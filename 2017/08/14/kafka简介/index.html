@@ -55,13 +55,13 @@
   };
 </script>
 
-  <meta name="description" content="背景起源于Linkedin，在apache开源，基于发布订阅的分布式消息系统。 特点高吞吐量：单机每秒几百MB的读写消息持久化高扩展性高可靠性支持多消费者（这个是比较重要的特点） 拓扑结构Broker：Kafka集群包含一个或多个服务器，这种服务器被称为brokerProducer: 负责发布消息到Kafka brokerConsumer: 消息消费者，向Kafka broker读取消息的客户端C">
+  <meta name="description" content="背景起源于Linkedin，在apache开源，基于发布订阅的分布式消息系统。特点高吞吐量：单机每秒几百MB的读写消息持久化高扩展性高可靠性支持多消费者（这个是比较重要的特点）拓扑结构Broker：Kafka集群包含一个或多个服务器，这种服务器被称为brokerProducer: 负责发布消息到Kafka brokerConsumer: 消息消费者，向Kafka broker读取消息的客户端Con">
 <meta name="keywords" content="kafka,中间件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kafka简介">
 <meta property="og:url" content="http://yoursite.com/2017/08/14/kafka简介/index.html">
 <meta property="og:site_name" content="潇湘夜雨">
-<meta property="og:description" content="背景起源于Linkedin，在apache开源，基于发布订阅的分布式消息系统。 特点高吞吐量：单机每秒几百MB的读写消息持久化高扩展性高可靠性支持多消费者（这个是比较重要的特点） 拓扑结构Broker：Kafka集群包含一个或多个服务器，这种服务器被称为brokerProducer: 负责发布消息到Kafka brokerConsumer: 消息消费者，向Kafka broker读取消息的客户端C">
+<meta property="og:description" content="背景起源于Linkedin，在apache开源，基于发布订阅的分布式消息系统。特点高吞吐量：单机每秒几百MB的读写消息持久化高扩展性高可靠性支持多消费者（这个是比较重要的特点）拓扑结构Broker：Kafka集群包含一个或多个服务器，这种服务器被称为brokerProducer: 负责发布消息到Kafka brokerConsumer: 消息消费者，向Kafka broker读取消息的客户端Con">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2017/08/14/kafka简介/1.png">
 <meta property="og:image" content="http://yoursite.com/2017/08/14/kafka简介/2.png">
@@ -69,7 +69,7 @@
 <meta property="og:updated_time" content="2019-09-15T07:37:59.508Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kafka简介">
-<meta name="twitter:description" content="背景起源于Linkedin，在apache开源，基于发布订阅的分布式消息系统。 特点高吞吐量：单机每秒几百MB的读写消息持久化高扩展性高可靠性支持多消费者（这个是比较重要的特点） 拓扑结构Broker：Kafka集群包含一个或多个服务器，这种服务器被称为brokerProducer: 负责发布消息到Kafka brokerConsumer: 消息消费者，向Kafka broker读取消息的客户端C">
+<meta name="twitter:description" content="背景起源于Linkedin，在apache开源，基于发布订阅的分布式消息系统。特点高吞吐量：单机每秒几百MB的读写消息持久化高扩展性高可靠性支持多消费者（这个是比较重要的特点）拓扑结构Broker：Kafka集群包含一个或多个服务器，这种服务器被称为brokerProducer: 负责发布消息到Kafka brokerConsumer: 消息消费者，向Kafka broker读取消息的客户端Con">
 <meta name="twitter:image" content="http://yoursite.com/2017/08/14/kafka简介/1.png">
   <link rel="canonical" href="http://yoursite.com/2017/08/14/kafka简介/">
 
@@ -167,17 +167,6 @@
       
       
         
-        <li class="menu-item menu-item-about">
-      
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-tags">
       
     
@@ -205,6 +194,17 @@
     
 
     <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
   </ul>
@@ -298,9 +298,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>起源于Linkedin，在apache开源，基于发布订阅的分布式消息系统。</p>
-<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><p>高吞吐量：单机每秒几百MB的读写<br>消息持久化<br>高扩展性<br>高可靠性<br>支持多消费者（这个是比较重要的特点）</p>
-<h1 id="拓扑结构"><a href="#拓扑结构" class="headerlink" title="拓扑结构"></a>拓扑结构</h1><p>Broker：Kafka集群包含一个或多个服务器，这种服务器被称为broker<br>Producer: 负责发布消息到Kafka broker<br>Consumer: 消息消费者，向Kafka broker读取消息的客户端<br>Consumer Group: 每个Consumer属于一个特定的Consumer Group<br><img src="/2017/08/14/kafka简介/1.png" alt="这里写图片描述"></p>
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>起源于Linkedin，在apache开源，基于发布订阅的分布式消息系统。</p><h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><p>高吞吐量：单机每秒几百MB的读写<br>消息持久化<br>高扩展性<br>高可靠性<br>支持多消费者（这个是比较重要的特点）</p><h1 id="拓扑结构"><a href="#拓扑结构" class="headerlink" title="拓扑结构"></a>拓扑结构</h1><p>Broker：Kafka集群包含一个或多个服务器，这种服务器被称为broker<br>Producer: 负责发布消息到Kafka broker<br>Consumer: 消息消费者，向Kafka broker读取消息的客户端<br>Consumer Group: 每个Consumer属于一个特定的Consumer Group<br><img src="/2017/08/14/kafka简介/1.png" alt="这里写图片描述"></p><a id="more"></a>
+
+
 <ol>
 <li><p>broker、producer、consumer这三个在所有消息队列中都有。这里注意一下consumer group的概念,如图所示，hadoop cluster、real-time monitoring、otherservice、datawarehouse分别是四个不同的集群，每一个集群中有成百上千个消费者，但是这时候如果发送了一条helloworld的消息，这四个集群中只有四个consumer客户端可以接收到这条消息，每个集群中只有一个consumer客户端可以消费到消息。这就是kafka 支持多消费者。</p>
 </li>

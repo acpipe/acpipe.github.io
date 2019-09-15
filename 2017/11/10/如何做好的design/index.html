@@ -55,19 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：  DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。 离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，">
+  <meta name="description" content="要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块： DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。 离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，实">
 <meta name="keywords" content="架构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何做好的design">
 <meta property="og:url" content="http://yoursite.com/2017/11/10/如何做好的design/index.html">
 <meta property="og:site_name" content="潇湘夜雨">
-<meta property="og:description" content="要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：  DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。 离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，">
+<meta property="og:description" content="要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块： DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。 离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，实">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2017/11/10/如何做好的design/HIT.jpg">
 <meta property="og:updated_time" content="2019-09-15T07:37:59.501Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何做好的design">
-<meta name="twitter:description" content="要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：  DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。 离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，">
+<meta name="twitter:description" content="要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块： DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。 离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，实">
 <meta name="twitter:image" content="http://yoursite.com/2017/11/10/如何做好的design/HIT.jpg">
   <link rel="canonical" href="http://yoursite.com/2017/11/10/如何做好的design/">
 
@@ -165,17 +165,6 @@
       
       
         
-        <li class="menu-item menu-item-about">
-      
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-tags">
       
     
@@ -203,6 +192,17 @@
     
 
     <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
   </ul>
@@ -296,12 +296,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：</p>
-<ol>
+        <p>要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：</p><ol>
 <li>DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。</li>
 <li>离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，实现数据版本化、回滚和监控。</li>
 <li>广告索引系统。该系统实现广告数据的增量更新和广告定向信息索引更新（正在参与设计中）</li>
-</ol>
+</ol><a id="more"></a>
+
 <p>就这些模块总结一些设计系统的方法论和套路。</p>
 <h1 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h1><p>高考写作文的时候，老师都非常讨厌模板，但是我这里还是推荐按照固定的套路，这样可以方便的讲清楚问题。</p>
 <ul>

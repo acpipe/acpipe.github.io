@@ -55,20 +55,20 @@
   };
 </script>
 
-  <meta name="description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。  面临的问题有两点：  打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；  那么打款模块面临最关键的问题是：可以根据处理能力掌控">
+  <meta name="description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。面临的问题有两点： 打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；">
 <meta name="keywords" content="java,多线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一次打款速度优化">
 <meta property="og:url" content="http://yoursite.com/2019/09/15/一次打款速度优化/index.html">
 <meta property="og:site_name" content="潇湘夜雨">
-<meta property="og:description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。  面临的问题有两点：  打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；  那么打款模块面临最关键的问题是：可以根据处理能力掌控">
+<meta property="og:description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。面临的问题有两点： 打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png">
 <meta property="og:image" content="http://yoursite.com/2019/09/15/一次打款速度优化/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A0%E9%80%9F.png">
 <meta property="og:updated_time" content="2019-09-15T08:00:34.804Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一次打款速度优化">
-<meta name="twitter:description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。  面临的问题有两点：  打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；  那么打款模块面临最关键的问题是：可以根据处理能力掌控">
+<meta name="twitter:description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。面临的问题有两点： 打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；">
 <meta name="twitter:image" content="http://yoursite.com/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png">
   <link rel="canonical" href="http://yoursite.com/2019/09/15/一次打款速度优化/">
 
@@ -166,17 +166,6 @@
       
       
         
-        <li class="menu-item menu-item-about">
-      
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-tags">
       
     
@@ -204,6 +193,17 @@
     
 
     <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
   </ul>
@@ -289,13 +289,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。</p>
-<p><img src="/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png" alt="数据流"></p>
-<p>面临的问题有两点：</p>
-<ul>
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。</p><p><img src="/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png" alt="数据流"></p><p>面临的问题有两点：</p><ul>
 <li>打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击；</li>
 <li>打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；</li>
-</ul>
+</ul><a id="more"></a>
+
+
+
 <p>那么打款模块面临最关键的问题是：<strong>可以根据处理能力掌控队列的消费速度。</strong></p>
 <p>这里有一个速度不匹配的问题，队列的消费速度<strong>远大于</strong>下游<strong>支付中台</strong>可接受的QPS速度。</p>
 <h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><p>在该问题中，对队列中的数据处理不要求顺序，所以我们可以用多线程来<strong>加速</strong>处理。把每次消费队列得到的数据扔到线程池里面。</p>

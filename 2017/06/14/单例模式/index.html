@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="这应该是所有设计模式中最简单的设计模式了，所以从它讲起。 用途用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。 v0.0.1-简单实现1234567891011121314151617/** * Created by Acceml on 2016/5/28. * Email: huminghit@gmail.com */public class Sing">
+  <meta name="description" content="这应该是所有设计模式中最简单的设计模式了，所以从它讲起。用途用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。v0.0.1-简单实现1234567891011121314151617/** * Created by Acceml on 2016/5/28. * Email: huminghit@gmail.com */public class Single">
 <meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="单例模式">
 <meta property="og:url" content="http://yoursite.com/2017/06/14/单例模式/index.html">
 <meta property="og:site_name" content="潇湘夜雨">
-<meta property="og:description" content="这应该是所有设计模式中最简单的设计模式了，所以从它讲起。 用途用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。 v0.0.1-简单实现1234567891011121314151617/** * Created by Acceml on 2016/5/28. * Email: huminghit@gmail.com */public class Sing">
+<meta property="og:description" content="这应该是所有设计模式中最简单的设计模式了，所以从它讲起。用途用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。v0.0.1-简单实现1234567891011121314151617/** * Created by Acceml on 2016/5/28. * Email: huminghit@gmail.com */public class Single">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2019-09-15T07:37:59.504Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单例模式">
-<meta name="twitter:description" content="这应该是所有设计模式中最简单的设计模式了，所以从它讲起。 用途用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。 v0.0.1-简单实现1234567891011121314151617/** * Created by Acceml on 2016/5/28. * Email: huminghit@gmail.com */public class Sing">
+<meta name="twitter:description" content="这应该是所有设计模式中最简单的设计模式了，所以从它讲起。用途用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。v0.0.1-简单实现1234567891011121314151617/** * Created by Acceml on 2016/5/28. * Email: huminghit@gmail.com */public class Single">
   <link rel="canonical" href="http://yoursite.com/2017/06/14/单例模式/">
 
 
@@ -163,17 +163,6 @@
       
       
         
-        <li class="menu-item menu-item-about">
-      
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-tags">
       
     
@@ -201,6 +190,17 @@
     
 
     <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
   </ul>
@@ -294,9 +294,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>这应该是所有设计模式中最简单的设计模式了，所以从它讲起。</p>
-<h1 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h1><p>用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。</p>
-<h1 id="v0-0-1-简单实现"><a href="#v0-0-1-简单实现" class="headerlink" title="v0.0.1-简单实现"></a>v0.0.1-简单实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by Acceml on 2016/5/28.</span></span><br><span class="line"><span class="comment"> * Email: huminghit@gmail.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton == <span class="keyword">null</span>) &#123;<span class="comment">//risk</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>这应该是所有设计模式中最简单的设计模式了，所以从它讲起。</p><h1 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h1><p>用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。</p><h1 id="v0-0-1-简单实现"><a href="#v0-0-1-简单实现" class="headerlink" title="v0.0.1-简单实现"></a>v0.0.1-简单实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by Acceml on 2016/5/28.</span></span><br><span class="line"><span class="comment"> * Email: huminghit@gmail.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton == <span class="keyword">null</span>) &#123;<span class="comment">//risk</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
 
 <p>要注意的点是：</p>
 <ul>

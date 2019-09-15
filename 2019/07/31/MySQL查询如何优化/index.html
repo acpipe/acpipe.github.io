@@ -55,13 +55,13 @@
   };
 </script>
 
-  <meta name="description" content="明确需求对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。  但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。  数据量大/准确性要求低/请求量大 这种场景一般是C端">
+  <meta name="description" content="明确需求对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。">
 <meta name="keywords" content="mysql,数据库">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL查询如何优化">
 <meta property="og:url" content="http://yoursite.com/2019/07/31/MySQL查询如何优化/index.html">
 <meta property="og:site_name" content="潇湘夜雨">
-<meta property="og:description" content="明确需求对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。  但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。  数据量大/准确性要求低/请求量大 这种场景一般是C端">
+<meta property="og:description" content="明确需求对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2019/07/31/MySQL查询如何优化/dedao.png">
 <meta property="og:image" content="http://yoursite.com/2019/07/31/MySQL查询如何优化/daotu.png">
@@ -69,7 +69,7 @@
 <meta property="og:updated_time" content="2019-09-15T07:37:59.501Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL查询如何优化">
-<meta name="twitter:description" content="明确需求对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。  但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。  数据量大/准确性要求低/请求量大 这种场景一般是C端">
+<meta name="twitter:description" content="明确需求对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。">
 <meta name="twitter:image" content="http://yoursite.com/2019/07/31/MySQL查询如何优化/dedao.png">
   <link rel="canonical" href="http://yoursite.com/2019/07/31/MySQL查询如何优化/">
 
@@ -167,17 +167,6 @@
       
       
         
-        <li class="menu-item menu-item-about">
-      
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-tags">
       
     
@@ -205,6 +194,17 @@
     
 
     <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
   </ul>
@@ -298,9 +298,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="明确需求"><a href="#明确需求" class="headerlink" title="明确需求"></a>明确需求</h1><p>对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。</p>
-<p><img src="/2019/07/31/MySQL查询如何优化/dedao.png" alt="得到统计"></p>
-<p>但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。</p>
+        <h1 id="明确需求"><a href="#明确需求" class="headerlink" title="明确需求"></a>明确需求</h1><p>对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。</p><p><img src="/2019/07/31/MySQL查询如何优化/dedao.png" alt="得到统计"></p><p>但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。</p><a id="more"></a>
+
+
 <p><img src="/2019/07/31/MySQL查询如何优化/daotu.png" alt="思维导图"></p>
 <h1 id="数据量大-准确性要求低-请求量大"><a href="#数据量大-准确性要求低-请求量大" class="headerlink" title="数据量大/准确性要求低/请求量大"></a>数据量大/准确性要求低/请求量大</h1><ol>
 <li>这种场景一般是C端产品，比如上面说的得到APP的订阅数目，如果对一致性要求不高，可以直接在内存中使用缓存，用guava在内存中做一个缓存定时刷新即可，百万量级count(*)有缓存的频率还不至于有啥性能问题；</li>

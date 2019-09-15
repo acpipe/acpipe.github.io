@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="拥抱变化关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：  在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。  这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：应对变化。 笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合">
+  <meta name="description" content="拥抱变化关于这个topic，在网上搜索出来的，很多你可以看到这么一句话： 在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。 这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：应对变化。笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合理。于">
 <meta name="keywords" content="mysql,数据库">
 <meta property="og:type" content="article">
 <meta property="og:title" content="为什么要用自增主键">
 <meta property="og:url" content="http://yoursite.com/2018/09/14/为什么要用自增主键/index.html">
 <meta property="og:site_name" content="潇湘夜雨">
-<meta property="og:description" content="拥抱变化关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：  在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。  这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：应对变化。 笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合">
+<meta property="og:description" content="拥抱变化关于这个topic，在网上搜索出来的，很多你可以看到这么一句话： 在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。 这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：应对变化。笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合理。于">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2019-09-15T07:37:59.512Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="为什么要用自增主键">
-<meta name="twitter:description" content="拥抱变化关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：  在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。  这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：应对变化。 笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合">
+<meta name="twitter:description" content="拥抱变化关于这个topic，在网上搜索出来的，很多你可以看到这么一句话： 在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。 这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：应对变化。笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合理。于">
   <link rel="canonical" href="http://yoursite.com/2018/09/14/为什么要用自增主键/">
 
 
@@ -163,17 +163,6 @@
       
       
         
-        <li class="menu-item menu-item-about">
-      
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-tags">
       
     
@@ -201,6 +190,17 @@
     
 
     <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
   </ul>
@@ -294,12 +294,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="拥抱变化"><a href="#拥抱变化" class="headerlink" title="拥抱变化"></a>拥抱变化</h1><p>关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：</p>
-<blockquote>
+        <h1 id="拥抱变化"><a href="#拥抱变化" class="headerlink" title="拥抱变化"></a>拥抱变化</h1><p>关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：</p><blockquote>
 <p>在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。</p>
-</blockquote>
-<p>这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：<strong>应对变化</strong>。</p>
-<p>笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合理。于是，初版建表的时候就有了如下表结构:</p>
+</blockquote><p>这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：<strong>应对变化</strong>。</p><p>笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合理。于是，初版建表的时候就有了如下表结构:</p><a id="more"></a>
+
+
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">accountId // 账号ID,全局唯一</span><br><span class="line">cert // 该账号的资质</span><br><span class="line">review_detail // 该账号的审核详情</span><br><span class="line">cert_photo // 资质的图片</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
 <p>当时业务迭代一定时间之后，新的需求来了：一个账号，在不同业务线，需要享有不同资质。</p>
