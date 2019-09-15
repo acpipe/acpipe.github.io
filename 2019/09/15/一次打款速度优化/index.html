@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。  面临的问题有两点：  打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；  那么打款模块面临最关键的问题是：可以根据处理能力掌控">
+<meta name="keywords" content="java,多线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次打款速度优化">
+<meta property="og:url" content="http://yoursite.com/2019/09/15/一次打款速度优化/index.html">
+<meta property="og:site_name" content="潇湘夜雨">
+<meta property="og:description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。  面临的问题有两点：  打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；  那么打款模块面临最关键的问题是：可以根据处理能力掌控">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/15/一次打款速度优化/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A0%E9%80%9F.png">
+<meta property="og:updated_time" content="2019-09-15T08:00:34.804Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一次打款速度优化">
+<meta name="twitter:description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。  面临的问题有两点：  打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；  那么打款模块面临最关键的问题是：可以根据处理能力掌控">
+<meta name="twitter:image" content="http://yoursite.com/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png">
+  <link rel="canonical" href="http://yoursite.com/2019/09/15/一次打款速度优化/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>一次打款速度优化 | 潇湘夜雨</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">潇湘夜雨</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/15/一次打款速度优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">一次打款速度优化
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-15 10:15:17 / 修改时间：16:00:34" itemprop="dateCreated datePublished" datetime="2019-09-15T10:15:17+08:00">2019-09-15</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。</p>
+<p><img src="/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png" alt="数据流"></p>
+<p>面临的问题有两点：</p>
+<ul>
+<li>打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击；</li>
+<li>打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；</li>
+</ul>
+<p>那么打款模块面临最关键的问题是：<strong>可以根据处理能力掌控队列的消费速度。</strong></p>
+<p>这里有一个速度不匹配的问题，队列的消费速度<strong>远大于</strong>下游<strong>支付中台</strong>可接受的QPS速度。</p>
+<h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><p>在该问题中，对队列中的数据处理不要求顺序，所以我们可以用多线程来<strong>加速</strong>处理。把每次消费队列得到的数据扔到线程池里面。</p>
+<p><img src="/2019/09/15/一次打款速度优化/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A0%E9%80%9F.png" alt="线程池加速"></p>
+<p>线程池有三个核心参数：</p>
+<ul>
+<li>corePoolSize。 核心线程数；</li>
+<li>maximumPoolSize。最大线程数；</li>
+<li>workQueue。线程池队列；</li>
+</ul>
+<p>打款需要<strong>控制速度</strong>，我们很容易想到控制核心线程数和最大线程数来控制速度。如果消费队列线程扔过来的消息过多，我们直接扔到workQueue里面即可，但是这样会导致<strong>线程池队列无限增长，爆掉内存</strong>。这里就需要有一种机制从线程池去告诉消费队列线程：你扔过来的消息我都处理不了了。很容易想到的方法就是：<strong>阻塞</strong>消费队列线程。</p>
+<p>至此，总结一下思路。通过控制核心线程数、最大线程数来控制速度，通过线程池队列大小来防止内存爆掉，通过阻塞消费队列线程来控制消息到队列的速度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(CORE_THREAD,</span><br><span class="line">     MAX_THREAD_COUNT, KEEP_ALIVE_TIMEOUT, SECONDS,</span><br><span class="line">     <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(QUEUE_SIZE),</span><br><span class="line">     <span class="keyword">new</span> ThreadFactoryBuilder().setNameFormat(<span class="string">"BatchConsumer"</span>).build(),</span><br><span class="line">     (r, executor) -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                 <span class="comment">// 如果线程池队列满了, 这里用put方法阻塞住.</span></span><br><span class="line">                 executor.getQueue().put(r);</span><br><span class="line">             &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">             &#125;</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里用一个<strong>有界阻塞队列</strong>作为线程池队列。当线程池队列满了的时候，线程池拒绝策略不是直接扔掉消息，而是阻塞发消息的线程。</p>
+<h1 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h1><p>如果你的业务要求消息<strong>顺序处理</strong>，那么则不能使用该方法。要求顺序处理，又想要借助多线程加速处理，下次笔者再写一篇文章谈一下我的实现方法。</p>
+<h1 id="code"><a href="#code" class="headerlink" title="code"></a>code</h1><p>代码原型已经放到github:  <a href="https://github.com/acpipe/rigel-infra/tree/master/src/main/java/com/rigel/concurrent/speedcontrol" target="_blank" rel="noopener">控制队列消费速度</a>, FYI.</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/java/" rel="tag"># java</a>
+            
+              <a href="/tags/多线程/" rel="tag"># 多线程</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/14/144-二叉树先序遍历/" rel="next" title="144.二叉树先序遍历">
+                  <i class="fa fa-chevron-left"></i> 144.二叉树先序遍历
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解法"><span class="nav-number">2.</span> <span class="nav-text">解法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#限制"><span class="nav-number">3.</span> <span class="nav-text">限制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#code"><span class="nav-number">4.</span> <span class="nav-text">code</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.png"
+      alt="修飒">
+  <p class="site-author-name" itemprop="name">修飒</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">修飒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

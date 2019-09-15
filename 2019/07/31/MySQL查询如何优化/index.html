@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="明确需求对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。  但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。  数据量大/准确性要求低/请求量大 这种场景一般是C端">
+<meta name="keywords" content="mysql,数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL查询如何优化">
+<meta property="og:url" content="http://yoursite.com/2019/07/31/MySQL查询如何优化/index.html">
+<meta property="og:site_name" content="潇湘夜雨">
+<meta property="og:description" content="明确需求对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。  但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。  数据量大/准确性要求低/请求量大 这种场景一般是C端">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/07/31/MySQL查询如何优化/dedao.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/31/MySQL查询如何优化/daotu.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/31/MySQL查询如何优化/cmp.png">
+<meta property="og:updated_time" content="2019-09-15T07:37:59.501Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL查询如何优化">
+<meta name="twitter:description" content="明确需求对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。  但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。  数据量大/准确性要求低/请求量大 这种场景一般是C端">
+<meta name="twitter:image" content="http://yoursite.com/2019/07/31/MySQL查询如何优化/dedao.png">
+  <link rel="canonical" href="http://yoursite.com/2019/07/31/MySQL查询如何优化/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MySQL查询如何优化 | 潇湘夜雨</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">潇湘夜雨</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/31/MySQL查询如何优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">MySQL查询如何优化
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-31 12:07:27" itemprop="dateCreated datePublished" datetime="2019-07-31T12:07:27+08:00">2019-07-31</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据库/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="明确需求"><a href="#明确需求" class="headerlink" title="明确需求"></a>明确需求</h1><p>对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。</p>
+<p><img src="/2019/07/31/MySQL查询如何优化/dedao.png" alt="得到统计"></p>
+<p>但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。</p>
+<p><img src="/2019/07/31/MySQL查询如何优化/daotu.png" alt="思维导图"></p>
+<h1 id="数据量大-准确性要求低-请求量大"><a href="#数据量大-准确性要求低-请求量大" class="headerlink" title="数据量大/准确性要求低/请求量大"></a>数据量大/准确性要求低/请求量大</h1><ol>
+<li>这种场景一般是C端产品，比如上面说的得到APP的订阅数目，如果对一致性要求不高，可以直接在内存中使用缓存，用guava在内存中做一个缓存定时刷新即可，百万量级count(*)有缓存的频率还不至于有啥性能问题；</li>
+<li>但是内存内缓存有一个问题就是不同服务器之间的缓存数量是不一致的，可以考虑用redis作为计数，一般这种场景是大多数同学遇到的，简单粗暴搞定即可；</li>
+<li>用show table status。这个建议还是不要用了，翻了下mysql 的doc，40%的误差概率，碰上就有点大了呀。</li>
+</ol>
+<blockquote>
+<p>TABLE_ROWS<br>The number of rows. Some storage engines, such as MyISAM, store the exact count. For other storage engines, such as InnoDB, this value is an approximation, and may vary from the actual value by as much as 40% to 50%. In such cases, use SELECT COUNT(*) to obtain an accurate count.</p>
+</blockquote>
+<h1 id="数据量大-准确性要求高-请求量一般"><a href="#数据量大-准确性要求高-请求量一般" class="headerlink" title="数据量大/准确性要求高/请求量一般"></a>数据量大/准确性要求高/请求量一般</h1><p>这种场景一般出现在账务上，比如有多少人打款。而且估计DAU在亿级别的公司可能才会遇到。这里最关键的问题还是一致性的要求。在并发系统中，看看我们用redis，我们看看会出现什么样的一致性问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">时间       A processor         B processor</span><br><span class="line">T1         插入数据</span><br><span class="line">T2                             1.redis#get计数器；2. 查询最新的N条数据</span><br><span class="line">T3         redis#incr</span><br></pre></td></tr></table></figure>
+
+<p>在T2的时间点的时候会出现数据不一致，B看到的是数据已经更新，但是数据库还没更新。我们就在想，如果放到一个事务里面，就可以完美解决这个问题了呀。由于事务，innoDB不支持像MyISAM准确计数，解铃还须系铃人，所以我们建一个计数表（count_table）+事务，解这个问题了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">时间         会话A                            会话B</span><br><span class="line">T1         begin;</span><br><span class="line">           在计数表中插入一条数据;</span><br><span class="line">T2                                          begin;</span><br><span class="line">                                            1. 读count_table；</span><br><span class="line">                                            2. 查询最新的N条数据</span><br><span class="line">                                            commit;</span><br><span class="line">T3         更新conut_table;</span><br><span class="line">           commit;</span><br></pre></td></tr></table></figure>
+
+<p>在T1的时候，如果采用Mysql默认的事务隔离级别：读提交。因为T1事务还没有提交，所以插入的数据，B是读不到的，所以从逻辑上来说是一致的。</p>
+<h1 id="数据量大-准确性要求高-请求量特别高"><a href="#数据量大-准确性要求高-请求量特别高" class="headerlink" title="数据量大/准确性要求高/请求量特别高"></a>数据量大/准确性要求高/请求量特别高</h1><p>抱歉，没遇到过。如果你觉得你遇到了，你的架构需要你重新design and review，相信我。</p>
+<h1 id="带条件count"><a href="#带条件count" class="headerlink" title="带条件count(*)"></a>带条件count(*)</h1><p>很多时候我们的业务场景不是数据量多，而是条件复杂。这其实就是一个查询优化的问题了，和是不是count(*)没有关系，那么有以下两招常用，这个得具体问题具体分析了。比如时间维度可以加一个索引来优化；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from table_name where a = x and b = x;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>加索引</li>
+<li>业务拆分</li>
+</ul>
+<h1 id="count性能比较"><a href="#count性能比较" class="headerlink" title="count性能比较"></a>count性能比较</h1><ul>
+<li>count(primary key)。遍历整个表，把主键值拿出来，累加；</li>
+<li>count(1)。遍历整个表，但是不取值，累加；</li>
+<li>count(非空字段)。遍历整个表，读出这个字段，累加；</li>
+<li>count(可以为空的字段)。遍历整个表，读出这个字段，判断不为null累加；</li>
+<li>count(*)。遍历整个表，做了优化，不取值，累加。</li>
+</ul>
+<p>结合mysql的一些索引查询知识，我们可以大致得出如下结论。</p>
+<p><img src="/2019/07/31/MySQL查询如何优化/cmp.png" alt="count性能比较"></p>
+<p>建议直接使用count(*)。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/mysql/" rel="tag"># mysql</a>
+            
+              <a href="/tags/数据库/" rel="tag"># 数据库</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2018/09/14/为什么要用自增主键/" rel="next" title="为什么要用自增主键">
+                  <i class="fa fa-chevron-left"></i> 为什么要用自增主键
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/14/144-二叉树先序遍历/" rel="prev" title="144.二叉树先序遍历">
+                  144.二叉树先序遍历 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#明确需求"><span class="nav-number">1.</span> <span class="nav-text">明确需求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据量大-准确性要求低-请求量大"><span class="nav-number">2.</span> <span class="nav-text">数据量大/准确性要求低/请求量大</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据量大-准确性要求高-请求量一般"><span class="nav-number">3.</span> <span class="nav-text">数据量大/准确性要求高/请求量一般</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据量大-准确性要求高-请求量特别高"><span class="nav-number">4.</span> <span class="nav-text">数据量大/准确性要求高/请求量特别高</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#带条件count"><span class="nav-number">5.</span> <span class="nav-text">带条件count(*)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#count性能比较"><span class="nav-number">6.</span> <span class="nav-text">count性能比较</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.png"
+      alt="修飒">
+  <p class="site-author-name" itemprop="name">修飒</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">修飒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

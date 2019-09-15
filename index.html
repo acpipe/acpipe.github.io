@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta property="og:type" content="website">
+<meta property="og:title" content="潇湘夜雨">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="潇湘夜雨">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="潇湘夜雨">
+  <link rel="canonical" href="http://yoursite.com/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: true,
+    isPost: false,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>潇湘夜雨</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">潇湘夜雨</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <div id="posts" class="posts-expand">
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/15/一次打款速度优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2019/09/15/一次打款速度优化/" class="post-title-link" itemprop="url">一次打款速度优化</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-15 10:15:17 / 修改时间：16:00:34" itemprop="dateCreated datePublished" datetime="2019-09-15T10:15:17+08:00">2019-09-15</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。</p>
+<p><img src="/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png" alt="数据流"></p>
+<p>面临的问题有两点：</p>
+<ul>
+<li>打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击；</li>
+<li>打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；</li>
+</ul>
+<p>那么打款模块面临最关键的问题是：<strong>可以根据处理能力掌控队列的消费速度。</strong></p>
+<p>这里有一个速度不匹配的问题，队列的消费速度<strong>远大于</strong>下游<strong>支付中台</strong>可接受的QPS速度。</p>
+<h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><p>在该问题中，对队列中的数据处理不要求顺序，所以我们可以用多线程来<strong>加速</strong>处理。把每次消费队列得到的数据扔到线程池里面。</p>
+<p><img src="/2019/09/15/一次打款速度优化/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A0%E9%80%9F.png" alt="线程池加速"></p>
+<p>线程池有三个核心参数：</p>
+<ul>
+<li>corePoolSize。 核心线程数；</li>
+<li>maximumPoolSize。最大线程数；</li>
+<li>workQueue。线程池队列；</li>
+</ul>
+<p>打款需要<strong>控制速度</strong>，我们很容易想到控制核心线程数和最大线程数来控制速度。如果消费队列线程扔过来的消息过多，我们直接扔到workQueue里面即可，但是这样会导致<strong>线程池队列无限增长，爆掉内存</strong>。这里就需要有一种机制从线程池去告诉消费队列线程：你扔过来的消息我都处理不了了。很容易想到的方法就是：<strong>阻塞</strong>消费队列线程。</p>
+<p>至此，总结一下思路。通过控制核心线程数、最大线程数来控制速度，通过线程池队列大小来防止内存爆掉，通过阻塞消费队列线程来控制消息到队列的速度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(CORE_THREAD,</span><br><span class="line">     MAX_THREAD_COUNT, KEEP_ALIVE_TIMEOUT, SECONDS,</span><br><span class="line">     <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(QUEUE_SIZE),</span><br><span class="line">     <span class="keyword">new</span> ThreadFactoryBuilder().setNameFormat(<span class="string">"BatchConsumer"</span>).build(),</span><br><span class="line">     (r, executor) -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                 <span class="comment">// 如果线程池队列满了, 这里用put方法阻塞住.</span></span><br><span class="line">                 executor.getQueue().put(r);</span><br><span class="line">             &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">             &#125;</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里用一个<strong>有界阻塞队列</strong>作为线程池队列。当线程池队列满了的时候，线程池拒绝策略不是直接扔掉消息，而是阻塞发消息的线程。</p>
+<h1 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h1><p>如果你的业务要求消息<strong>顺序处理</strong>，那么则不能使用该方法。要求顺序处理，又想要借助多线程加速处理，下次笔者再写一篇文章谈一下我的实现方法。</p>
+<h1 id="code"><a href="#code" class="headerlink" title="code"></a>code</h1><p>代码原型已经放到github:  <a href="https://github.com/acpipe/rigel-infra/tree/master/src/main/java/com/rigel/concurrent/speedcontrol" target="_blank" rel="noopener">控制队列消费速度</a>, FYI.</p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/14/144-二叉树先序遍历/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2019/09/14/144-二叉树先序遍历/" class="post-title-link" itemprop="url">144.二叉树先序遍历</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-14 23:42:29" itemprop="dateCreated datePublished" datetime="2019-09-14T23:42:29+08:00">2019-09-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Leetcode/" itemprop="url" rel="index"><span itemprop="name">Leetcode</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>给定一个二叉树，返回它的 前序 遍历。</p>
+<p> 示例:</p>
+<p>输入: [1,null,2,3]  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span></span><br><span class="line"> \</span><br><span class="line">  <span class="number">2</span></span><br><span class="line"> /</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>输出: [1,2,3]<br>进阶: 递归算法很简单，你可以通过迭代算法完成吗？</p>
+<h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><h2 id="方法1-递归"><a href="#方法1-递归" class="headerlink" title="方法1 递归"></a>方法1 递归</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">preorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        helper(root, list);</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">helper</span><span class="params">(TreeNode node, List&lt;Integer&gt; res)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (node != <span class="keyword">null</span>) &#123;</span><br><span class="line">            res.add(node.val);</span><br><span class="line">            helper(node.left, res);</span><br><span class="line">            helper(node.right, res);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="方法2-非递归"><a href="#方法2-非递归" class="headerlink" title="方法2 非递归"></a>方法2 非递归</h2><p>非递归的方法用stack 的方式来解。</p>
+<p>循环结束条件是stack 不为空，或者树不为空。</p>
+<ul>
+<li>stack不为空，代表遍历过根节点</li>
+<li>root不为空，代表可以继续遍历左子树.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">preorderTraversal</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();        </span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> list;</span><br><span class="line">        &#125;</span><br><span class="line">        Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span> (!stack.isEmpty() || root != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//  这里代表还有左子树, 注意是while循环.</span></span><br><span class="line">            <span class="keyword">while</span> (root != <span class="keyword">null</span>) &#123;</span><br><span class="line">                list.add(root.val);</span><br><span class="line">                stack.add(root);</span><br><span class="line">                root = root.left;                </span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 左子树为null, 这时候开始遍历右子树.</span></span><br><span class="line">            <span class="keyword">if</span> (!stack.isEmpty()) &#123;</span><br><span class="line">                root = stack.pop();</span><br><span class="line">                root = root.right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/31/MySQL查询如何优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2019/07/31/MySQL查询如何优化/" class="post-title-link" itemprop="url">MySQL查询如何优化</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-31 12:07:27" itemprop="dateCreated datePublished" datetime="2019-07-31T12:07:27+08:00">2019-07-31</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据库/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="明确需求"><a href="#明确需求" class="headerlink" title="明确需求"></a>明确需求</h1><p>对这个问题有兴趣是源于一次开发中遇到要统计人数的需求。类似于“得到”专栏的订阅数。</p>
+<p><img src="/2019/07/31/MySQL查询如何优化/dedao.png" alt="得到统计"></p>
+<p>但是我的数据量比这个大很多，而对数据的准确性要求就不那么高。所以首先要明确需求。其他答案有的说了用缓存，有的答案对比了count(*)、count(1)的区别，都很好，但是我认为还是要看一下题主的场景。我根据我实际开发的经验总结如下几个方面，FYI。</p>
+<p><img src="/2019/07/31/MySQL查询如何优化/daotu.png" alt="思维导图"></p>
+<h1 id="数据量大-准确性要求低-请求量大"><a href="#数据量大-准确性要求低-请求量大" class="headerlink" title="数据量大/准确性要求低/请求量大"></a>数据量大/准确性要求低/请求量大</h1><ol>
+<li>这种场景一般是C端产品，比如上面说的得到APP的订阅数目，如果对一致性要求不高，可以直接在内存中使用缓存，用guava在内存中做一个缓存定时刷新即可，百万量级count(*)有缓存的频率还不至于有啥性能问题；</li>
+<li>但是内存内缓存有一个问题就是不同服务器之间的缓存数量是不一致的，可以考虑用redis作为计数，一般这种场景是大多数同学遇到的，简单粗暴搞定即可；</li>
+<li>用show table status。这个建议还是不要用了，翻了下mysql 的doc，40%的误差概率，碰上就有点大了呀。</li>
+</ol>
+<blockquote>
+<p>TABLE_ROWS<br>The number of rows. Some storage engines, such as MyISAM, store the exact count. For other storage engines, such as InnoDB, this value is an approximation, and may vary from the actual value by as much as 40% to 50%. In such cases, use SELECT COUNT(*) to obtain an accurate count.</p>
+</blockquote>
+<h1 id="数据量大-准确性要求高-请求量一般"><a href="#数据量大-准确性要求高-请求量一般" class="headerlink" title="数据量大/准确性要求高/请求量一般"></a>数据量大/准确性要求高/请求量一般</h1><p>这种场景一般出现在账务上，比如有多少人打款。而且估计DAU在亿级别的公司可能才会遇到。这里最关键的问题还是一致性的要求。在并发系统中，看看我们用redis，我们看看会出现什么样的一致性问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">时间       A processor         B processor</span><br><span class="line">T1         插入数据</span><br><span class="line">T2                             1.redis#get计数器；2. 查询最新的N条数据</span><br><span class="line">T3         redis#incr</span><br></pre></td></tr></table></figure>
+
+<p>在T2的时间点的时候会出现数据不一致，B看到的是数据已经更新，但是数据库还没更新。我们就在想，如果放到一个事务里面，就可以完美解决这个问题了呀。由于事务，innoDB不支持像MyISAM准确计数，解铃还须系铃人，所以我们建一个计数表（count_table）+事务，解这个问题了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">时间         会话A                            会话B</span><br><span class="line">T1         begin;</span><br><span class="line">           在计数表中插入一条数据;</span><br><span class="line">T2                                          begin;</span><br><span class="line">                                            1. 读count_table；</span><br><span class="line">                                            2. 查询最新的N条数据</span><br><span class="line">                                            commit;</span><br><span class="line">T3         更新conut_table;</span><br><span class="line">           commit;</span><br></pre></td></tr></table></figure>
+
+<p>在T1的时候，如果采用Mysql默认的事务隔离级别：读提交。因为T1事务还没有提交，所以插入的数据，B是读不到的，所以从逻辑上来说是一致的。</p>
+<h1 id="数据量大-准确性要求高-请求量特别高"><a href="#数据量大-准确性要求高-请求量特别高" class="headerlink" title="数据量大/准确性要求高/请求量特别高"></a>数据量大/准确性要求高/请求量特别高</h1><p>抱歉，没遇到过。如果你觉得你遇到了，你的架构需要你重新design and review，相信我。</p>
+<h1 id="带条件count"><a href="#带条件count" class="headerlink" title="带条件count(*)"></a>带条件count(*)</h1><p>很多时候我们的业务场景不是数据量多，而是条件复杂。这其实就是一个查询优化的问题了，和是不是count(*)没有关系，那么有以下两招常用，这个得具体问题具体分析了。比如时间维度可以加一个索引来优化；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from table_name where a = x and b = x;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>加索引</li>
+<li>业务拆分</li>
+</ul>
+<h1 id="count性能比较"><a href="#count性能比较" class="headerlink" title="count性能比较"></a>count性能比较</h1><ul>
+<li>count(primary key)。遍历整个表，把主键值拿出来，累加；</li>
+<li>count(1)。遍历整个表，但是不取值，累加；</li>
+<li>count(非空字段)。遍历整个表，读出这个字段，累加；</li>
+<li>count(可以为空的字段)。遍历整个表，读出这个字段，判断不为null累加；</li>
+<li>count(*)。遍历整个表，做了优化，不取值，累加。</li>
+</ul>
+<p>结合mysql的一些索引查询知识，我们可以大致得出如下结论。</p>
+<p><img src="/2019/07/31/MySQL查询如何优化/cmp.png" alt="count性能比较"></p>
+<p>建议直接使用count(*)。</p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/14/为什么要用自增主键/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2018/09/14/为什么要用自增主键/" class="post-title-link" itemprop="url">为什么要用自增主键</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-14 01:45:33" itemprop="dateCreated datePublished" datetime="2018-09-14T01:45:33+08:00">2018-09-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据库/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="拥抱变化"><a href="#拥抱变化" class="headerlink" title="拥抱变化"></a>拥抱变化</h1><p>关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：</p>
+<blockquote>
+<p>在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。</p>
+</blockquote>
+<p>这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：<strong>应对变化</strong>。</p>
+<p>笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合理。于是，初版建表的时候就有了如下表结构:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">accountId // 账号ID,全局唯一</span><br><span class="line">cert // 该账号的资质</span><br><span class="line">review_detail // 该账号的审核详情</span><br><span class="line">cert_photo // 资质的图片</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>当时业务迭代一定时间之后，新的需求来了：一个账号，在不同业务线，需要享有不同资质。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">accountId // 账号ID,全局唯一</span><br><span class="line">business // 新加入的字段，标志不同业务线.</span><br><span class="line">cert // 该账号的资质</span><br><span class="line">review_detail // 该账号的审核详情</span><br><span class="line">cert_photo // 资质的图片</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>这个时候就accountId就不是一个唯一的了，因为，同一个账号，不同业务线，资质是不一样的。</p>
+<p>笔者和同事讨论之后，做出如下方案：</p>
+<ol>
+<li>先把原来业务代码中依赖主键查询的代码做升级；</li>
+<li>把数据库原来的索引drop掉；</li>
+<li>新建自增主键索引；</li>
+<li>升级当前业务，实现同一账号，不同系统，享有不同资质；</li>
+</ol>
+<blockquote>
+<p>但是第二步之后，实际上drop掉主键，这个时候Mysql是没有主键状态的。如果没有定义主键，则会使用非空的UNIQUE键做主键 ; 如果没有非空的UNIQUE键，则系统生成一个6字节的rowid做主键</p>
+</blockquote>
+<p>这么做其实可能会有性能问题。</p>
+<p>如果我们一开始设计表的时候，就用业务无关的ID作为自增主键，那么本次升级就不会变得这么麻烦。推荐的做法是，在系统设计之初：</p>
+<ol>
+<li>设置自增主键；</li>
+<li>把当前需要约束的键（这里即账号ID）作为唯一键约束;</li>
+</ol>
+<blockquote>
+<p>主键:<br>1.可以定义一列或多列为主键。不允许空（NULL）,主健可作外健，唯一索引不可；<br>2.定义一个主键将自动创建主键索引，主键索引是唯一索引的特殊类型。</p>
+<p>唯一键：<br>1.唯一性约束用来限制不受主键约束的列上的数据的唯一性，用于作为访问某行的可选手段，<br>指定列上都不允许有相同的值，允许空（NULL）<br>2.唯一约束可以用于保证在基表中增加一条记录时，一个或多个列值是唯一的。</p>
+</blockquote>
+<h1 id="性能考量"><a href="#性能考量" class="headerlink" title="性能考量"></a>性能考量</h1><ol>
+<li>如果表使用自增主键，那么每次插入新的记录，记录就会顺序添加到当前索引节点的后续位置，当一页写满，就会自动开辟一个新的页。如果不是自增主键，那么可能会在中间插入，学过数据结构的同学都知道，在中间插入，B+树为了维持平衡，引起B+树的节点分裂。 总的来说用自增主键是可以提高查询和插入的性能。</li>
+<li>在切换这段时间，如果你的系统对latency非常敏感，那么就不能这么简单的做了，可能需要重新备份数据库，由于笔者维护这个表是B端系统，且数据量级大概百万量级，这么搞是OK的。</li>
+<li>自增ID可以用来做分页优化。当然这是另一个话题了，下次分析。</li>
+</ol>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/10/如何做好的design/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2017/11/10/如何做好的design/" class="post-title-link" itemprop="url">如何做好的design</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2017-11-10 10:26:47" itemprop="dateCreated datePublished" datetime="2017-11-10T10:26:47+08:00">2017-11-10</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/架构/" itemprop="url" rel="index"><span itemprop="name">架构</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：</p>
+<ol>
+<li>DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。</li>
+<li>离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，实现数据版本化、回滚和监控。</li>
+<li>广告索引系统。该系统实现广告数据的增量更新和广告定向信息索引更新（正在参与设计中）</li>
+</ol>
+<p>就这些模块总结一些设计系统的方法论和套路。</p>
+<h1 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h1><p>高考写作文的时候，老师都非常讨厌模板，但是我这里还是推荐按照固定的套路，这样可以方便的讲清楚问题。</p>
+<ul>
+<li><p>简介（描述为什么做，解决什么问题）</p>
+<ul>
+<li>背景。面临的问题是什么，使用该系统后会变成什么样子。</li>
+<li>Goal。进度和人日预估，版本功能点和时间节点。</li>
+<li>术语。该系统中特有的词汇，但是不要把大家认为common sence的东西写进去。</li>
+<li>参考资料</li>
+</ul>
+</li>
+<li><p>总体设计</p>
+<ul>
+<li>规约。描述好该系统解决问题的边界是什么？可以承载多大的并发，多少数据，数据更新频率。</li>
+<li>系统结构图(系统间)。该系统和其他系统的交互关系。</li>
+<li>模块图(系统内)。该系统分为几个模块，同时要给出：图例、数据流向、数据模块、功能模块。</li>
+</ul>
+</li>
+<li><p>功能模块1。</p>
+<ul>
+<li>功能描述。描述好功能、每个功能点面向谁、交互的模块是什么、数据流向。</li>
+<li>API定义。描述好API的功能、同步还是异步、阻塞还是非阻塞。</li>
+<li>关键点。如果涉及到分布式锁、一致性等对于该模块比较重要的点需要单独说一下。</li>
+<li>示意图。如果面向的是用户，可以适当给出示意图。</li>
+<li>可用性。</li>
+</ul>
+</li>
+<li><p>功能模块X</p>
+</li>
+<li><p>数据模块1。</p>
+<ul>
+<li>表设计。需要详细描述数据库表，包括字段的类型、含义、更新频率等信息。</li>
+<li>数据一致性保证、完整性。</li>
+</ul>
+</li>
+<li><p>数据模块X。</p>
+</li>
+<li><p>关键流程(功能)说明</p>
+<ul>
+<li>该模块用于主要的功能点说明。比如你设计的是外卖订单系统，那么下单，退单，结算等就显得尤为重要。</li>
+<li>这个部分可能需要画泳道图、或者跨职能流程图，角色就是上面定义的各模块。</li>
+<li>异常。如果关键步骤失败了，会出现什么情况，系统对该情况的容忍度。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>可用性说明<ul>
+<li>如果某个模块挂掉，或者该系统的某个子系统挂掉会出现什么情况，需要详细给出系统的可用性并有后续的action跟踪。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>监控报警集成<ul>
+<li>需要集成哪些监控项和报警项。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>环境要求<ul>
+<li>描述JDK、ZK、thrift、dubbo、mysql等。如果部门都是统一的，该章节可以省略。</li>
+</ul>
+</li>
+</ul>
+<p>当然，以上的只是给出一个套路，具体看系统的侧重点，每个系统对外部服务可用性、基础服务可用性的依赖都是不一样的。本文提供一个基本的框架，这样做design的时候会比较有条理。</p>
+<h1 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h1><p>可以看到，要想准确无误的传达信息，最重要的两个图：<strong>系统结构图(系统间)和模块图(系统内)</strong>。这两个图直接决定了你整个design的走向，是做成一个服务还是做成一个jar包，是同步还是异步等等。 如果拿捏不定，需要自己列出类似于决策平衡单的东西。</p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>方案1</th>
+<th>方案2</th>
+<th align="left">方案3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统结构图</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>模块框图</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>优点</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>缺点</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p>该图列出后，系统设计主笔者需要给出推荐理由，并做一些取舍，作为设计初稿可以给组内review或者组织brain storm ，最终拍板形成最终设计方案。刚毕业的同学这个部分很难，通常需要自己调研业界已有方案，和自己的业务痛点和场景做对比，然后提出上面的对比方案，组织一个brain storm，把大家的的idea记下来之后，会有新的idea。</p>
+<h1 id="Diss-自己"><a href="#Diss-自己" class="headerlink" title="Diss 自己"></a>Diss 自己</h1><p>自己设计的系统就是要不断的和自己的idea做斗争，最终得出一个相对优化或者折中的设计。要把自己想象成被challenge的对象，在做一个系统的时候怎么去challenge自己呢?尤其是在没有经验的时候，自己想的时候觉得自己很完美，结果别人挑出一堆毛病没办法解决。我自己总结了一些常规的点如下：</p>
+<ul>
+<li>系统或者子系统挂掉。任意一个节点挂掉系统的可用性，自己随便想想挂掉个几个模块，宕机几台机子。</li>
+<li>数据的一致性。</li>
+<li>不同节点之间会不会存在竞争共享锁。</li>
+<li>数据的完整性。</li>
+<li>系统调用超时。</li>
+<li>该系统发生状态变化时候，对线上系统其他系统的影响。</li>
+<li>如果是服务，什么时候需要熔断，什么时候进行服务降级。</li>
+<li>用户异常行为。</li>
+<li>技术实现难度。这个需要自己对细节和不可控部分有认识，不然很容易画大饼，避免的办法是多交流。</li>
+<li>启动速度，回滚速度，响应速度。</li>
+<li>什么时候触发监控，报警频率和量级会不会对其他系统构成挑战。</li>
+<li>进度预估是否合理。</li>
+<li>数据库容量会不会爆炸增长，尤其是异常的时候。</li>
+<li>系统瓶颈在哪里。比如索引系统的瓶颈在于更新索引，状态是否一致。</li>
+<li>系统迭代更新时可用性。</li>
+<li>系统的边界界定是否合理。比如该系统解决的问题是不是还可以扩大一点，涵盖的业务是不是可以更多。</li>
+<li>是不是可以复用已有模块避免重复造轮子。</li>
+</ul>
+<p>Diss自己还需要整个复盘交互的细节，通常会发现很多问题自己没有考虑到。</p>
+<h1 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h1><p>通常Diss完自己后，根据别人的意见修改，还需要check一下一些细节，这个部分很多人不注意。</p>
+<ul>
+<li>图例。图例其实很有用，尤其是系统稍微复杂一点。比如：数据模块、中间件、功能模块、元数据流、主数据流。不写图例让人觉得很混乱。</li>
+<li>数据规约的大小是不是合适。比如你随便定一个只支持500M的数据更新，有没有数据支持。</li>
+<li>模块颜色。通常系统设计都需要分层，尽量用不同颜色标志，如接入层、转发层、业务层、数据层等。但是颜色不要太浮夸，毕竟程序员是需要低调一点的。</li>
+</ul>
+<p><img src="/2017/11/10/如何做好的design/HIT.jpg" alt="哈工大校训"></p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/14/kafka简介/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2017/08/14/kafka简介/" class="post-title-link" itemprop="url">kafka简介</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2017-08-14 08:04:11" itemprop="dateCreated datePublished" datetime="2017-08-14T08:04:11+08:00">2017-08-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/中间件/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>起源于Linkedin，在apache开源，基于发布订阅的分布式消息系统。</p>
+<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><p>高吞吐量：单机每秒几百MB的读写<br>消息持久化<br>高扩展性<br>高可靠性<br>支持多消费者（这个是比较重要的特点）</p>
+<h1 id="拓扑结构"><a href="#拓扑结构" class="headerlink" title="拓扑结构"></a>拓扑结构</h1><p>Broker：Kafka集群包含一个或多个服务器，这种服务器被称为broker<br>Producer: 负责发布消息到Kafka broker<br>Consumer: 消息消费者，向Kafka broker读取消息的客户端<br>Consumer Group: 每个Consumer属于一个特定的Consumer Group<br><img src="/2017/08/14/kafka简介/1.png" alt="这里写图片描述"></p>
+<ol>
+<li><p>broker、producer、consumer这三个在所有消息队列中都有。这里注意一下consumer group的概念,如图所示，hadoop cluster、real-time monitoring、otherservice、datawarehouse分别是四个不同的集群，每一个集群中有成百上千个消费者，但是这时候如果发送了一条helloworld的消息，这四个集群中只有四个consumer客户端可以接收到这条消息，每个集群中只有一个consumer客户端可以消费到消息。这就是kafka 支持多消费者。</p>
+</li>
+<li><p>kafka用zookeeper来做配置中心，用于协调各节点、consumer 之间的关系。但是图中的线可以看到kafka中producer并不和 zookeeper保持相连。</p>
+</li>
+</ol>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>有三个比较基础的概念。</p>
+<h2 id="Topic"><a href="#Topic" class="headerlink" title="Topic"></a>Topic</h2><p>逻辑上的队列;</p>
+<h2 id="Patition"><a href="#Patition" class="headerlink" title="Patition"></a>Patition</h2><p>物理上把Topic分成多个Partition;<br>一个topic分布在多个broker上(为了负载均衡和备份，很多分布式组件都有这种设计，如mongodb的sharding)。<br>1.如上图，假设我们的kafka集群有3个broker，创建了1个topic，这个topic我们创建的时候指定它的partition为3，这时候partition就会平均分布到每个broker上，1个broker上面有一个partition(物理上分开)，但是这三个partition仍然属于同一个topic(逻辑上还是一个队列)。</p>
+<p>2.如图所示，kafka只保证partition级别的有序。</p>
+<h1 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h1><p><img src="/2017/08/14/kafka简介/2.png" alt="这里写图片描述"><br>kafka在业界的使用主要还是用来处理日志，因为像flink、storm、spark这些大数据中间件和kafka对接得很好，也可以用来做业务逻辑处理，主要是多消费者的情况,同学们可以结合自己的情况做方案设计。<br>前段时间《架构师》上面推送了《有赞日志统一平台初探》，这是有赞团队的日志处理系统，其他的日志处理系统也大同小异。包括日志接入、日志传输、日志处理、日志存储。在日志处理的时候由于支持多消费者，可以在这里用spark做实时数据分析，也可以直接在这里做简单的处理做重要日志备份、也可以根据业务需要做离线的日志分析。<br><img src="/2017/08/14/kafka简介/3.png" alt="这里写图片描述"></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://kafka.apache.org/" target="_blank" rel="noopener">kafka官方文档</a><br><a href="http://tech.youzan.com/you-zan-tong-ri-zhi-ping-tai-chu-tan/?utm_source=tuicool&utm_medium=referral" target="_blank" rel="noopener">有赞日志统一平台</a></p>
+<blockquote>
+<p>程序员在跟宇宙赛跑，他们在努力开发出更大更好的傻瓜程序，而宇宙则努力培养出更大更好的白痴。到目前为止，宇宙领先。Rich Cook</p>
+</blockquote>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/14/建造者模式在日志系统中的运用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2017/08/14/建造者模式在日志系统中的运用/" class="post-title-link" itemprop="url">建造者模式在日志系统中的运用</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2017-08-14 08:04:11" itemprop="dateCreated datePublished" datetime="2017-08-14T08:04:11+08:00">2017-08-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/设计模式/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p> 本文旨在介绍builder设计模式的运用。适合对builder设计模式了解，但是不知道怎么运用的同学。</p>
+</blockquote>
+<h1 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h1><p>在当前笔者维护的广告系统中，有一个模块专门对接客户端上报的点击、曝光、下载事件，用于记录每个广告数据，供算法决策、BI报表展示给广告主。这些数据的格式不统一，使用的协议也不统一，有的是通过http有的是通过rpc调用。如下图所示，该模块的作用在于汇总各数据流、兼容新老数据格式。每种格式自己维护一套解析系统，我们的代码会显得十分的混乱。</p>
+<h1 id="M-1结构"><a href="#M-1结构" class="headerlink" title="M-1结构"></a>M-1结构</h1><p>对于这样的<strong>M to 1</strong>的数据流，就是输入有多种格式，但是输出固定为一种格式，非常适合用builder来统一。</p>
+<p><img src="/2017/08/14/建造者模式在日志系统中的运用/1.png" alt="这里写图片描述"></p>
+<p>经典的builder模式伪代码如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActionLog</span> </span>&#123;</span><br><span class="line">  	ActionLog()&#123;</span><br><span class="line">      ...</span><br><span class="line">      ...</span><br><span class="line">  	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String requiredParams;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String optionalParams;</span><br><span class="line">      	Builder(String requiredParams) &#123;</span><br><span class="line">        </span><br><span class="line">      	&#125;</span><br><span class="line">      </span><br><span class="line">     	<span class="function"><span class="keyword">public</span> Builder <span class="title">withOptionalParams</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        	...</span><br><span class="line">      	&#125;</span><br><span class="line">      	<span class="function"><span class="keyword">public</span> ActionLog <span class="title">build</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="keyword">new</span> ActionLog(<span class="keyword">this</span>);&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可参考《effective java》chapter1。这里谈一个细节，为什么这个内部静态类需要define 为final的? builder封装了构造的过程，在还没有构造完成时，允许使用提供的<code>withOptionalParams</code> 来构建对象，但是一旦这个对象确定下来，就不允许改变，得到最终想要的ActionLog。</p>
+<h1 id="M-N结构"><a href="#M-N结构" class="headerlink" title="M-N结构"></a>M-N结构</h1><p>通常的业务场景都不是一种数据格式可以搞定的，可能需要生成多种数据格式。如下游需要送到kafka、hdfs、hive表、thrift调用等。构造这些格式的<code>meta data</code> 已经包含在builder中了，所以我们只需要稍加改动即可。<br><img src="/2017/08/14/建造者模式在日志系统中的运用/2.png" alt="这里写图片描述"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActionLog</span> </span>&#123;</span><br><span class="line">  	ActionLog()&#123;</span><br><span class="line">      ...</span><br><span class="line">      ...</span><br><span class="line">  	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String requiredParams;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String optionalParams;</span><br><span class="line">      	Builder(String requiredParams) &#123;</span><br><span class="line">        </span><br><span class="line">      	&#125;</span><br><span class="line">      </span><br><span class="line">     	<span class="function"><span class="keyword">public</span> Builder <span class="title">withOptionalParams</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        	...</span><br><span class="line">      	&#125;</span><br><span class="line">      	<span class="function"><span class="keyword">public</span> ActionLog <span class="title">buildForKafka</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="keyword">new</span> ActionLog(<span class="keyword">this</span>);&#125;</span><br><span class="line">      	<span class="function"><span class="keyword">public</span> ActionLog <span class="title">buildForThrift</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="keyword">new</span> ActionLog(<span class="keyword">this</span>);&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="多条上报"><a href="#多条上报" class="headerlink" title="多条上报"></a>多条上报</h1><p>上面的两个例子都是一个请求，产生一条日志，请求层面来说是<code>one to one</code> ，有时候客户端通常会做一个proxy或者sdk，来减少请求次数，一次上报多条。</p>
+<p>这个时候请求层面属于<code>M to one</code> 的结构。我们构造出多个builder就好，不要在builder中做额外的事情，buider保持它职能的单一性。<code>one request</code>-&gt; <code>List&lt;Builder&gt;</code> -&gt; <code>List&lt;ActionLog&gt;</code></p>
+<p>目前在开发中遇到这三种情况，基本可以cover到解析日志的各种情况。在大型系统中，数据结构的统一十分重要。FYI</p>
+<blockquote>
+<p>Don’t be evil. 不要用 eval()。—— Google</p>
+</blockquote>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/14/单例模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2017/06/14/单例模式/" class="post-title-link" itemprop="url">单例模式</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2017-06-14 08:04:11" itemprop="dateCreated datePublished" datetime="2017-06-14T08:04:11+08:00">2017-06-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/设计模式/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这应该是所有设计模式中最简单的设计模式了，所以从它讲起。</p>
+<h1 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h1><p>用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。</p>
+<h1 id="v0-0-1-简单实现"><a href="#v0-0-1-简单实现" class="headerlink" title="v0.0.1-简单实现"></a>v0.0.1-简单实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by Acceml on 2016/5/28.</span></span><br><span class="line"><span class="comment"> * Email: huminghit@gmail.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton == <span class="keyword">null</span>) &#123;<span class="comment">//risk</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要注意的点是：</p>
+<ul>
+<li>单例模式没有public的construct</li>
+<li>有一个静态的对象，每次getSingleton()的时候获得的是同一个</li>
+</ul>
+<p>这样写的问题是：<br>多线程的时候回出问题，比如我们有两个线程thread0，thread1去同时调用getSingleton()这个方法，就会在if(singleton == null)出现问题。thread0,thread1都认为没有该判断为true，就会去创建两个对象，没有多线程的时候，这样使用没有问题。</p>
+<h1 id="V0-0-2-双重锁实现"><a href="#V0-0-2-双重锁实现" class="headerlink" title="V0.0.2-双重锁实现"></a>V0.0.2-双重锁实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by Acceml on 2016/5/28.</span></span><br><span class="line"><span class="comment"> * Email: huminghit@gmail.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton singleton;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton == <span class="keyword">null</span>) &#123;<span class="comment">//判断1</span></span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span>(singleton == <span class="keyword">null</span>) &#123;<span class="comment">//判断2</span></span><br><span class="line">                    singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>变化有：</p>
+<ul>
+<li>加了volatile关键字</li>
+<li>加了双重锁<br>加volatile很容易理解，因为加上该关键字，那么变量就对不同线程可见。在方法getSingleton()中，第一个判断不存在，就进入同步块，进入同步块之后再判断一次，还是为null才创建实例。但是为什么这么做呢？假如thread0执行到判断1，它进入同步区之后，thread2就进不来了，从而保证只有一个线程执行到判断2。</li>
+</ul>
+<h1 id="v0-0-3-eager实现"><a href="#v0-0-3-eager实现" class="headerlink" title="v0.0.3-eager实现"></a>v0.0.3-eager实现</h1><p>上面两种方法都是我们需要的时候去做判断，然后实例化，如果创建对象负担不重的话，可以考虑在静态初始化的时候创建对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by Acceml on 2016/5/28.</span></span><br><span class="line"><span class="comment"> * Email: huminghit@gmail.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>97% 的情况下，过早优化是万恶之源，然而我们也不该放弃 3% 的关键机会。  —— Donald Knuth</p>
+</blockquote>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+  </div>
+
+  
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.png"
+      alt="修飒">
+  <p class="site-author-name" itemprop="name">修飒</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">修飒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

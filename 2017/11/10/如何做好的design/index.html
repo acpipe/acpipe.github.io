@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：  DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。 离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，">
+<meta name="keywords" content="架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何做好的design">
+<meta property="og:url" content="http://yoursite.com/2017/11/10/如何做好的design/index.html">
+<meta property="og:site_name" content="潇湘夜雨">
+<meta property="og:description" content="要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：  DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。 离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2017/11/10/如何做好的design/HIT.jpg">
+<meta property="og:updated_time" content="2019-09-15T07:37:59.501Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何做好的design">
+<meta name="twitter:description" content="要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：  DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。 离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，">
+<meta name="twitter:image" content="http://yoursite.com/2017/11/10/如何做好的design/HIT.jpg">
+  <link rel="canonical" href="http://yoursite.com/2017/11/10/如何做好的design/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>如何做好的design | 潇湘夜雨</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">潇湘夜雨</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/10/如何做好的design/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潇湘夜雨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">如何做好的design
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2017-11-10 10:26:47" itemprop="dateCreated datePublished" datetime="2017-11-10T10:26:47+08:00">2017-11-10</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/架构/" itemprop="url" rel="index"><span itemprop="name">架构</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：</p>
+<ol>
+<li>DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。</li>
+<li>离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，实现数据版本化、回滚和监控。</li>
+<li>广告索引系统。该系统实现广告数据的增量更新和广告定向信息索引更新（正在参与设计中）</li>
+</ol>
+<p>就这些模块总结一些设计系统的方法论和套路。</p>
+<h1 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h1><p>高考写作文的时候，老师都非常讨厌模板，但是我这里还是推荐按照固定的套路，这样可以方便的讲清楚问题。</p>
+<ul>
+<li><p>简介（描述为什么做，解决什么问题）</p>
+<ul>
+<li>背景。面临的问题是什么，使用该系统后会变成什么样子。</li>
+<li>Goal。进度和人日预估，版本功能点和时间节点。</li>
+<li>术语。该系统中特有的词汇，但是不要把大家认为common sence的东西写进去。</li>
+<li>参考资料</li>
+</ul>
+</li>
+<li><p>总体设计</p>
+<ul>
+<li>规约。描述好该系统解决问题的边界是什么？可以承载多大的并发，多少数据，数据更新频率。</li>
+<li>系统结构图(系统间)。该系统和其他系统的交互关系。</li>
+<li>模块图(系统内)。该系统分为几个模块，同时要给出：图例、数据流向、数据模块、功能模块。</li>
+</ul>
+</li>
+<li><p>功能模块1。</p>
+<ul>
+<li>功能描述。描述好功能、每个功能点面向谁、交互的模块是什么、数据流向。</li>
+<li>API定义。描述好API的功能、同步还是异步、阻塞还是非阻塞。</li>
+<li>关键点。如果涉及到分布式锁、一致性等对于该模块比较重要的点需要单独说一下。</li>
+<li>示意图。如果面向的是用户，可以适当给出示意图。</li>
+<li>可用性。</li>
+</ul>
+</li>
+<li><p>功能模块X</p>
+</li>
+<li><p>数据模块1。</p>
+<ul>
+<li>表设计。需要详细描述数据库表，包括字段的类型、含义、更新频率等信息。</li>
+<li>数据一致性保证、完整性。</li>
+</ul>
+</li>
+<li><p>数据模块X。</p>
+</li>
+<li><p>关键流程(功能)说明</p>
+<ul>
+<li>该模块用于主要的功能点说明。比如你设计的是外卖订单系统，那么下单，退单，结算等就显得尤为重要。</li>
+<li>这个部分可能需要画泳道图、或者跨职能流程图，角色就是上面定义的各模块。</li>
+<li>异常。如果关键步骤失败了，会出现什么情况，系统对该情况的容忍度。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>可用性说明<ul>
+<li>如果某个模块挂掉，或者该系统的某个子系统挂掉会出现什么情况，需要详细给出系统的可用性并有后续的action跟踪。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>监控报警集成<ul>
+<li>需要集成哪些监控项和报警项。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>环境要求<ul>
+<li>描述JDK、ZK、thrift、dubbo、mysql等。如果部门都是统一的，该章节可以省略。</li>
+</ul>
+</li>
+</ul>
+<p>当然，以上的只是给出一个套路，具体看系统的侧重点，每个系统对外部服务可用性、基础服务可用性的依赖都是不一样的。本文提供一个基本的框架，这样做design的时候会比较有条理。</p>
+<h1 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h1><p>可以看到，要想准确无误的传达信息，最重要的两个图：<strong>系统结构图(系统间)和模块图(系统内)</strong>。这两个图直接决定了你整个design的走向，是做成一个服务还是做成一个jar包，是同步还是异步等等。 如果拿捏不定，需要自己列出类似于决策平衡单的东西。</p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>方案1</th>
+<th>方案2</th>
+<th align="left">方案3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统结构图</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>模块框图</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>优点</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>缺点</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p>该图列出后，系统设计主笔者需要给出推荐理由，并做一些取舍，作为设计初稿可以给组内review或者组织brain storm ，最终拍板形成最终设计方案。刚毕业的同学这个部分很难，通常需要自己调研业界已有方案，和自己的业务痛点和场景做对比，然后提出上面的对比方案，组织一个brain storm，把大家的的idea记下来之后，会有新的idea。</p>
+<h1 id="Diss-自己"><a href="#Diss-自己" class="headerlink" title="Diss 自己"></a>Diss 自己</h1><p>自己设计的系统就是要不断的和自己的idea做斗争，最终得出一个相对优化或者折中的设计。要把自己想象成被challenge的对象，在做一个系统的时候怎么去challenge自己呢?尤其是在没有经验的时候，自己想的时候觉得自己很完美，结果别人挑出一堆毛病没办法解决。我自己总结了一些常规的点如下：</p>
+<ul>
+<li>系统或者子系统挂掉。任意一个节点挂掉系统的可用性，自己随便想想挂掉个几个模块，宕机几台机子。</li>
+<li>数据的一致性。</li>
+<li>不同节点之间会不会存在竞争共享锁。</li>
+<li>数据的完整性。</li>
+<li>系统调用超时。</li>
+<li>该系统发生状态变化时候，对线上系统其他系统的影响。</li>
+<li>如果是服务，什么时候需要熔断，什么时候进行服务降级。</li>
+<li>用户异常行为。</li>
+<li>技术实现难度。这个需要自己对细节和不可控部分有认识，不然很容易画大饼，避免的办法是多交流。</li>
+<li>启动速度，回滚速度，响应速度。</li>
+<li>什么时候触发监控，报警频率和量级会不会对其他系统构成挑战。</li>
+<li>进度预估是否合理。</li>
+<li>数据库容量会不会爆炸增长，尤其是异常的时候。</li>
+<li>系统瓶颈在哪里。比如索引系统的瓶颈在于更新索引，状态是否一致。</li>
+<li>系统迭代更新时可用性。</li>
+<li>系统的边界界定是否合理。比如该系统解决的问题是不是还可以扩大一点，涵盖的业务是不是可以更多。</li>
+<li>是不是可以复用已有模块避免重复造轮子。</li>
+</ul>
+<p>Diss自己还需要整个复盘交互的细节，通常会发现很多问题自己没有考虑到。</p>
+<h1 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h1><p>通常Diss完自己后，根据别人的意见修改，还需要check一下一些细节，这个部分很多人不注意。</p>
+<ul>
+<li>图例。图例其实很有用，尤其是系统稍微复杂一点。比如：数据模块、中间件、功能模块、元数据流、主数据流。不写图例让人觉得很混乱。</li>
+<li>数据规约的大小是不是合适。比如你随便定一个只支持500M的数据更新，有没有数据支持。</li>
+<li>模块颜色。通常系统设计都需要分层，尽量用不同颜色标志，如接入层、转发层、业务层、数据层等。但是颜色不要太浮夸，毕竟程序员是需要低调一点的。</li>
+</ul>
+<p><img src="/2017/11/10/如何做好的design/HIT.jpg" alt="哈工大校训"></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/架构/" rel="tag"># 架构</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2017/08/14/kafka简介/" rel="next" title="kafka简介">
+                  <i class="fa fa-chevron-left"></i> kafka简介
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2018/09/14/为什么要用自增主键/" rel="prev" title="为什么要用自增主键">
+                  为什么要用自增主键 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模板"><span class="nav-number">1.</span> <span class="nav-text">模板</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA"><span class="nav-number">2.</span> <span class="nav-text">IDEA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Diss-自己"><span class="nav-number">3.</span> <span class="nav-text">Diss 自己</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#细节"><span class="nav-number">4.</span> <span class="nav-text">细节</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.png"
+      alt="修飒">
+  <p class="site-author-name" itemprop="name">修飒</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">修飒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
