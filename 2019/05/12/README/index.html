@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="设计模式 单例模式  建造者模式在日志系统中的应用  策略模式使用的小技巧  java并发 synchronized实现原理 不可不说的Java“锁”事 ThreadLocal ThreadLocal2 12345678910111213141516public class Foo&amp;#123;    // SimpleDateFormat is not thread-safe, so give o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="江声浩荡">
+<meta property="og:url" content="http://yoursite.com/2019/05/12/README/index.html">
+<meta property="og:site_name" content="江声浩荡">
+<meta property="og:description" content="设计模式 单例模式  建造者模式在日志系统中的应用  策略模式使用的小技巧  java并发 synchronized实现原理 不可不说的Java“锁”事 ThreadLocal ThreadLocal2 12345678910111213141516public class Foo&amp;#123;    // SimpleDateFormat is not thread-safe, so give o">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-09T04:21:44.454Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="江声浩荡">
+<meta name="twitter:description" content="设计模式 单例模式  建造者模式在日志系统中的应用  策略模式使用的小技巧  java并发 synchronized实现原理 不可不说的Java“锁”事 ThreadLocal ThreadLocal2 12345678910111213141516public class Foo&amp;#123;    // SimpleDateFormat is not thread-safe, so give o">
+  <link rel="canonical" href="http://yoursite.com/2019/05/12/README/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title> | 江声浩荡</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">江声浩荡</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/12/README/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="江声浩荡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-12 23:58:23" itemprop="dateCreated datePublished" datetime="2019-05-12T23:58:23+08:00">2019-05-12</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-07-09 12:21:44" itemprop="dateModified" datetime="2019-07-09T12:21:44+08:00">2019-07-09</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><ul>
+<li><p><a href="./单例模式.md">单例模式</a></p>
+</li>
+<li><p><a href="./建造者模式在日志系统中的运用.md">建造者模式在日志系统中的应用</a></p>
+</li>
+<li><p><a href="策略模式使用的小技巧.md">策略模式使用的小技巧</a></p>
+</li>
+</ul><h1 id="java"><a href="#java" class="headerlink" title="java"></a>java</h1><h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><ul>
+<li><a href="https://blog.csdn.net/javazejian/article/details/72828483" target="_blank" rel="noopener">synchronized实现原理</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/50098743" target="_blank" rel="noopener">不可不说的Java“锁”事</a></li>
+<li><a href="https://www.zhihu.com/question/23089780/answer/62097840" target="_blank" rel="noopener">ThreadLocal</a></li>
+<li><a href="http://www.jasongj.com/java/threadlocal/" target="_blank" rel="noopener">ThreadLocal2</a></li>
+</ul><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// SimpleDateFormat is not thread-safe, so give one to each thread</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;SimpleDateFormat&gt; formatter = <span class="keyword">new</span> ThreadLocal&lt;SimpleDateFormat&gt;()&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> SimpleDateFormat <span class="title">initialValue</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyyMMdd HHmm"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">formatIt</span><span class="params">(Date date)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> formatter.get().format(date);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private static final ThreadLocal&lt;Map&lt;String, String&gt;&gt; MAPPING = ThreadLocal.withInitial(HashMap::new);</span><br><span class="line"></span><br><span class="line">public static void doBefore(Client client) &#123;</span><br><span class="line">    MAPPING.get().put(A, B);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public static void doAfter(ClientInfoV3 clientInfoV3) &#123;</span><br><span class="line">     MAPPING.get().get(A);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><ul>
+<li><a href="HashMap内部原理.md">HashMap内部原理</a></li>
+<li><a href="java快速读取文件.md">java快速读取文件</a></li>
+</ul>
+<h2 id="jvm"><a href="#jvm" class="headerlink" title="jvm"></a>jvm</h2><ul>
+<li><a href="./GC区域.md">GC区域</a></li>
+<li><a href="./GC算法和分代回收设计.md">GC算法和分代回收设计</a></li>
+<li><a href="垃圾回收器分类.md">垃圾回收器分类</a></li>
+<li><a href="G1垃圾回收器.md">G1垃圾回收器</a></li>
+<li><a href="G1参数设置.md">G1参数设置</a></li>
+<li><a href="java类加载机制.md">java类加载机制</a></li>
+<li><a href="jvm命令使用.md">jvm命令使用</a></li>
+<li><a href="https://tech.meituan.com/jvm_optimize.html" target="_blank" rel="noopener">从实际案例聊聊Java应用的GC优化</a><ul>
+<li>young gc 和 full gc 频繁，调大新生代，young gc 回收时间 = 扫描 + 复制，复制的变少，young gc 回收次数变少，且回收时间不会长。young gc 次数少，相应的full gc 也会变少。</li>
+<li>请求高峰发生gc，可用性下降<ul>
+<li>CMSMaxAbortablePrecleanTime 调大，abortable preclean Time 会进行young gc，减少remark 的对象</li>
+</ul>
+</li>
+<li>full gc 频繁，老年代不够，动态扩容引起<ul>
+<li>java8 去除了老年代，引入元空间</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>G1 参数  <ul>
+<li><a href="https://stackoverflow.com/questions/42080648/why-when-you-would-not-want-to-have-java-8-usestringdeduplication-enabled-in-jvm" target="_blank" rel="noopener">去掉StringDedup</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h1><ul>
+<li><a href="Spring-Aop.md">Spring-Aop</a></li>
+</ul>
+<h1 id="代码-amp-amp-架构-amp-amp-设计"><a href="#代码-amp-amp-架构-amp-amp-设计" class="headerlink" title="代码&amp;&amp;架构&amp;&amp;设计"></a>代码&amp;&amp;架构&amp;&amp;设计</h1><ul>
+<li><a href="问题定位经验.md">问题定位经验</a></li>
+<li><a href="best-practice-for-code-review.md">Best Practice For Code Review</a></li>
+<li><a href="如何做好的design.md">如何做好的design</a></li>
+<li><a href="分布式锁的几种实现方式.md">分布式锁的几种实现方式</a></li>
+<li><a href="一致性hash.md">一致性hash</a></li>
+<li><a href="基于bool表达式的广告索引.md">基于bool表达式的广告索引</a></li>
+<li><a href="http://ningg.top/experiment-series-flow-router/" target="_blank" rel="noopener">实验平台设计</a></li>
+<li>广告索引<ul>
+<li>bool 表达式，索引的量级最大的时候就是广告的数量</li>
+<li>更新索引的一致性<ul>
+<li>用一个时间戳，大于某个时间戳的才更新过来</li>
+<li>重启机子的时候</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>redis 双写</li>
+<li>美团高可用系统<ul>
+<li>限流</li>
+<li>熔断</li>
+<li>压测</li>
+</ul>
+</li>
+</ul>
+<h1 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h1><ul>
+<li><a href="https://juejin.im/post/5b67902f6fb9a04fc67c1a24" target="_blank" rel="noopener">什么是 TCP 拆、粘包？如何解决？</a><ul>
+<li>设置定长消息,例如每个报文的大小固定长度为200字节</li>
+<li>通过特殊字符,例如通过回车换行进行分割</li>
+<li>将消息分为消息头和消息体,消息头包含消息总长度</li>
+</ul>
+</li>
+<li><a href="https://crossoverjie.top/2018/07/04/netty/Netty(2)Thread-model/" target="_blank" rel="noopener">Netty线程模型</a></li>
+</ul>
+<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1><ul>
+<li><a href="决策树.md">决策树</a></li>
+</ul>
+<h1 id="kafka"><a href="#kafka" class="headerlink" title="kafka"></a>kafka</h1><ul>
+<li><a href="kafka简介.md">kafka简介</a></li>
+<li><a href="kafka运维总结.md">kafka运维总结</a></li>
+</ul>
+<h1 id="Http"><a href="#Http" class="headerlink" title="Http"></a>Http</h1><ul>
+<li><a href="restful学习.md">restful学习</a></li>
+<li><a href="https://www.jianshu.com/p/b894a7e1c779" target="_blank" rel="noopener">https如何保证加密的安全性</a></li>
+</ul>
+<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><ul>
+<li><a href="redis-pipeline.md">redis-pipeline</a></li>
+<li><a href="redis-String-vs-Hash.md">redis-String-vs-Hash</a></li>
+<li>缓存穿透问题<ul>
+<li>在启动的时候放很少的流量进来，权重 + 启动时间</li>
+<li>提前建连接池，预热服务</li>
+</ul>
+</li>
+</ul>
+<h1 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h1><ul>
+<li>分库分表</li>
+<li>SQL 调优</li>
+<li><a href="https://tech.meituan.com/MT_Leaf.html" target="_blank" rel="noopener">美团点评分布式ID生成系统</a></li>
+<li><a href="https://tech.meituan.com/lrucache_practice_dsp.html" target="_blank" rel="noopener">LruCache在美团DSP系统中的应用演进</a><ul>
+<li>双向链表 + hash</li>
+<li>应用<ul>
+<li>用来存广告数据 adId</li>
+</ul>
+</li>
+<li>演化1：引入LruCache</li>
+<li>演化2：因为折中全量更新而引入时效清退机制</li>
+<li>演化3：因为锁的问题进行hash分片</li>
+<li>演化4：零拷贝技术</li>
+</ul>
+</li>
+<li><a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html" target="_blank" rel="noopener">MySQL索引背后的数据结构及算法原理</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/34133067" target="_blank" rel="noopener">LRU原理</a></li>
+<li><a href="分布式事务.md">分布式事务</a></li>
+</ul>
+<h1 id="线上问题定位"><a href="#线上问题定位" class="headerlink" title="线上问题定位"></a>线上问题定位</h1><ul>
+<li><a href="线上问题总结.md">线上问题总结</a></li>
+</ul>
+<h1 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h1><ul>
+<li><a href="https://blog.csdn.net/u013096088/article/details/79122671" target="_blank" rel="noopener">零拷贝</a></li>
+<li><a href="https://blog.csdn.net/tianyaleixiaowu/article/details/74942405" target="_blank" rel="noopener">QPS限流算法</a></li>
+<li><a href="分布式事务.md">分布式事务</a></li>
+<li><a href="http://www.runoob.com/scala/scala-closures.html" target="_blank" rel="noopener">闭包</a></li>
+<li>如何实现一个ImmutableSet</li>
+</ul>
+<h1 id="Beautiful-DT"><a href="#Beautiful-DT" class="headerlink" title="Beautiful DT"></a>Beautiful DT</h1><ul>
+<li>trie 树</li>
+</ul>
+<h1 id="design"><a href="#design" class="headerlink" title="design"></a>design</h1><ul>
+<li>批量接口通用方案.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/05/12/best-practice-for-code-review/" rel="next" title="">
+                  <i class="fa fa-chevron-left"></i> 
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/05/12/Spring-Aop/" rel="prev" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#设计模式"><span class="nav-number">1.</span> <span class="nav-text">设计模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#java"><span class="nav-number">2.</span> <span class="nav-text">java</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#并发"><span class="nav-number">2.1.</span> <span class="nav-text">并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码"><span class="nav-number">2.2.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm"><span class="nav-number">2.3.</span> <span class="nav-text">jvm</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring"><span class="nav-number">3.</span> <span class="nav-text">Spring</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码-amp-amp-架构-amp-amp-设计"><span class="nav-number">4.</span> <span class="nav-text">代码&amp;&amp;架构&amp;&amp;设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Netty"><span class="nav-number">5.</span> <span class="nav-text">Netty</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#机器学习"><span class="nav-number">6.</span> <span class="nav-text">机器学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka"><span class="nav-number">7.</span> <span class="nav-text">kafka</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Http"><span class="nav-number">8.</span> <span class="nav-text">Http</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis"><span class="nav-number">9.</span> <span class="nav-text">Redis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据库"><span class="nav-number">10.</span> <span class="nav-text">数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线上问题定位"><span class="nav-number">11.</span> <span class="nav-text">线上问题定位</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基础"><span class="nav-number">12.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Beautiful-DT"><span class="nav-number">13.</span> <span class="nav-text">Beautiful DT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#design"><span class="nav-number">14.</span> <span class="nav-text">design</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.png"
+      alt="修飒">
+  <p class="site-author-name" itemprop="name">修飒</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">修飒</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="背景最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题。故该篇文章作为分库分表实践的自我总结，一遍以后遇到类似问题，迅速定位找到合适的解法。 你真的需要分库分表吗">
+  <meta name="description" content="背景最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题，并没有说清楚。故该篇文章作为分库分表实践的自我总结，以便以后遇到类似问题，迅速定位找到合适的解法。如果能给您带来些许参考，那将是莫大的荣幸。">
 <meta name="keywords" content="mysql,高并发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分库分表实践">
 <meta property="og:url" content="http://yoursite.com/2019/09/28/分库分表实践/index.html">
 <meta property="og:site_name" content="江声浩荡">
-<meta property="og:description" content="背景最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题。故该篇文章作为分库分表实践的自我总结，一遍以后遇到类似问题，迅速定位找到合适的解法。 你真的需要分库分表吗">
+<meta property="og:description" content="背景最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题，并没有说清楚。故该篇文章作为分库分表实践的自我总结，以便以后遇到类似问题，迅速定位找到合适的解法。如果能给您带来些许参考，那将是莫大的荣幸。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-28T08:57:40.521Z">
+<meta property="og:updated_time" content="2019-09-28T09:21:14.413Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分库分表实践">
-<meta name="twitter:description" content="背景最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题。故该篇文章作为分库分表实践的自我总结，一遍以后遇到类似问题，迅速定位找到合适的解法。 你真的需要分库分表吗">
+<meta name="twitter:description" content="背景最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题，并没有说清楚。故该篇文章作为分库分表实践的自我总结，以便以后遇到类似问题，迅速定位找到合适的解法。如果能给您带来些许参考，那将是莫大的荣幸。">
   <link rel="canonical" href="http://yoursite.com/2019/09/28/分库分表实践/">
 
 
@@ -254,7 +254,7 @@
                 
               
 
-              <time title="创建时间：2019-09-28 16:53:01 / 修改时间：16:57:40" itemprop="dateCreated datePublished" datetime="2019-09-28T16:53:01+08:00">2019-09-28</time>
+              <time title="创建时间：2019-09-28 16:53:01 / 修改时间：17:21:14" itemprop="dateCreated datePublished" datetime="2019-09-28T16:53:01+08:00">2019-09-28</time>
             </span>
           
             
@@ -294,8 +294,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题。故该篇文章作为分库分表实践的自我总结，一遍以后遇到类似问题，迅速定位找到合适的解法。</p>
-<h1 id="你真的需要分库分表吗"><a href="#你真的需要分库分表吗" class="headerlink" title="你真的需要分库分表吗"></a>你真的需要分库分表吗</h1>
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题，并没有说清楚。故该篇文章作为分库分表实践的自我总结，以便以后遇到类似问题，迅速定位找到合适的解法。如果能给您带来些许参考，那将是莫大的荣幸。</p><a id="more"></a>
+<h1 id="你真的需要分库分表吗"><a href="#你真的需要分库分表吗" class="headerlink" title="你真的需要分库分表吗"></a>你真的需要分库分表吗</h1><p>在做分库分表之前，请明确的描述清楚你的问题。这个描述的过程不应该是定性的，而是<strong>定量的、边界可衡量</strong>的。例如：由于xxx业务的日益增长，遇到了性能问题，需要分库分表。这样的描述就极其模糊。正确的定义问题边界是：由于xxx业务增长，某个接口延时耗时增加多少，某平台因为数据库查询慢导致可用性降低多少。而关于定于问题，笔者认为最重要的是定义清楚两个问题：</p>
+<ol>
+<li><strong>当前系统遇到什么问题</strong>。即当前系统遇到的性能、容量等问题，定量定义；</li>
+<li><strong>希望通过该次升级支持多久</strong>。并不是从当前看，系统设计得越好，就能支撑业务发展很好，对未知需要保持敬畏，避免过度设计。</li>
+</ol>
+
     </div>
 
     
@@ -331,6 +336,10 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/19/领域驱动设计读书笔记/" rel="prev" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -397,7 +406,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -463,7 +472,11 @@
         
           
         
-        <span class="site-state-item-count">11</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
