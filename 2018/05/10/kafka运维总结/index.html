@@ -55,22 +55,21 @@
   };
 </script>
 
-  <meta name="description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。面临的问题有两点： 打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；">
-<meta name="keywords" content="java,多线程">
+  <meta name="description" content="1.自身日志量过大的问题kafka运行一段时间之后，会发现它的主机磁盘使用率在缓慢增长，查看数据日志的持有量还是之前设置的阈值。这时候其实是kafka自身的日志打印撑爆磁盘。默认的~/kafka_2.11-0.9.0.0/config/log4j.properties如下：123456789101112log4j.rootLogger=INFO, stdout log4j.appender.std">
+<meta name="keywords" content="kafka,消息队列">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一次打款速度优化">
-<meta property="og:url" content="http://yoursite.com/2019/09/15/一次打款速度优化/index.html">
+<meta property="og:title" content="KAFKA运维总结">
+<meta property="og:url" content="http://yoursite.com/2018/05/10/kafka运维总结/index.html">
 <meta property="og:site_name" content="江声浩荡">
-<meta property="og:description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。面临的问题有两点： 打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；">
+<meta property="og:description" content="1.自身日志量过大的问题kafka运行一段时间之后，会发现它的主机磁盘使用率在缓慢增长，查看数据日志的持有量还是之前设置的阈值。这时候其实是kafka自身的日志打印撑爆磁盘。默认的~/kafka_2.11-0.9.0.0/config/log4j.properties如下：123456789101112log4j.rootLogger=INFO, stdout log4j.appender.std">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png">
-<meta property="og:image" content="http://yoursite.com/2019/09/15/一次打款速度优化/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A0%E9%80%9F.png">
-<meta property="og:updated_time" content="2019-09-15T08:00:34.804Z">
+<meta property="og:image" content="http://yoursite.com/2018/05/10/kafka运维总结/1.png">
+<meta property="og:updated_time" content="2020-04-25T07:55:20.467Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一次打款速度优化">
-<meta name="twitter:description" content="问题先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。面临的问题有两点： 打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击； 打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；">
-<meta name="twitter:image" content="http://yoursite.com/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png">
-  <link rel="canonical" href="http://yoursite.com/2019/09/15/一次打款速度优化/">
+<meta name="twitter:title" content="KAFKA运维总结">
+<meta name="twitter:description" content="1.自身日志量过大的问题kafka运行一段时间之后，会发现它的主机磁盘使用率在缓慢增长，查看数据日志的持有量还是之前设置的阈值。这时候其实是kafka自身的日志打印撑爆磁盘。默认的~/kafka_2.11-0.9.0.0/config/log4j.properties如下：123456789101112log4j.rootLogger=INFO, stdout log4j.appender.std">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/10/kafka运维总结/1.png">
+  <link rel="canonical" href="http://yoursite.com/2018/05/10/kafka运维总结/">
 
 
 <script id="page-configurations">
@@ -84,7 +83,7 @@
   };
 </script>
 
-  <title>一次打款速度优化 | 江声浩荡</title>
+  <title>KAFKA运维总结 | 江声浩荡</title>
   <meta name="generator" content="Hexo 3.9.0">
   
 
@@ -256,7 +255,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/15/一次打款速度优化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/kafka运维总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="修飒">
@@ -268,7 +267,7 @@
       <meta itemprop="name" content="江声浩荡">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">一次打款速度优化
+        <h1 class="post-title" itemprop="name headline">KAFKA运维总结
 
           
         </h1>
@@ -284,11 +283,19 @@
                 
               
 
-              <time title="创建时间：2019-09-15 10:15:17 / 修改时间：16:00:34" itemprop="dateCreated datePublished" datetime="2019-09-15T10:15:17+08:00">2019-09-15</time>
+              <time title="创建时间：2018-05-10 13:38:13" itemprop="dateCreated datePublished" datetime="2018-05-10T13:38:13+08:00">2018-05-10</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-25 15:55:20" itemprop="dateModified" datetime="2020-04-25T15:55:20+08:00">2020-04-25</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -297,7 +304,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kafka/" itemprop="url" rel="index"><span itemprop="name">kafka</span></a></span>
 
                 
                 
@@ -324,30 +331,19 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。</p><p><img src="/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png" alt="数据流"></p><p>面临的问题有两点：</p><ul>
-<li>打款时段是集中的，会在瞬间产生高QPS的数据，需要控制速度不能太快，太快会对支付中台造成冲击；</li>
-<li>打款能接受延时，但是也不能太慢，用户需要看到他的收益到账；</li>
-</ul><a id="more"></a>
+        <h1 id="1-自身日志量过大的问题"><a href="#1-自身日志量过大的问题" class="headerlink" title="1.自身日志量过大的问题"></a>1.自身日志量过大的问题</h1><p>kafka运行一段时间之后，会发现它的主机磁盘使用率在缓慢增长，查看数据日志的持有量还是之前设置的阈值。<br><img src="/2018/05/10/kafka运维总结/1.png" alt="这里写图片描述"><br>这时候其实是kafka自身的日志打印撑爆磁盘。<br>默认的<code>~/kafka_2.11-0.9.0.0/config/log4j.properties</code>如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">log4j.rootLogger=INFO, stdout </span><br><span class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender</span><br><span class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">log4j.appender.kafkaAppender=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.kafkaAppender.DatePattern=&apos;.&apos;yyyy-MM-dd-HH</span><br><span class="line">log4j.appender.kafkaAppender.File=$&#123;kafka.logs.dir&#125;/server.log</span><br><span class="line">log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.kafkaAppender.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure><a id="more"></a>
 
 
+<p>可以看到它自身日志是按照小时去备份的，而且没有自动清除的功能，所以自身日志一直没有清掉，就可能会影响到对数据量的预估和判断。这时候我们只想保留最近n天的日志。log4j并没有配置这样的功能，在不改动源码的情况下，有两种办法达到目的。<br>​    1. 写一个crontab的脚本自动清除；<br>​    2. 修改log4j.properties，按照大小去自动清除。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">log4j.rootLogger=INFO, stdout </span><br><span class="line"></span><br><span class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender</span><br><span class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line"></span><br><span class="line">log4j.appender.kafkaAppender=org.apache.log4j.RollingFileAppender</span><br><span class="line">log4j.appender.kafkaAppender.append=true</span><br><span class="line">log4j.appender.kafkaAppender.maxBackupIndex=2</span><br><span class="line">log4j.appender.kafkaAppender.maxFileSize=5MB</span><br><span class="line">log4j.appender.kafkaAppender.File=$&#123;kafka.logs.dir&#125;/server.log</span><br><span class="line">log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.kafkaAppender.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
-<p>那么打款模块面临最关键的问题是：<strong>可以根据处理能力掌控队列的消费速度。</strong></p>
-<p>这里有一个速度不匹配的问题，队列的消费速度<strong>远大于</strong>下游<strong>支付中台</strong>可接受的QPS速度。</p>
-<h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><p>在该问题中，对队列中的数据处理不要求顺序，所以我们可以用多线程来<strong>加速</strong>处理。把每次消费队列得到的数据扔到线程池里面。</p>
-<p><img src="/2019/09/15/一次打款速度优化/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A0%E9%80%9F.png" alt="线程池加速"></p>
-<p>线程池有三个核心参数：</p>
-<ul>
-<li>corePoolSize。 核心线程数；</li>
-<li>maximumPoolSize。最大线程数；</li>
-<li>workQueue。线程池队列；</li>
-</ul>
-<p>打款需要<strong>控制速度</strong>，我们很容易想到控制核心线程数和最大线程数来控制速度。如果消费队列线程扔过来的消息过多，我们直接扔到workQueue里面即可，但是这样会导致<strong>线程池队列无限增长，爆掉内存</strong>。这里就需要有一种机制从线程池去告诉消费队列线程：你扔过来的消息我都处理不了了。很容易想到的方法就是：<strong>阻塞</strong>消费队列线程。</p>
-<p>至此，总结一下思路。通过控制核心线程数、最大线程数来控制速度，通过线程池队列大小来防止内存爆掉，通过阻塞消费队列线程来控制消息到队列的速度。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(CORE_THREAD,</span><br><span class="line">     MAX_THREAD_COUNT, KEEP_ALIVE_TIMEOUT, SECONDS,</span><br><span class="line">     <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(QUEUE_SIZE),</span><br><span class="line">     <span class="keyword">new</span> ThreadFactoryBuilder().setNameFormat(<span class="string">"BatchConsumer"</span>).build(),</span><br><span class="line">     (r, executor) -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                 <span class="comment">// 如果线程池队列满了, 这里用put方法阻塞住.</span></span><br><span class="line">                 executor.getQueue().put(r);</span><br><span class="line">             &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">             &#125;</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure>
-
-<p>这里用一个<strong>有界阻塞队列</strong>作为线程池队列。当线程池队列满了的时候，线程池拒绝策略不是直接扔掉消息，而是阻塞发消息的线程。</p>
-<h1 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h1><p>如果你的业务要求消息<strong>顺序处理</strong>，那么则不能使用该方法。要求顺序处理，又想要借助多线程加速处理，下次笔者再写一篇文章谈一下我的实现方法。</p>
-<h1 id="code"><a href="#code" class="headerlink" title="code"></a>code</h1><p>代码原型已经放到github:  <a href="https://github.com/acpipe/rigel-infra/tree/master/src/main/java/com/rigel/concurrent/speedcontrol" target="_blank" rel="noopener">控制队列消费速度</a>, FYI.</p>
+<p>如上，我本人在生产环境设置的是日志备份两个，5MB就开始回滚。</p>
+<h1 id="log-retention-bytes是partition级别的"><a href="#log-retention-bytes是partition级别的" class="headerlink" title="log.retention.bytes是partition级别的"></a>log.retention.bytes是partition级别的</h1><p>官网的解释是：The maximum size of the log before deleting it，解释得不清楚，实际上这个值<strong>只是partition日志的大小</strong>，不是topic的日志大小。</p>
+<h1 id="log-segment-delete-delay-ms设置"><a href="#log-segment-delete-delay-ms设置" class="headerlink" title="log.segment.delete.delay.ms设置"></a>log.segment.delete.delay.ms设置</h1><p>The amount of time to wait before deleting a file from the filesystem。</p>
+<p>这个值默认的是:60000ms,也就是数据量达到设定的阈值之后，还是会保留数据，等待一段时间之后才会从文件系统上删除，所以做性能测试的时候，如果数据发送速率很大，那么就会导致监控数据文件夹的时候发现它总是超出阈值才删除，可以把这个阈值设置小一点。</p>
+<blockquote>
+<p>怎么做对是科学，怎么做好则是艺术。——王小波</p>
+</blockquote>
 
     </div>
 
@@ -363,9 +359,9 @@
           
           <div class="post-tags">
             
-              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/kafka/" rel="tag"># kafka</a>
             
-              <a href="/tags/多线程/" rel="tag"># 多线程</a>
+              <a href="/tags/消息队列/" rel="tag"># 消息队列</a>
             
           </div>
         
@@ -375,8 +371,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/08/25/restful学习/" rel="next" title="Restful学习总结">
-                  <i class="fa fa-chevron-left"></i> Restful学习总结
+                <a href="/2018/05/10/jvm命令使用/" rel="next" title="jvm命令使用">
+                  <i class="fa fa-chevron-left"></i> jvm命令使用
                 </a>
               
             </div>
@@ -385,8 +381,8 @@
 
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2019/09/15/best-practice-for-code-review/" rel="prev" title="谈谈code-review">
-                  谈谈code-review <i class="fa fa-chevron-right"></i>
+                <a href="/2018/05/10/G1参数设置/" rel="prev" title="G1参数设置">
+                  G1参数设置 <i class="fa fa-chevron-right"></i>
                 </a>
               
             </div>
@@ -436,7 +432,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解法"><span class="nav-number">2.</span> <span class="nav-text">解法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#限制"><span class="nav-number">3.</span> <span class="nav-text">限制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#code"><span class="nav-number">4.</span> <span class="nav-text">code</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-自身日志量过大的问题"><span class="nav-number">1.</span> <span class="nav-text">1.自身日志量过大的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#log-retention-bytes是partition级别的"><span class="nav-number">2.</span> <span class="nav-text">log.retention.bytes是partition级别的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#log-segment-delete-delay-ms设置"><span class="nav-number">3.</span> <span class="nav-text">log.segment.delete.delay.ms设置</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->

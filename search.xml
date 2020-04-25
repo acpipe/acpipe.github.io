@@ -1,93 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>G1垃圾回收器</title>
-    <url>/2018/05/03/G1%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</url>
-    <content><![CDATA[<h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><ul>
-<li>像CMS收集器一样，能与应用程序线程并发执行。</li>
-<li>整理空闲空间更快。</li>
-<li>需要GC停顿时间更好预测。</li>
-<li>不希望牺牲大量的吞吐性能。</li>
-<li>不需要更大的Java Heap。</li>
-</ul><p>G1 的出现就是为了干掉CMS。它同CMS相比，在以下方面表现的更出色：</p><ul>
-<li>G1是一个有整理内存过程的垃圾收集器，不会产生很多内存碎片。</li>
-<li>G1的Stop The World(STW)更可控，G1在停顿时间上添加了预测机制，用户可以指定期望停顿时间。</li>
+    <title>GC区域</title>
+    <url>/2018/05/03/GC%E5%8C%BA%E5%9F%9F/</url>
+    <content><![CDATA[<h1 id="回收区域"><a href="#回收区域" class="headerlink" title="回收区域"></a>回收区域</h1><ul>
+<li>GC区域：<strong>堆、方法区</strong></li>
+<li>不GC的区域：程序计数器、虚拟机栈、本地方法栈</li>
+</ul><h2 id="堆回收"><a href="#堆回收" class="headerlink" title="堆回收"></a>堆回收</h2><ul>
+<li>引用计数法：有引用就会记1<ul>
+<li>会有循环引用的问题</li>
+<li>主流jvm不使用这种方式</li>
+</ul>
+</li>
+<li>可达性分析法：判断到GC-root<ul>
+<li>GC root 对象<ul>
+<li>jvm中栈帧中引用的对象</li>
+<li>方法区中静态属性(static)、常量(final)引用的对象</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>引用分类<ul>
+<li>强引用：<code>Object ojb = new Object()</code>， 只要有强引用，不会被GC</li>
+<li>软引用：可以用<code>SoftReference</code>来实现。内存溢出时，进行二次回收。第二次还没有足够内存，抛内存溢出异常。</li>
+<li>弱引用：可以用<code>WeakReference</code>来实现。只能生存到下一次GC之前。无论内存是否够，都会被GC.</li>
+<li>虚引用：可以用<code>PhantomReference</code>来实现。GC时会收到一个系统通知。</li>
+<li>强引用 &gt; 软引用 &gt; 弱引用 &gt; 虚引用</li>
+</ul>
+</li>
 </ul><a id="more"></a>
 
-
-<h1 id="G1-Heap-Allocation"><a href="#G1-Heap-Allocation" class="headerlink" title="G1 Heap Allocation"></a>G1 Heap Allocation</h1><p><img src="/2018/05/03/G1垃圾回收器/HeapStructure.png" alt></p>
-<p><img src="/2018/05/03/G1垃圾回收器/Slide9.PNG" alt></p>
-<p>serial, parallel, CMS把垃圾回收器分成上面几个部分：Young Generation、Old Generation、Permanent Generation。在内存管理上，G1依然采用<strong>分代</strong> 的内存管理方式，但是跟以往的垃圾回收算法不同的是，G1将整个堆划分成很多大小相同的小块，这些小块称为Region。Eden区、Survivor区、老年区都由若干Region组成，并且这些Region的数量在程序运行中是可变的。</p>
 <ul>
-<li>Eden区</li>
-<li>Survivor区</li>
-<li>Old Generation<ul>
-<li>Humongous区。当需要分配一个超过Region一半大小的大对象时。</li>
+<li>什么时候回收<ul>
+<li>如果对象不可达，判断是否需要执行<code>finalize()</code>方法<ul>
+<li>不需要执行<code>finalize()</code> 的情况：<ul>
+<li>没有<code>overwrite</code> <code>finalize()</code>方法</li>
+<li>虚拟机已经执行过一次<code>finalize()</code></li>
 </ul>
 </li>
 </ul>
-<p>region具有如下的一些特点:</p>
-<ul>
-<li>整个堆被分作大约2000个rigion.</li>
-<li>region在分代之间不连续</li>
-<li>Minimum = 1Mb,  maximum = 32Mb</li>
-</ul>
-<h1 id="Young-GC-in-G1"><a href="#Young-GC-in-G1" class="headerlink" title="Young GC in G1"></a>Young GC in G1</h1><p><img src="/2018/05/03/G1垃圾回收器/Slide11.PNG" alt></p>
-<ul>
-<li>是否Stop the World： 是</li>
-<li>触发条件：Eden区被填满</li>
-<li>过程：Eden区存活对象拷贝至Survivor，Survivor区存活对象如果年龄小于阈值则拷贝至其他Survivor Region，否则会被提升至老年代Region中。</li>
-</ul>
-<p>年轻代大小会根据设定的最大暂停时间进行自适应调整。一个基本假定是：空间越大，回收越慢，空间越小，回收越快，G1会据此调整堆的大小以满足暂停时间的要求。</p>
-<h1 id="Old-GC-in-G1"><a href="#Old-GC-in-G1" class="headerlink" title="Old GC in G1"></a>Old GC in G1</h1><ul>
-<li>是否Stop the World：部分阶段Stop the World</li>
-<li>触发条件：<ul>
-<li>整个堆空间的使用率达到特定的值（通过InitiatingHeapOccupancyPercent控制，默认45%）</li>
-<li>大对象分配</li>
+</li>
+<li>如果需要执行<code>finalize()</code>方法， 放入<code>F-Queue</code>中，在<code>finalize()</code>执行完后还是满足回收的条件，宣判“死刑”被回收。</li>
 </ul>
 </li>
-<li>过程</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Phase</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>(1) Initial Mark<em>(Stop the World Event)</em></td>
-<td>This is a stop the world event. With G1, it is piggybacked on a normal young GC. Mark survivor regions (root regions) which may have references to objects in old generation.</td>
-</tr>
-<tr>
-<td>(2) Root Region Scanning</td>
-<td>Scan survivor regions for references into the old generation. This happens while the application continues to run. The phase must be completed before a young GC can occur.</td>
-</tr>
-<tr>
-<td>(3) Concurrent Marking</td>
-<td>Find live objects over the entire heap. This happens while the application is running. This phase can be interrupted by young generation garbage collections.</td>
-</tr>
-<tr>
-<td>(4) Remark<em>(Stop the World Event)</em></td>
-<td>Completes the marking of live object in the heap. Uses an algorithm called snapshot-at-the-beginning (SATB) which is much faster than what was used in the CMS collector.</td>
-</tr>
-<tr>
-<td>(5) Cleanup<em>(Stop the World Event and Concurrent)</em></td>
-<td>Performs accounting on live objects and completely free regions. (Stop the world)Scrubs the Remembered Sets. (Stop the world)Reset the empty regions and return them to the free list. (Concurrent)</td>
-</tr>
-<tr>
-<td>(<em>) Copying</em>(Stop the World Event)*</td>
-<td>These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as <code>[GC pause (young)]</code>. Or both young and old generation regions which are logged as <code>[GC Pause (mixed)]</code>.</td>
-</tr>
-</tbody></table>
-<h1 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h1><p>G1的Full GC与CMS一样，都是用Serial Old垃圾收集器。特别是G1一般用在大内存的场景下，其后果更加严重。</p>
-<p>G1场景下发生Full GC的通常原因：</p>
-<p>（1）元空间耗尽(MetaspaceSize, 对应原来的永久代，java8废除了永久代)</p>
-<p>（2）to space exhausted</p>
-<p>（3）对象产生及提升太快，在并发标记阶段完成之前就填满了堆空间</p>
+<h2 id="方法区（永久代）回收"><a href="#方法区（永久代）回收" class="headerlink" title="方法区（永久代）回收"></a>方法区（永久代）回收</h2><p>方法区回收的能够回收的空间有限。</p>
+<ul>
+<li>回收：<ul>
+<li>废弃常量：无引用，和heap类似。</li>
+<li>无用的类必须满足的条件<ul>
+<li>java堆中不存在该类的任何对象</li>
+<li>加载该类的<code>classLoader</code>已经被回收</li>
+<li>这个类对应的<code>java.lang.class</code> 对象没有在任何地方被引用。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>class类扩展<ul>
+<li>因为java是运行时类型识别，<code>class</code> 类是保存这些识别信息的类，即：保存了每个对象的类型信息。可以通过这些信息反射创建一个实例。判断一下有没有引用就理所当然了，因为如果有引用，那么就可能有对这个对象类型信息的依赖，就不可以被回收。</li>
+</ul>
+</li>
+</ul>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li><a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/G1GettingStarted/index.html" target="_blank" rel="noopener">Getting Started with the G1 Garbage Collector</a></li>
-<li><a href="http://www.oracle.com/technetwork/articles/java/g1gc-1984535.html" target="_blank" rel="noopener">Garbage First Garbage Collector Tuning</a></li>
+<li><a href="https://www.sczyh30.com/posts/Java/jvm-metaspace/" target="_blank" rel="noopener">深入探究JVM | 探秘 Metaspace</a></li>
 </ul>
 ]]></content>
       <categories>
@@ -182,6 +157,106 @@
 <li><p><a href="https://docs.oracle.com/javase/9/gctuning/garbage-first-garbage-collector-tuning.htm#JSGCT-GUID-90E30ACA-8040-432E-B3A0-1E0440AB556A" target="_blank" rel="noopener">Java Platform, Standard Edition HotSpot Virtual Machine Garbage Collection Tuning Guide</a></p>
 <p>​</p>
 </li>
+</ul>
+]]></content>
+      <categories>
+        <category>jvm</category>
+      </categories>
+      <tags>
+        <tag>jvm</tag>
+        <tag>java</tag>
+        <tag>虚拟机</tag>
+        <tag>G1</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>G1垃圾回收器</title>
+    <url>/2018/05/03/G1%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</url>
+    <content><![CDATA[<h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><ul>
+<li>像CMS收集器一样，能与应用程序线程并发执行。</li>
+<li>整理空闲空间更快。</li>
+<li>需要GC停顿时间更好预测。</li>
+<li>不希望牺牲大量的吞吐性能。</li>
+<li>不需要更大的Java Heap。</li>
+</ul><p>G1 的出现就是为了干掉CMS。它同CMS相比，在以下方面表现的更出色：</p><ul>
+<li>G1是一个有整理内存过程的垃圾收集器，不会产生很多内存碎片。</li>
+<li>G1的Stop The World(STW)更可控，G1在停顿时间上添加了预测机制，用户可以指定期望停顿时间。</li>
+</ul><a id="more"></a>
+
+
+<h1 id="G1-Heap-Allocation"><a href="#G1-Heap-Allocation" class="headerlink" title="G1 Heap Allocation"></a>G1 Heap Allocation</h1><p><img src="/2018/05/03/G1垃圾回收器/HeapStructure.png" alt></p>
+<p><img src="/2018/05/03/G1垃圾回收器/Slide9.PNG" alt></p>
+<p>serial, parallel, CMS把垃圾回收器分成上面几个部分：Young Generation、Old Generation、Permanent Generation。在内存管理上，G1依然采用<strong>分代</strong> 的内存管理方式，但是跟以往的垃圾回收算法不同的是，G1将整个堆划分成很多大小相同的小块，这些小块称为Region。Eden区、Survivor区、老年区都由若干Region组成，并且这些Region的数量在程序运行中是可变的。</p>
+<ul>
+<li>Eden区</li>
+<li>Survivor区</li>
+<li>Old Generation<ul>
+<li>Humongous区。当需要分配一个超过Region一半大小的大对象时。</li>
+</ul>
+</li>
+</ul>
+<p>region具有如下的一些特点:</p>
+<ul>
+<li>整个堆被分作大约2000个rigion.</li>
+<li>region在分代之间不连续</li>
+<li>Minimum = 1Mb,  maximum = 32Mb</li>
+</ul>
+<h1 id="Young-GC-in-G1"><a href="#Young-GC-in-G1" class="headerlink" title="Young GC in G1"></a>Young GC in G1</h1><p><img src="/2018/05/03/G1垃圾回收器/Slide11.PNG" alt></p>
+<ul>
+<li>是否Stop the World： 是</li>
+<li>触发条件：Eden区被填满</li>
+<li>过程：Eden区存活对象拷贝至Survivor，Survivor区存活对象如果年龄小于阈值则拷贝至其他Survivor Region，否则会被提升至老年代Region中。</li>
+</ul>
+<p>年轻代大小会根据设定的最大暂停时间进行自适应调整。一个基本假定是：空间越大，回收越慢，空间越小，回收越快，G1会据此调整堆的大小以满足暂停时间的要求。</p>
+<h1 id="Old-GC-in-G1"><a href="#Old-GC-in-G1" class="headerlink" title="Old GC in G1"></a>Old GC in G1</h1><ul>
+<li>是否Stop the World：部分阶段Stop the World</li>
+<li>触发条件：<ul>
+<li>整个堆空间的使用率达到特定的值（通过InitiatingHeapOccupancyPercent控制，默认45%）</li>
+<li>大对象分配</li>
+</ul>
+</li>
+<li>过程</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(1) Initial Mark<em>(Stop the World Event)</em></td>
+<td>This is a stop the world event. With G1, it is piggybacked on a normal young GC. Mark survivor regions (root regions) which may have references to objects in old generation.</td>
+</tr>
+<tr>
+<td>(2) Root Region Scanning</td>
+<td>Scan survivor regions for references into the old generation. This happens while the application continues to run. The phase must be completed before a young GC can occur.</td>
+</tr>
+<tr>
+<td>(3) Concurrent Marking</td>
+<td>Find live objects over the entire heap. This happens while the application is running. This phase can be interrupted by young generation garbage collections.</td>
+</tr>
+<tr>
+<td>(4) Remark<em>(Stop the World Event)</em></td>
+<td>Completes the marking of live object in the heap. Uses an algorithm called snapshot-at-the-beginning (SATB) which is much faster than what was used in the CMS collector.</td>
+</tr>
+<tr>
+<td>(5) Cleanup<em>(Stop the World Event and Concurrent)</em></td>
+<td>Performs accounting on live objects and completely free regions. (Stop the world)Scrubs the Remembered Sets. (Stop the world)Reset the empty regions and return them to the free list. (Concurrent)</td>
+</tr>
+<tr>
+<td>(<em>) Copying</em>(Stop the World Event)*</td>
+<td>These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as <code>[GC pause (young)]</code>. Or both young and old generation regions which are logged as <code>[GC Pause (mixed)]</code>.</td>
+</tr>
+</tbody></table>
+<h1 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h1><p>G1的Full GC与CMS一样，都是用Serial Old垃圾收集器。特别是G1一般用在大内存的场景下，其后果更加严重。</p>
+<p>G1场景下发生Full GC的通常原因：</p>
+<p>（1）元空间耗尽(MetaspaceSize, 对应原来的永久代，java8废除了永久代)</p>
+<p>（2）to space exhausted</p>
+<p>（3）对象产生及提升太快，在并发标记阶段完成之前就填满了堆空间</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/G1GettingStarted/index.html" target="_blank" rel="noopener">Getting Started with the G1 Garbage Collector</a></li>
+<li><a href="http://www.oracle.com/technetwork/articles/java/g1gc-1984535.html" target="_blank" rel="noopener">Garbage First Garbage Collector Tuning</a></li>
 </ul>
 ]]></content>
       <categories>
@@ -306,81 +381,6 @@
       </tags>
   </entry>
   <entry>
-    <title>GC区域</title>
-    <url>/2018/05/03/GC%E5%8C%BA%E5%9F%9F/</url>
-    <content><![CDATA[<h1 id="回收区域"><a href="#回收区域" class="headerlink" title="回收区域"></a>回收区域</h1><ul>
-<li>GC区域：<strong>堆、方法区</strong></li>
-<li>不GC的区域：程序计数器、虚拟机栈、本地方法栈</li>
-</ul><h2 id="堆回收"><a href="#堆回收" class="headerlink" title="堆回收"></a>堆回收</h2><ul>
-<li>引用计数法：有引用就会记1<ul>
-<li>会有循环引用的问题</li>
-<li>主流jvm不使用这种方式</li>
-</ul>
-</li>
-<li>可达性分析法：判断到GC-root<ul>
-<li>GC root 对象<ul>
-<li>jvm中栈帧中引用的对象</li>
-<li>方法区中静态属性(static)、常量(final)引用的对象</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>引用分类<ul>
-<li>强引用：<code>Object ojb = new Object()</code>， 只要有强引用，不会被GC</li>
-<li>软引用：可以用<code>SoftReference</code>来实现。内存溢出时，进行二次回收。第二次还没有足够内存，抛内存溢出异常。</li>
-<li>弱引用：可以用<code>WeakReference</code>来实现。只能生存到下一次GC之前。无论内存是否够，都会被GC.</li>
-<li>虚引用：可以用<code>PhantomReference</code>来实现。GC时会收到一个系统通知。</li>
-<li>强引用 &gt; 软引用 &gt; 弱引用 &gt; 虚引用</li>
-</ul>
-</li>
-</ul><a id="more"></a>
-
-<ul>
-<li>什么时候回收<ul>
-<li>如果对象不可达，判断是否需要执行<code>finalize()</code>方法<ul>
-<li>不需要执行<code>finalize()</code> 的情况：<ul>
-<li>没有<code>overwrite</code> <code>finalize()</code>方法</li>
-<li>虚拟机已经执行过一次<code>finalize()</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>如果需要执行<code>finalize()</code>方法， 放入<code>F-Queue</code>中，在<code>finalize()</code>执行完后还是满足回收的条件，宣判“死刑”被回收。</li>
-</ul>
-</li>
-</ul>
-<h2 id="方法区（永久代）回收"><a href="#方法区（永久代）回收" class="headerlink" title="方法区（永久代）回收"></a>方法区（永久代）回收</h2><p>方法区回收的能够回收的空间有限。</p>
-<ul>
-<li>回收：<ul>
-<li>废弃常量：无引用，和heap类似。</li>
-<li>无用的类必须满足的条件<ul>
-<li>java堆中不存在该类的任何对象</li>
-<li>加载该类的<code>classLoader</code>已经被回收</li>
-<li>这个类对应的<code>java.lang.class</code> 对象没有在任何地方被引用。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>class类扩展<ul>
-<li>因为java是运行时类型识别，<code>class</code> 类是保存这些识别信息的类，即：保存了每个对象的类型信息。可以通过这些信息反射创建一个实例。判断一下有没有引用就理所当然了，因为如果有引用，那么就可能有对这个对象类型信息的依赖，就不可以被回收。</li>
-</ul>
-</li>
-</ul>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li><a href="https://www.sczyh30.com/posts/Java/jvm-metaspace/" target="_blank" rel="noopener">深入探究JVM | 探秘 Metaspace</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>jvm</category>
-      </categories>
-      <tags>
-        <tag>jvm</tag>
-        <tag>java</tag>
-        <tag>虚拟机</tag>
-        <tag>G1</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>HashMap内部实现原理</title>
     <url>/2019/05/03/HashMap%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<ul>
@@ -474,12 +474,6 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2019/05/12/java%E5%BF%AB%E9%80%9F%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<p><a href="http://www.idryman.org/blog/2013/09/28/java-fast-io-using-java-nio-api/" target="_blank" rel="noopener">Java Fast IO Using java.nio API</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>谈谈code-review</title>
     <url>/2019/09/15/best-practice-for-code-review/</url>
     <content><![CDATA[<p>上一篇文章写了<a href="https://acceml.github.io/2017/11/10/%E5%A6%82%E4%BD%95%E5%81%9A%E5%A5%BD%E7%9A%84design/" target="_blank" rel="noopener">如何做好design</a>，其实也是一个如何指导新人，做design review的方法论。由于tech leader是一个有代码洁癖的人，组内的代码互相review一直都特别严格，经常一份小代码提了数十个comments。这里同样总结一些方法论，如何做好code review。</p><h1 id="None-goal"><a href="#None-goal" class="headerlink" title="None-goal"></a>None-goal</h1><a id="more"></a>
@@ -564,153 +558,8 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2019/05/12/README/</url>
-    <content><![CDATA[<h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><ul>
-<li><p><a href="./单例模式.md">单例模式</a></p>
-</li>
-<li><p><a href="./建造者模式在日志系统中的运用.md">建造者模式在日志系统中的应用</a></p>
-</li>
-<li><p><a href="策略模式使用的小技巧.md">策略模式使用的小技巧</a></p>
-</li>
-</ul><h1 id="java"><a href="#java" class="headerlink" title="java"></a>java</h1><h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><ul>
-<li><a href="https://blog.csdn.net/javazejian/article/details/72828483" target="_blank" rel="noopener">synchronized实现原理</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/50098743" target="_blank" rel="noopener">不可不说的Java“锁”事</a></li>
-<li><a href="https://www.zhihu.com/question/23089780/answer/62097840" target="_blank" rel="noopener">ThreadLocal</a></li>
-<li><a href="http://www.jasongj.com/java/threadlocal/" target="_blank" rel="noopener">ThreadLocal2</a></li>
-</ul><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// SimpleDateFormat is not thread-safe, so give one to each thread</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;SimpleDateFormat&gt; formatter = <span class="keyword">new</span> ThreadLocal&lt;SimpleDateFormat&gt;()&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> SimpleDateFormat <span class="title">initialValue</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyyMMdd HHmm"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">formatIt</span><span class="params">(Date date)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> formatter.get().format(date);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
-
-
-
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">private static final ThreadLocal&lt;Map&lt;String, String&gt;&gt; MAPPING = ThreadLocal.withInitial(HashMap::new);</span><br><span class="line"></span><br><span class="line">public static void doBefore(Client client) &#123;</span><br><span class="line">    MAPPING.get().put(A, B);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public static void doAfter(ClientInfoV3 clientInfoV3) &#123;</span><br><span class="line">     MAPPING.get().get(A);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><ul>
-<li><a href="HashMap内部原理.md">HashMap内部原理</a></li>
-<li><a href="java快速读取文件.md">java快速读取文件</a></li>
-</ul>
-<h2 id="jvm"><a href="#jvm" class="headerlink" title="jvm"></a>jvm</h2><ul>
-<li><a href="./GC区域.md">GC区域</a></li>
-<li><a href="./GC算法和分代回收设计.md">GC算法和分代回收设计</a></li>
-<li><a href="垃圾回收器分类.md">垃圾回收器分类</a></li>
-<li><a href="G1垃圾回收器.md">G1垃圾回收器</a></li>
-<li><a href="G1参数设置.md">G1参数设置</a></li>
-<li><a href="java类加载机制.md">java类加载机制</a></li>
-<li><a href="jvm命令使用.md">jvm命令使用</a></li>
-<li><a href="https://tech.meituan.com/jvm_optimize.html" target="_blank" rel="noopener">从实际案例聊聊Java应用的GC优化</a><ul>
-<li>young gc 和 full gc 频繁，调大新生代，young gc 回收时间 = 扫描 + 复制，复制的变少，young gc 回收次数变少，且回收时间不会长。young gc 次数少，相应的full gc 也会变少。</li>
-<li>请求高峰发生gc，可用性下降<ul>
-<li>CMSMaxAbortablePrecleanTime 调大，abortable preclean Time 会进行young gc，减少remark 的对象</li>
-</ul>
-</li>
-<li>full gc 频繁，老年代不够，动态扩容引起<ul>
-<li>java8 去除了老年代，引入元空间</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>G1 参数  <ul>
-<li><a href="https://stackoverflow.com/questions/42080648/why-when-you-would-not-want-to-have-java-8-usestringdeduplication-enabled-in-jvm" target="_blank" rel="noopener">去掉StringDedup</a></li>
-</ul>
-</li>
-</ul>
-<h1 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h1><ul>
-<li><a href="Spring-Aop.md">Spring-Aop</a></li>
-</ul>
-<h1 id="代码-amp-amp-架构-amp-amp-设计"><a href="#代码-amp-amp-架构-amp-amp-设计" class="headerlink" title="代码&amp;&amp;架构&amp;&amp;设计"></a>代码&amp;&amp;架构&amp;&amp;设计</h1><ul>
-<li><a href="问题定位经验.md">问题定位经验</a></li>
-<li><a href="best-practice-for-code-review.md">Best Practice For Code Review</a></li>
-<li><a href="如何做好的design.md">如何做好的design</a></li>
-<li><a href="分布式锁的几种实现方式.md">分布式锁的几种实现方式</a></li>
-<li><a href="一致性hash.md">一致性hash</a></li>
-<li><a href="基于bool表达式的广告索引.md">基于bool表达式的广告索引</a></li>
-<li><a href="http://ningg.top/experiment-series-flow-router/" target="_blank" rel="noopener">实验平台设计</a></li>
-<li>广告索引<ul>
-<li>bool 表达式，索引的量级最大的时候就是广告的数量</li>
-<li>更新索引的一致性<ul>
-<li>用一个时间戳，大于某个时间戳的才更新过来</li>
-<li>重启机子的时候</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>redis 双写</li>
-<li>美团高可用系统<ul>
-<li>限流</li>
-<li>熔断</li>
-<li>压测</li>
-</ul>
-</li>
-</ul>
-<h1 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h1><ul>
-<li><a href="https://juejin.im/post/5b67902f6fb9a04fc67c1a24" target="_blank" rel="noopener">什么是 TCP 拆、粘包？如何解决？</a><ul>
-<li>设置定长消息,例如每个报文的大小固定长度为200字节</li>
-<li>通过特殊字符,例如通过回车换行进行分割</li>
-<li>将消息分为消息头和消息体,消息头包含消息总长度</li>
-</ul>
-</li>
-<li><a href="https://crossoverjie.top/2018/07/04/netty/Netty(2)Thread-model/" target="_blank" rel="noopener">Netty线程模型</a></li>
-</ul>
-<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1><ul>
-<li><a href="决策树.md">决策树</a></li>
-</ul>
-<h1 id="kafka"><a href="#kafka" class="headerlink" title="kafka"></a>kafka</h1><ul>
-<li><a href="kafka简介.md">kafka简介</a></li>
-<li><a href="kafka运维总结.md">kafka运维总结</a></li>
-</ul>
-<h1 id="Http"><a href="#Http" class="headerlink" title="Http"></a>Http</h1><ul>
-<li><a href="restful学习.md">restful学习</a></li>
-<li><a href="https://www.jianshu.com/p/b894a7e1c779" target="_blank" rel="noopener">https如何保证加密的安全性</a></li>
-</ul>
-<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><ul>
-<li><a href="redis-pipeline.md">redis-pipeline</a></li>
-<li><a href="redis-String-vs-Hash.md">redis-String-vs-Hash</a></li>
-<li>缓存穿透问题<ul>
-<li>在启动的时候放很少的流量进来，权重 + 启动时间</li>
-<li>提前建连接池，预热服务</li>
-</ul>
-</li>
-</ul>
-<h1 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h1><ul>
-<li>分库分表</li>
-<li>SQL 调优</li>
-<li><a href="https://tech.meituan.com/MT_Leaf.html" target="_blank" rel="noopener">美团点评分布式ID生成系统</a></li>
-<li><a href="https://tech.meituan.com/lrucache_practice_dsp.html" target="_blank" rel="noopener">LruCache在美团DSP系统中的应用演进</a><ul>
-<li>双向链表 + hash</li>
-<li>应用<ul>
-<li>用来存广告数据 adId</li>
-</ul>
-</li>
-<li>演化1：引入LruCache</li>
-<li>演化2：因为折中全量更新而引入时效清退机制</li>
-<li>演化3：因为锁的问题进行hash分片</li>
-<li>演化4：零拷贝技术</li>
-</ul>
-</li>
-<li><a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html" target="_blank" rel="noopener">MySQL索引背后的数据结构及算法原理</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/34133067" target="_blank" rel="noopener">LRU原理</a></li>
-<li><a href="分布式事务.md">分布式事务</a></li>
-</ul>
-<h1 id="线上问题定位"><a href="#线上问题定位" class="headerlink" title="线上问题定位"></a>线上问题定位</h1><ul>
-<li><a href="线上问题总结.md">线上问题总结</a></li>
-</ul>
-<h1 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h1><ul>
-<li><a href="https://blog.csdn.net/u013096088/article/details/79122671" target="_blank" rel="noopener">零拷贝</a></li>
-<li><a href="https://blog.csdn.net/tianyaleixiaowu/article/details/74942405" target="_blank" rel="noopener">QPS限流算法</a></li>
-<li><a href="分布式事务.md">分布式事务</a></li>
-<li><a href="http://www.runoob.com/scala/scala-closures.html" target="_blank" rel="noopener">闭包</a></li>
-<li>如何实现一个ImmutableSet</li>
-</ul>
-<h1 id="Beautiful-DT"><a href="#Beautiful-DT" class="headerlink" title="Beautiful DT"></a>Beautiful DT</h1><ul>
-<li>trie 树</li>
-</ul>
-<h1 id="design"><a href="#design" class="headerlink" title="design"></a>design</h1><ul>
-<li>批量接口通用方案.</li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2019/05/12/jvm%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8/</url>
+    <title>jvm命令使用</title>
+    <url>/2018/05/10/jvm%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jmap -histo [pid]</span><br></pre></td></tr></table></figure><p>用<a href="https://www.eclipse.org/mat/downloads.php" target="_blank" rel="noopener">工具</a>查看</p><h2 id="内存dump-分析工具-Eclipse-Memory-Analyzer-Tool"><a href="#内存dump-分析工具-Eclipse-Memory-Analyzer-Tool" class="headerlink" title="内存dump 分析工具-Eclipse Memory Analyzer Tool"></a>内存dump 分析工具-Eclipse Memory Analyzer Tool</h2><p><code>jmap -dump:live,format=b,file=[文件名] [pid]</code></p><ul>
 <li><p>MAT是什么？个基于Eclipse的内存分析工具，是一个快速、功能丰富的<a href="http://lib.csdn.net/base/java" target="_blank" rel="noopener">Java </a>heap分析工具，它可以帮助我们查找内存泄漏和减少内存消耗。使用内存分析工具从众多的对象中进行分析，快速的计算出在内存中对象的占用大小，看看是谁阻止了垃圾收集器的回收工作，并可以通过报表直观的查看到可能造成这种结果的对象。</p>
 </li>
@@ -736,11 +585,19 @@
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>jvm</category>
+      </categories>
+      <tags>
+        <tag>jvm</tag>
+        <tag>java</tag>
+        <tag>虚拟机</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2019/05/12/kafka%E8%BF%90%E7%BB%B4%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h1 id="1-自身日志量过大的问题"><a href="#1-自身日志量过大的问题" class="headerlink" title="1.自身日志量过大的问题"></a>1.自身日志量过大的问题</h1><p>kafka运行一段时间之后，会发现它的主机磁盘使用率在缓慢增长，查看数据日志的持有量还是之前设置的阈值。<br><img src="/2019/05/12/kafka运维总结/1.png" alt="这里写图片描述"><br>这时候其实是kafka自身的日志打印撑爆磁盘。<br>默认的<code>~/kafka_2.11-0.9.0.0/config/log4j.properties</code>如下：</p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">log4j.rootLogger=INFO, stdout </span><br><span class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender</span><br><span class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">log4j.appender.kafkaAppender=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.kafkaAppender.DatePattern=&apos;.&apos;yyyy-MM-dd-HH</span><br><span class="line">log4j.appender.kafkaAppender.File=$&#123;kafka.logs.dir&#125;/server.log</span><br><span class="line">log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.kafkaAppender.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure><a id="more"></a>
+    <title>KAFKA运维总结</title>
+    <url>/2018/05/10/kafka%E8%BF%90%E7%BB%B4%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="1-自身日志量过大的问题"><a href="#1-自身日志量过大的问题" class="headerlink" title="1.自身日志量过大的问题"></a>1.自身日志量过大的问题</h1><p>kafka运行一段时间之后，会发现它的主机磁盘使用率在缓慢增长，查看数据日志的持有量还是之前设置的阈值。<br><img src="/2018/05/10/kafka运维总结/1.png" alt="这里写图片描述"><br>这时候其实是kafka自身的日志打印撑爆磁盘。<br>默认的<code>~/kafka_2.11-0.9.0.0/config/log4j.properties</code>如下：</p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">log4j.rootLogger=INFO, stdout </span><br><span class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender</span><br><span class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">log4j.appender.kafkaAppender=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.kafkaAppender.DatePattern=&apos;.&apos;yyyy-MM-dd-HH</span><br><span class="line">log4j.appender.kafkaAppender.File=$&#123;kafka.logs.dir&#125;/server.log</span><br><span class="line">log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.kafkaAppender.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure><a id="more"></a>
 
 
 <p>可以看到它自身日志是按照小时去备份的，而且没有自动清除的功能，所以自身日志一直没有清掉，就可能会影响到对数据量的预估和判断。这时候我们只想保留最近n天的日志。log4j并没有配置这样的功能，在不改动源码的情况下，有两种办法达到目的。<br>​    1. 写一个crontab的脚本自动清除；<br>​    2. 修改log4j.properties，按照大小去自动清除。</p>
@@ -754,6 +611,13 @@
 <p>怎么做对是科学，怎么做好则是艺术。——王小波</p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>kafka</category>
+      </categories>
+      <tags>
+        <tag>kafka</tag>
+        <tag>消息队列</tag>
+      </tags>
   </entry>
   <entry>
     <title>kafka简介</title>
@@ -811,6 +675,19 @@
       </tags>
   </entry>
   <entry>
+    <title></title>
+    <url>/2019/05/12/%E4%B8%80%E8%87%B4%E6%80%A7hash/</url>
+    <content><![CDATA[<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>一致性hash 算法的原理很简单，见<a href="https://blog.csdn.net/cywosp/article/details/23397179" target="_blank" rel="noopener">博客</a>。</p><h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><p>一致性hash在rpc中有应用。rpc客户端存储的数据格式如下：</p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ip1 + vitual Index 1 -&gt; hash值0</span><br><span class="line">    ...</span><br><span class="line">ip1 + vitual Index 9 -&gt; hash值9</span><br><span class="line">ip2 + vitual Index 1 -&gt; hash值10</span><br><span class="line">    ...</span><br><span class="line">ip2 + vitual Index 9 -&gt; hash值19</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+<p>现在下游上线或者下线的时候，在zk上的注册都会频繁的改变，那客户端就会重新计算hash，而一旦hash的函数比较复杂的时候，重新计算hash值就会比较耗时。</p>
+<p>比如：假如线上有100台机子，有10个虚拟node。那么每一次如果上线的时候都要重新计算一致性hash的值，那么就需要100 * 10次的hash计算。</p>
+<p>改进也很简单，部署新的机子才会需要计算hash值。</p>
+<p>这样也可能有问题，比如在docker平台上面，每起一个实例的ip都是不一样的，也是会出问题的，所以docker 要尽量保证Ip不变。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>一次打款速度优化</title>
     <url>/2019/09/15/%E4%B8%80%E6%AC%A1%E6%89%93%E6%AC%BE%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/</url>
     <content><![CDATA[<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>先简单介绍下业务背景，以便看到该文章的读者碰到类似的问题，有一些解决问题思路的启发。在我们的广告业务系统中，结算和打款是解耦开的，用户的收益分天计算后打给用户。</p><p><img src="/2019/09/15/一次打款速度优化/%E6%95%B0%E6%8D%AE%E6%B5%81.png" alt="数据流"></p><p>面临的问题有两点：</p><ul>
@@ -845,19 +722,6 @@
         <tag>java</tag>
         <tag>多线程</tag>
       </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2019/05/12/%E4%B8%80%E8%87%B4%E6%80%A7hash/</url>
-    <content><![CDATA[<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>一致性hash 算法的原理很简单，见<a href="https://blog.csdn.net/cywosp/article/details/23397179" target="_blank" rel="noopener">博客</a>。</p><h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><p>一致性hash在rpc中有应用。rpc客户端存储的数据格式如下：</p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ip1 + vitual Index 1 -&gt; hash值0</span><br><span class="line">    ...</span><br><span class="line">ip1 + vitual Index 9 -&gt; hash值9</span><br><span class="line">ip2 + vitual Index 1 -&gt; hash值10</span><br><span class="line">    ...</span><br><span class="line">ip2 + vitual Index 9 -&gt; hash值19</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure><a id="more"></a>
-
-
-
-<p>现在下游上线或者下线的时候，在zk上的注册都会频繁的改变，那客户端就会重新计算hash，而一旦hash的函数比较复杂的时候，重新计算hash值就会比较耗时。</p>
-<p>比如：假如线上有100台机子，有10个虚拟node。那么每一次如果上线的时候都要重新计算一致性hash的值，那么就需要100 * 10次的hash计算。</p>
-<p>改进也很简单，部署新的机子才会需要计算hash值。</p>
-<p>这样也可能有问题，比如在docker平台上面，每起一个实例的ip都是不一样的，也是会出问题的，所以docker 要尽量保证Ip不变。</p>
-]]></content>
   </entry>
   <entry>
     <title>为什么要用自增主键</title>
@@ -1065,24 +929,6 @@
       </tags>
   </entry>
   <entry>
-    <title>分库分表实践</title>
-    <url>/2019/09/28/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E5%AE%9E%E8%B7%B5/</url>
-    <content><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题，并没有说清楚。故该篇文章作为分库分表实践的自我总结，以便以后遇到类似问题，迅速定位找到合适的解法。如果能给您带来些许参考，那将是莫大的荣幸。</p><a id="more"></a>
-<h1 id="你真的需要分库分表吗"><a href="#你真的需要分库分表吗" class="headerlink" title="你真的需要分库分表吗"></a>你真的需要分库分表吗</h1><p>在做分库分表之前，请明确的描述清楚你的问题。这个描述的过程不应该是定性的，而是<strong>定量的、边界可衡量</strong>的。例如：由于xxx业务的日益增长，遇到了性能问题，需要分库分表。这样的描述就极其模糊。正确的定义问题边界是：由于xxx业务增长，某个接口延时耗时增加多少，某平台因为数据库查询慢导致可用性降低多少。而关于定于问题，笔者认为最重要的是定义清楚两个问题：</p>
-<ol>
-<li><strong>当前系统遇到什么问题</strong>。即当前系统遇到的性能、容量等问题，定量定义；</li>
-<li><strong>希望通过该次升级支持多久</strong>。并不是从当前看，系统设计得越好，就能支撑业务发展很好，对未知需要保持敬畏，避免过度设计。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>高并发</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>单例模式</title>
     <url>/2017/06/14/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
     <content><![CDATA[<p>这应该是所有设计模式中最简单的设计模式了，所以从它讲起。</p><h1 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h1><p>用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。</p><h1 id="v0-0-1-简单实现"><a href="#v0-0-1-简单实现" class="headerlink" title="v0.0.1-简单实现"></a>v0.0.1-简单实现</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by Acceml on 2016/5/28.</span></span><br><span class="line"><span class="comment"> * Email: huminghit@gmail.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton == <span class="keyword">null</span>) &#123;<span class="comment">//risk</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
@@ -1114,6 +960,24 @@
       </categories>
       <tags>
         <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>分库分表实践</title>
+    <url>/2019/09/28/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E5%AE%9E%E8%B7%B5/</url>
+    <content><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题，并没有说清楚。故该篇文章作为分库分表实践的自我总结，以便以后遇到类似问题，迅速定位找到合适的解法。如果能给您带来些许参考，那将是莫大的荣幸。</p><a id="more"></a>
+<h1 id="你真的需要分库分表吗"><a href="#你真的需要分库分表吗" class="headerlink" title="你真的需要分库分表吗"></a>你真的需要分库分表吗</h1><p>在做分库分表之前，请明确的描述清楚你的问题。这个描述的过程不应该是定性的，而是<strong>定量的、边界可衡量</strong>的。例如：由于xxx业务的日益增长，遇到了性能问题，需要分库分表。这样的描述就极其模糊。正确的定义问题边界是：由于xxx业务增长，某个接口延时耗时增加多少，某平台因为数据库查询慢导致可用性降低多少。而关于定于问题，笔者认为最重要的是定义清楚两个问题：</p>
+<ol>
+<li><strong>当前系统遇到什么问题</strong>。即当前系统遇到的性能、容量等问题，定量定义；</li>
+<li><strong>希望通过该次升级支持多久</strong>。并不是从当前看，系统设计得越好，就能支撑业务发展很好，对未知需要保持敬畏，避免过度设计。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>高并发</tag>
       </tags>
   </entry>
   <entry>

@@ -426,337 +426,6 @@
   
   
   <div class="post-block home">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/12/kafka运维总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="修飒">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="江声浩荡">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-            
-            <a href="/2019/05/12/kafka运维总结/" class="post-title-link" itemprop="url">未命名</a>
-          
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-12 23:58:23" itemprop="dateCreated datePublished" datetime="2019-05-12T23:58:23+08:00">2019-05-12</time>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="1-自身日志量过大的问题"><a href="#1-自身日志量过大的问题" class="headerlink" title="1.自身日志量过大的问题"></a>1.自身日志量过大的问题</h1><p>kafka运行一段时间之后，会发现它的主机磁盘使用率在缓慢增长，查看数据日志的持有量还是之前设置的阈值。<br><img src="/2019/05/12/kafka运维总结/1.png" alt="这里写图片描述"><br>这时候其实是kafka自身的日志打印撑爆磁盘。<br>默认的<code>~/kafka_2.11-0.9.0.0/config/log4j.properties</code>如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">log4j.rootLogger=INFO, stdout </span><br><span class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender</span><br><span class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">log4j.appender.kafkaAppender=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.kafkaAppender.DatePattern=&apos;.&apos;yyyy-MM-dd-HH</span><br><span class="line">log4j.appender.kafkaAppender.File=$&#123;kafka.logs.dir&#125;/server.log</span><br><span class="line">log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.kafkaAppender.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/12/kafka运维总结/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-          <div class="post-eof"></div>
-        
-      </footer>
-  </div>
-  
-  
-  
-  </article>
-
-    
-        <article itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block home">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/12/jvm命令使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="修飒">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="江声浩荡">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-            
-            <a href="/2019/05/12/jvm命令使用/" class="post-title-link" itemprop="url">未命名</a>
-          
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-12 23:58:23" itemprop="dateCreated datePublished" datetime="2019-05-12T23:58:23+08:00">2019-05-12</time>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -histo [pid]</span><br></pre></td></tr></table></figure><p>用<a href="https://www.eclipse.org/mat/downloads.php" target="_blank" rel="noopener">工具</a>查看</p><h2 id="内存dump-分析工具-Eclipse-Memory-Analyzer-Tool"><a href="#内存dump-分析工具-Eclipse-Memory-Analyzer-Tool" class="headerlink" title="内存dump 分析工具-Eclipse Memory Analyzer Tool"></a>内存dump 分析工具-Eclipse Memory Analyzer Tool</h2><p><code>jmap -dump:live,format=b,file=[文件名] [pid]</code></p><ul>
-<li><p>MAT是什么？个基于Eclipse的内存分析工具，是一个快速、功能丰富的<a href="http://lib.csdn.net/base/java" target="_blank" rel="noopener">Java </a>heap分析工具，它可以帮助我们查找内存泄漏和减少内存消耗。使用内存分析工具从众多的对象中进行分析，快速的计算出在内存中对象的占用大小，看看是谁阻止了垃圾收集器的回收工作，并可以通过报表直观的查看到可能造成这种结果的对象。</p>
-</li>
-<li><p><a href="http://www.eclipse.org/mat/downloads.php" target="_blank" rel="noopener">下载地址</a></p>
-</li>
-<li><p>一般的内存dump文件较大，可以通过调整下载下来的文件夹中 MemoryAnalyzer.ini 来调整MAT使用内存大小， 参数为 -vmargs -Xmx3072m(解决imprt error的问题)</p>
-</li>
-</ul>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/12/jvm命令使用/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-          <div class="post-eof"></div>
-        
-      </footer>
-  </div>
-  
-  
-  
-  </article>
-
-    
-        <article itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block home">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/12/java快速读取文件/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="修飒">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="江声浩荡">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-            
-            <a href="/2019/05/12/java快速读取文件/" class="post-title-link" itemprop="url">未命名</a>
-          
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-12 23:58:23" itemprop="dateCreated datePublished" datetime="2019-05-12T23:58:23+08:00">2019-05-12</time>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a href="http://www.idryman.org/blog/2013/09/28/java-fast-io-using-java-nio-api/" target="_blank" rel="noopener">Java Fast IO Using java.nio API</a></p>
-
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-          <div class="post-eof"></div>
-        
-      </footer>
-  </div>
-  
-  
-  
-  </article>
-
-    
-        <article itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block home">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/12/README/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="修飒">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="江声浩荡">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-            
-            <a href="/2019/05/12/README/" class="post-title-link" itemprop="url">未命名</a>
-          
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-12 23:58:23" itemprop="dateCreated datePublished" datetime="2019-05-12T23:58:23+08:00">2019-05-12</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-07-09 12:21:44" itemprop="dateModified" datetime="2019-07-09T12:21:44+08:00">2019-07-09</time>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><ul>
-<li><p><a href="./单例模式.md">单例模式</a></p>
-</li>
-<li><p><a href="./建造者模式在日志系统中的运用.md">建造者模式在日志系统中的应用</a></p>
-</li>
-<li><p><a href="策略模式使用的小技巧.md">策略模式使用的小技巧</a></p>
-</li>
-</ul><h1 id="java"><a href="#java" class="headerlink" title="java"></a>java</h1><h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><ul>
-<li><a href="https://blog.csdn.net/javazejian/article/details/72828483" target="_blank" rel="noopener">synchronized实现原理</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/50098743" target="_blank" rel="noopener">不可不说的Java“锁”事</a></li>
-<li><a href="https://www.zhihu.com/question/23089780/answer/62097840" target="_blank" rel="noopener">ThreadLocal</a></li>
-<li><a href="http://www.jasongj.com/java/threadlocal/" target="_blank" rel="noopener">ThreadLocal2</a></li>
-</ul><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// SimpleDateFormat is not thread-safe, so give one to each thread</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;SimpleDateFormat&gt; formatter = <span class="keyword">new</span> ThreadLocal&lt;SimpleDateFormat&gt;()&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> SimpleDateFormat <span class="title">initialValue</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyyMMdd HHmm"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">formatIt</span><span class="params">(Date date)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> formatter.get().format(date);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/12/README/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-          <div class="post-eof"></div>
-        
-      </footer>
-  </div>
-  
-  
-  
-  </article>
-
-    
-        <article itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block home">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/03/HashMap内部原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -973,110 +642,6 @@
   
   
   <div class="post-block home">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/14/为什么要用自增主键/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="修飒">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="江声浩荡">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-            
-            <a href="/2018/09/14/为什么要用自增主键/" class="post-title-link" itemprop="url">为什么要用自增主键</a>
-          
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              
-                
-              
-
-              <time title="创建时间：2018-09-14 01:45:33" itemprop="dateCreated datePublished" datetime="2018-09-14T01:45:33+08:00">2018-09-14</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
-              </span>
-            
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据库/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="拥抱变化"><a href="#拥抱变化" class="headerlink" title="拥抱变化"></a>拥抱变化</h1><p>关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：</p><blockquote>
-<p>在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。</p>
-</blockquote><p>这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：<strong>应对变化</strong>。</p><p>笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合理。于是，初版建表的时候就有了如下表结构:</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/09/14/为什么要用自增主键/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-          <div class="post-eof"></div>
-        
-      </footer>
-  </div>
-  
-  
-  
-  </article>
-
-    
-        <article itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block home">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/14/策略模式使用的小技巧/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1183,6 +748,578 @@
   </article>
 
     
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/14/为什么要用自增主键/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="江声浩荡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2018/09/14/为什么要用自增主键/" class="post-title-link" itemprop="url">为什么要用自增主键</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-14 01:45:33" itemprop="dateCreated datePublished" datetime="2018-09-14T01:45:33+08:00">2018-09-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-15 15:37:59" itemprop="dateModified" datetime="2019-09-15T15:37:59+08:00">2019-09-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据库/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="拥抱变化"><a href="#拥抱变化" class="headerlink" title="拥抱变化"></a>拥抱变化</h1><p>关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：</p><blockquote>
+<p>在设计数据库时不需要费尽心思去考虑设置哪个字段为主键。</p>
+</blockquote><p>这固然没错，但是不那么具有说服力。最近在做商业账号的项目的时候，对这点体会尤为深刻。我觉得设置自增主键的最主要目的是：<strong>应对变化</strong>。</p><p>笔者遇到的场景为：维护商业账号的资质相关信息。账号是由全局唯一且自增的分布式ID生成器生成的，很显然这个时候我们把账号作为主键这就天然合理。于是，初版建表的时候就有了如下表结构:</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/09/14/为什么要用自增主键/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/G1参数设置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="江声浩荡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2018/05/10/G1参数设置/" class="post-title-link" itemprop="url">G1参数设置</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-10 13:38:13" itemprop="dateCreated datePublished" datetime="2018-05-10T13:38:13+08:00">2018-05-10</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-05-12 23:58:23" itemprop="dateModified" datetime="2019-05-12T23:58:23+08:00">2019-05-12</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/jvm/" itemprop="url" rel="index"><span itemprop="name">jvm</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h1><table>
+<thead>
+<tr>
+<th>Option and Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-Xmx -Xms</td>
+<td>最小和最大堆内存</td>
+</tr>
+<tr>
+<td>-XX:MetaspaceSize -XX:MaxMetaspaceSize</td>
+<td>永久代中用于存放类和方法的元数据以及常量池，比如Class和Method。每当一个类初次被加载的时候，它的元数据都会放到永久代中。java8 废除了永久代，使用元数据大小.</td>
+</tr>
+<tr>
+<td>-XX:+UseG1</td>
+<td>使用G1垃圾回收器.</td>
+</tr>
+<tr>
+<td>-XX:MaxGCPauseMillis=n</td>
+<td>你期望的GC最大暂停时间(50~200ms,对时延敏感的服务一般建议设置60ms)</td>
+</tr>
+<tr>
+<td>-XX:G1HeapRegionSize</td>
+<td>该参数取值范围是1 ~ 32，且必须为2的幂。JVM启动时会计算Region大小，其依据是使得整个堆被分为约2000个块。如堆大小为4G的话，G1HeapRegionSize会被设置为2MB.在程序运行过程中，如果发现GC日志中出现大量的Humongous Allocation，说明程序产生了很多巨型对象（超过Region大小一半），这些对象容易导致内存碎片，且在jdk8u40前的版本中其回收过程不够优化。此时应该适当调大G1HeapRegionSize的值，使得一部分超过原Region大小一半的对象在新的RegionSize下不再显得那么大。</td>
+</tr>
+<tr>
+<td>-XX:G1ReservePercent</td>
+<td>在G1中，有一部分内存会被预留出来，当Survivor区容量不足时，这块区域会暂时顶上。默认值为10，即10%的堆空间被预留下来。如果GC日志中出现to-space-exhuasted，可以调大该参数解决。</td>
+</tr>
+<tr>
+<td>-XX:MaxTenuringThreshold</td>
+<td>控制对象晋升到老年代的年龄阈值。可以通过-XX:+PrintTenuringDistribution打出Survivor区中对象的年龄分布情况，找出能够有效老化对象的年龄值。如果Survivor区的对象在到达某个年龄后，只见年龄增加但对象所占内存几乎没有减少，那么就可以把MaxTenuringThreshold设置为该值，让Survivor区的对象及时晋升到老年代。如果在日志中发现Survivor区空间占用一直比较大，新生代垃圾收集时间较长，可考虑缩小最大年龄阈值，让Survivor区的对象尽早进入老年代。</td>
+</tr>
+<tr>
+<td>-XX:G1MaxNewSizePercent</td>
+<td>控制对象晋升到老年代的年龄阈值。可以通过-XX:+PrintTenuringDistribution打出Survivor区中对象的年龄分布情况，找出能够有效老化对象的年龄值。如果Survivor区的对象在到达某个年龄后，只见年龄增加但对象所占内存几乎没有减少，那么就可以把MaxTenuringThreshold设置为该值，让Survivor区的对象及时晋升到老年代。如果在日志中发现Survivor区空间占用一直比较大，新生代垃圾收集时间较长，可考虑缩小最大年龄阈值，让Survivor区的对象尽早进入老年代。</td>
+</tr>
+<tr>
+<td>-XX:G1MaxNewSizePercent</td>
+<td>G1主要通过调整新生代大小来达到暂停时间的要求，默认的新生代可变范围是5% ~ 60%。G1MaxNewSizePercent控制新生代大小的上限，该值默认为60%。如果Survivor区对象占用的空间波动剧烈，G1的暂停时间可能会有抖动，可以通过降低G1MaxNewSizePercent参数缓解。使用该参数时，需要加上-XX:+UnlockExperimentalVMOptions解锁实验性参数，该参数需在满足Survivor区占用剧烈变动的条件下才使用，其他情况下慎用。</td>
+</tr>
+</tbody></table>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/05/10/G1参数设置/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/kafka运维总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="江声浩荡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2018/05/10/kafka运维总结/" class="post-title-link" itemprop="url">KAFKA运维总结</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-10 13:38:13" itemprop="dateCreated datePublished" datetime="2018-05-10T13:38:13+08:00">2018-05-10</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-25 15:55:20" itemprop="dateModified" datetime="2020-04-25T15:55:20+08:00">2020-04-25</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kafka/" itemprop="url" rel="index"><span itemprop="name">kafka</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-自身日志量过大的问题"><a href="#1-自身日志量过大的问题" class="headerlink" title="1.自身日志量过大的问题"></a>1.自身日志量过大的问题</h1><p>kafka运行一段时间之后，会发现它的主机磁盘使用率在缓慢增长，查看数据日志的持有量还是之前设置的阈值。<br><img src="/2018/05/10/kafka运维总结/1.png" alt="这里写图片描述"><br>这时候其实是kafka自身的日志打印撑爆磁盘。<br>默认的<code>~/kafka_2.11-0.9.0.0/config/log4j.properties</code>如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">log4j.rootLogger=INFO, stdout </span><br><span class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender</span><br><span class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">log4j.appender.kafkaAppender=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.kafkaAppender.DatePattern=&apos;.&apos;yyyy-MM-dd-HH</span><br><span class="line">log4j.appender.kafkaAppender.File=$&#123;kafka.logs.dir&#125;/server.log</span><br><span class="line">log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.kafkaAppender.layout.ConversionPattern=[%d] %p %m (%c)%n</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/05/10/kafka运维总结/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/jvm命令使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="江声浩荡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2018/05/10/jvm命令使用/" class="post-title-link" itemprop="url">jvm命令使用</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-10 13:38:13" itemprop="dateCreated datePublished" datetime="2018-05-10T13:38:13+08:00">2018-05-10</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-25 15:54:07" itemprop="dateModified" datetime="2020-04-25T15:54:07+08:00">2020-04-25</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/jvm/" itemprop="url" rel="index"><span itemprop="name">jvm</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -histo [pid]</span><br></pre></td></tr></table></figure><p>用<a href="https://www.eclipse.org/mat/downloads.php" target="_blank" rel="noopener">工具</a>查看</p><h2 id="内存dump-分析工具-Eclipse-Memory-Analyzer-Tool"><a href="#内存dump-分析工具-Eclipse-Memory-Analyzer-Tool" class="headerlink" title="内存dump 分析工具-Eclipse Memory Analyzer Tool"></a>内存dump 分析工具-Eclipse Memory Analyzer Tool</h2><p><code>jmap -dump:live,format=b,file=[文件名] [pid]</code></p><ul>
+<li><p>MAT是什么？个基于Eclipse的内存分析工具，是一个快速、功能丰富的<a href="http://lib.csdn.net/base/java" target="_blank" rel="noopener">Java </a>heap分析工具，它可以帮助我们查找内存泄漏和减少内存消耗。使用内存分析工具从众多的对象中进行分析，快速的计算出在内存中对象的占用大小，看看是谁阻止了垃圾收集器的回收工作，并可以通过报表直观的查看到可能造成这种结果的对象。</p>
+</li>
+<li><p><a href="http://www.eclipse.org/mat/downloads.php" target="_blank" rel="noopener">下载地址</a></p>
+</li>
+<li><p>一般的内存dump文件较大，可以通过调整下载下来的文件夹中 MemoryAnalyzer.ini 来调整MAT使用内存大小， 参数为 -vmargs -Xmx3072m(解决imprt error的问题)</p>
+</li>
+</ul>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/05/10/jvm命令使用/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/03/GC算法和分代回收设计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="修飒">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="江声浩荡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="/2018/05/03/GC算法和分代回收设计/" class="post-title-link" itemprop="url">GC算法和分代回收设计</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-03 09:38:24" itemprop="dateCreated datePublished" datetime="2018-05-03T09:38:24+08:00">2018-05-03</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-15 02:43:49" itemprop="dateModified" datetime="2019-12-15T02:43:49+08:00">2019-12-15</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/jvm/" itemprop="url" rel="index"><span itemprop="name">jvm</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="gc算法分类"><a href="#gc算法分类" class="headerlink" title="gc算法分类"></a>gc算法分类</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p>算法实现：</p><ul>
+<li>标记。</li>
+<li>清除。</li>
+</ul><p>缺点：</p><ul>
+<li>标记和清除两个阶段效率不高</li>
+<li>会产生内存碎片，无法分配大对象</li>
+</ul><h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>为了解决 <strong>标记-清除算法的效率不高</strong> 的问题。</p><p>算法实现：</p><ul>
+<li>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块</li>
+<li>当这一块的内存用完了，就将还存活着的对象复制到另外一块上面</li>
+<li>一次性清除使用过的内存</li>
+</ul>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/05/03/GC算法和分代回收设计/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
   </div>
 
   
@@ -1235,7 +1372,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1325,7 +1462,9 @@
         
           
         
-        <span class="site-state-item-count">19</span>
+          
+        
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
