@@ -1,72 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title></title>
-    <url>/2019/05/12/GC%E5%8C%BA%E5%9F%9F/</url>
-    <content><![CDATA[<h1 id="回收区域"><a href="#回收区域" class="headerlink" title="回收区域"></a>回收区域</h1><ul>
-<li>GC区域：<strong>堆、方法区</strong></li>
-<li>不GC的区域：程序计数器、虚拟机栈、本地方法栈</li>
-</ul><h2 id="堆回收"><a href="#堆回收" class="headerlink" title="堆回收"></a>堆回收</h2><ul>
-<li>引用计数法：有引用就会记1<ul>
-<li>会有循环引用的问题</li>
-<li>主流jvm不使用这种方式</li>
-</ul>
-</li>
-<li>可达性分析法：判断到GC-root<ul>
-<li>GC root 对象<ul>
-<li>jvm中栈帧中引用的对象</li>
-<li>方法区中静态属性(static)、常量(final)引用的对象</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>引用分类<ul>
-<li>强引用：<code>Object ojb = new Object()</code>， 只要有强引用，不会被GC</li>
-<li>软引用：可以用<code>SoftReference</code>来实现。内存溢出时，进行二次回收。第二次还没有足够内存，抛内存溢出异常。</li>
-<li>弱引用：可以用<code>WeakReference</code>来实现。只能生存到下一次GC之前。无论内存是否够，都会被GC.</li>
-<li>虚引用：可以用<code>PhantomReference</code>来实现。GC时会收到一个系统通知。</li>
-<li>强引用 &gt; 软引用 &gt; 弱引用 &gt; 虚引用</li>
-</ul>
-</li>
-</ul><a id="more"></a>
-
-<ul>
-<li>什么时候回收<ul>
-<li>如果对象不可达，判断是否需要执行<code>finalize()</code>方法<ul>
-<li>不需要执行<code>finalize()</code> 的情况：<ul>
-<li>没有<code>overwrite</code> <code>finalize()</code>方法</li>
-<li>虚拟机已经执行过一次<code>finalize()</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>如果需要执行<code>finalize()</code>方法， 放入<code>F-Queue</code>中，在<code>finalize()</code>执行完后还是满足回收的条件，宣判“死刑”被回收。</li>
-</ul>
-</li>
-</ul>
-<h2 id="方法区（永久代）回收"><a href="#方法区（永久代）回收" class="headerlink" title="方法区（永久代）回收"></a>方法区（永久代）回收</h2><p>方法区回收的能够回收的空间有限。</p>
-<ul>
-<li>回收：<ul>
-<li>废弃常量：无引用，和heap类似。</li>
-<li>无用的类必须满足的条件<ul>
-<li>java堆中不存在该类的任何对象</li>
-<li>加载该类的<code>classLoader</code>已经被回收</li>
-<li>这个类对应的<code>java.lang.class</code> 对象没有在任何地方被引用。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>class类扩展<ul>
-<li>因为java是运行时类型识别，<code>class</code> 类是保存这些识别信息的类，即：保存了每个对象的类型信息。可以通过这些信息反射创建一个实例。判断一下有没有引用就理所当然了，因为如果有引用，那么就可能有对这个对象类型信息的依赖，就不可以被回收。</li>
-</ul>
-</li>
-</ul>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li><a href="https://www.sczyh30.com/posts/Java/jvm-metaspace/" target="_blank" rel="noopener">深入探究JVM | 探秘 Metaspace</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
     <title>G1参数设置</title>
     <url>/2018/05/10/G1%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/</url>
     <content><![CDATA[<h1 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h1><table>
@@ -147,117 +81,6 @@
 </li>
 <li><p><a href="https://docs.oracle.com/javase/9/gctuning/garbage-first-garbage-collector-tuning.htm#JSGCT-GUID-90E30ACA-8040-432E-B3A0-1E0440AB556A" target="_blank" rel="noopener">Java Platform, Standard Edition HotSpot Virtual Machine Garbage Collection Tuning Guide</a></p>
 <p>​</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>jvm</category>
-      </categories>
-      <tags>
-        <tag>jvm</tag>
-        <tag>java</tag>
-        <tag>虚拟机</tag>
-        <tag>G1</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GC算法和分代回收设计</title>
-    <url>/2018/05/03/GC%E7%AE%97%E6%B3%95%E5%92%8C%E5%88%86%E4%BB%A3%E5%9B%9E%E6%94%B6%E8%AE%BE%E8%AE%A1/</url>
-    <content><![CDATA[<h1 id="gc算法分类"><a href="#gc算法分类" class="headerlink" title="gc算法分类"></a>gc算法分类</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p>算法实现：</p><ul>
-<li>标记。</li>
-<li>清除。</li>
-</ul><p>缺点：</p><ul>
-<li>标记和清除两个阶段效率不高</li>
-<li>会产生内存碎片，无法分配大对象</li>
-</ul><h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>为了解决 <strong>标记-清除算法的效率不高</strong> 的问题。</p><p>算法实现：</p><ul>
-<li>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块</li>
-<li>当这一块的内存用完了，就将还存活着的对象复制到另外一块上面</li>
-<li>一次性清除使用过的内存</li>
-</ul><a id="more"></a>
-
-
-
-
-
-
-<p>优点：</p>
-<ul>
-<li>只需要移动一下指针，顺序分配内存即可，效率高</li>
-<li>同时也不会有内存碎片的问题</li>
-</ul>
-<p>缺点：</p>
-<ul>
-<li>内存缩小为原来的一半</li>
-<li>如果存活的对象比较多的时候就会复制较多的存活对象，效率降低</li>
-</ul>
-<p>根据缺点知道，适用于对象被频繁创建和GC的场景，如果对象长期存在的较多，那么就会导致花费大量时间在复制存活对象上，效率降低。</p>
-<h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p>为了解决 <strong>复制算法内存占用过高、复制较多存活对象效率</strong>问题而设计。</p>
-<p>算法实现：</p>
-<ul>
-<li>标记</li>
-<li>整理的时候让存活对象向一端移动，直接清理掉边界以外的内存。</li>
-</ul>
-<h1 id="GC分代"><a href="#GC分代" class="headerlink" title="GC分代"></a>GC分代</h1><h2 id="为什么要分代"><a href="#为什么要分代" class="headerlink" title="为什么要分代?"></a>为什么要分代?</h2><ul>
-<li>对象的<strong>生命周期</strong> 不一样。有的对象是“朝生夕死”，有的对象存活的时间就比较长。</li>
-<li>如果不分代，我们要对对的所有区域进行扫描，<strong>效率</strong> 不高</li>
-<li>充分发挥不同<strong>GC算法</strong> 。</li>
-</ul>
-<h2 id="如何分代"><a href="#如何分代" class="headerlink" title="如何分代"></a>如何分代</h2><p><img src="/2018/05/03/GC算法和分代回收设计/1.png" alt="这里写图片描述"></p>
-<h3 id="年轻代"><a href="#年轻代" class="headerlink" title="年轻代"></a>年轻代</h3><p>存放生命周期较短的对象。一般使用<strong>复制算法</strong>进行GC.</p>
-<ul>
-<li>构成：<code>Eden</code>区、2个<code>Survivor</code>区（分别叫<code>from</code>和<code>to</code>）。</li>
-<li>GC:<ul>
-<li>最开始对象存在于: <code>Eden</code>区和<code>Survivor</code> 的<code>from</code>, <code>To</code>区是空的。</li>
-<li>进行GC，<ul>
-<li><code>Eden</code>区：所有存活对象被复制到 <code>To</code></li>
-<li>from区：大于<code>XX:MaxTenuringThreshold</code>移到年老代, 反之复制到<code>To</code></li>
-</ul>
-</li>
-<li>Eden 和 from区已经被清空，被清空的from区就相当于最开始的To区域 </li>
-<li>回到最开始的状态</li>
-</ul>
-</li>
-<li>相关参数<ul>
-<li>-Xms 20M ：最小堆内存</li>
-<li>-Xmx 20M： 最大堆内存</li>
-<li>-Xmn 10M：新生代大小<ul>
-<li>-XXSurvivorRatio=8 新生代中<code>Eden</code>区和<strong>其中一个</strong> Survivor区的比例( <strong>8:1:1</strong>)。</li>
-<li>eden space: 8192k</li>
-<li>from space: 1024k</li>
-<li>to space: 1024k</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>为什么很多服务都把 -Xms 和 -Xmx都设置成一样？<ul>
-<li>减少初期GC带来的抖动</li>
-<li>避免JVM在运行过程中向OS申请内存,发生内存抖动</li>
-</ul>
-</li>
-</ul>
-<h3 id="年老代"><a href="#年老代" class="headerlink" title="年老代"></a>年老代</h3><p>存放生命周期长的对象。经历过N次回收之后，仍然存活的对象。一般使用<strong>标记-整理</strong>算法GC，但是常用的CMS是标记-清除算法。</p>
-<h3 id="永久代"><a href="#永久代" class="headerlink" title="永久代"></a>永久代</h3><p>对应前一篇笔记的：方法区。常量、类等。</p>
-<h2 id="GC的触发"><a href="#GC的触发" class="headerlink" title="GC的触发"></a>GC的触发</h2><ul>
-<li><p>Partial GC：并不收集整个GC堆的模式</p>
-<ul>
-<li>Young GC：只收集young gen的GC</li>
-</ul>
-<ul>
-<li>Old GC：只收集old gen的GC。只有CMS的concurrent collection是这个模式</li>
-<li>Mixed GC：收集整个young gen以及部分old gen的GC。只有G1有这个模式</li>
-</ul>
-</li>
-<li><p>Full GC：收集整个堆，包括young gen、old gen、perm gen（如果存在的话）等所有部分的模式。</p>
-</li>
-</ul>
-<p>Major GC通常是跟full GC是等价的，收集整个GC堆。但因为HotSpot VM发展了这么多年，外界对各种名词的解读已经完全混乱了，当有人说“major GC”的时候一定要问清楚他想要指的是上面的full GC还是old GC。</p>
-<ul>
-<li>young GC：当young gen中的<strong>eden区分配满</strong>的时候触发。注意young GC中有部分存活对象会晋升到old gen，所以young GC后old gen的占用量通常会有所升高。</li>
-<li>full GC：<ul>
-<li>当准备要触发一次young GC时，如果发现统计数据说之前young GC的平均晋升大小比目前old gen剩余的空间大，则不会触发young GC而是转为触发full GC（因为HotSpot VM的GC里，除了CMS的concurrent collection之外，其它能收集old gen的GC都会同时收集整个GC堆，包括young gen，所以不需要事先触发一次单独的young GC）；</li>
-<li>或者如果有perm gen的话，要在perm gen分配空间但已经没有足够空间时，也要触发一次full GC；</li>
-<li>或者System.gc()、heap dump带GC，默认也是触发full GC。</li>
-</ul>
 </li>
 </ul>
 ]]></content>
@@ -373,6 +196,183 @@
   </entry>
   <entry>
     <title></title>
+    <url>/2019/05/12/GC%E5%8C%BA%E5%9F%9F/</url>
+    <content><![CDATA[<h1 id="回收区域"><a href="#回收区域" class="headerlink" title="回收区域"></a>回收区域</h1><ul>
+<li>GC区域：<strong>堆、方法区</strong></li>
+<li>不GC的区域：程序计数器、虚拟机栈、本地方法栈</li>
+</ul><h2 id="堆回收"><a href="#堆回收" class="headerlink" title="堆回收"></a>堆回收</h2><ul>
+<li>引用计数法：有引用就会记1<ul>
+<li>会有循环引用的问题</li>
+<li>主流jvm不使用这种方式</li>
+</ul>
+</li>
+<li>可达性分析法：判断到GC-root<ul>
+<li>GC root 对象<ul>
+<li>jvm中栈帧中引用的对象</li>
+<li>方法区中静态属性(static)、常量(final)引用的对象</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>引用分类<ul>
+<li>强引用：<code>Object ojb = new Object()</code>， 只要有强引用，不会被GC</li>
+<li>软引用：可以用<code>SoftReference</code>来实现。内存溢出时，进行二次回收。第二次还没有足够内存，抛内存溢出异常。</li>
+<li>弱引用：可以用<code>WeakReference</code>来实现。只能生存到下一次GC之前。无论内存是否够，都会被GC.</li>
+<li>虚引用：可以用<code>PhantomReference</code>来实现。GC时会收到一个系统通知。</li>
+<li>强引用 &gt; 软引用 &gt; 弱引用 &gt; 虚引用</li>
+</ul>
+</li>
+</ul><a id="more"></a>
+
+<ul>
+<li>什么时候回收<ul>
+<li>如果对象不可达，判断是否需要执行<code>finalize()</code>方法<ul>
+<li>不需要执行<code>finalize()</code> 的情况：<ul>
+<li>没有<code>overwrite</code> <code>finalize()</code>方法</li>
+<li>虚拟机已经执行过一次<code>finalize()</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果需要执行<code>finalize()</code>方法， 放入<code>F-Queue</code>中，在<code>finalize()</code>执行完后还是满足回收的条件，宣判“死刑”被回收。</li>
+</ul>
+</li>
+</ul>
+<h2 id="方法区（永久代）回收"><a href="#方法区（永久代）回收" class="headerlink" title="方法区（永久代）回收"></a>方法区（永久代）回收</h2><p>方法区回收的能够回收的空间有限。</p>
+<ul>
+<li>回收：<ul>
+<li>废弃常量：无引用，和heap类似。</li>
+<li>无用的类必须满足的条件<ul>
+<li>java堆中不存在该类的任何对象</li>
+<li>加载该类的<code>classLoader</code>已经被回收</li>
+<li>这个类对应的<code>java.lang.class</code> 对象没有在任何地方被引用。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>class类扩展<ul>
+<li>因为java是运行时类型识别，<code>class</code> 类是保存这些识别信息的类，即：保存了每个对象的类型信息。可以通过这些信息反射创建一个实例。判断一下有没有引用就理所当然了，因为如果有引用，那么就可能有对这个对象类型信息的依赖，就不可以被回收。</li>
+</ul>
+</li>
+</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><a href="https://www.sczyh30.com/posts/Java/jvm-metaspace/" target="_blank" rel="noopener">深入探究JVM | 探秘 Metaspace</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>GC算法和分代回收设计</title>
+    <url>/2018/05/03/GC%E7%AE%97%E6%B3%95%E5%92%8C%E5%88%86%E4%BB%A3%E5%9B%9E%E6%94%B6%E8%AE%BE%E8%AE%A1/</url>
+    <content><![CDATA[<h1 id="gc算法分类"><a href="#gc算法分类" class="headerlink" title="gc算法分类"></a>gc算法分类</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p>算法实现：</p><ul>
+<li>标记。</li>
+<li>清除。</li>
+</ul><p>缺点：</p><ul>
+<li>标记和清除两个阶段效率不高</li>
+<li>会产生内存碎片，无法分配大对象</li>
+</ul><h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>为了解决 <strong>标记-清除算法的效率不高</strong> 的问题。</p><p>算法实现：</p><ul>
+<li>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块</li>
+<li>当这一块的内存用完了，就将还存活着的对象复制到另外一块上面</li>
+<li>一次性清除使用过的内存</li>
+</ul><a id="more"></a>
+
+
+
+
+
+
+<p>优点：</p>
+<ul>
+<li>只需要移动一下指针，顺序分配内存即可，效率高</li>
+<li>同时也不会有内存碎片的问题</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>内存缩小为原来的一半</li>
+<li>如果存活的对象比较多的时候就会复制较多的存活对象，效率降低</li>
+</ul>
+<p>根据缺点知道，适用于对象被频繁创建和GC的场景，如果对象长期存在的较多，那么就会导致花费大量时间在复制存活对象上，效率降低。</p>
+<h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p>为了解决 <strong>复制算法内存占用过高、复制较多存活对象效率</strong>问题而设计。</p>
+<p>算法实现：</p>
+<ul>
+<li>标记</li>
+<li>整理的时候让存活对象向一端移动，直接清理掉边界以外的内存。</li>
+</ul>
+<h1 id="GC分代"><a href="#GC分代" class="headerlink" title="GC分代"></a>GC分代</h1><h2 id="为什么要分代"><a href="#为什么要分代" class="headerlink" title="为什么要分代?"></a>为什么要分代?</h2><ul>
+<li>对象的<strong>生命周期</strong> 不一样。有的对象是“朝生夕死”，有的对象存活的时间就比较长。</li>
+<li>如果不分代，我们要对对的所有区域进行扫描，<strong>效率</strong> 不高</li>
+<li>充分发挥不同<strong>GC算法</strong> 。</li>
+</ul>
+<h2 id="如何分代"><a href="#如何分代" class="headerlink" title="如何分代"></a>如何分代</h2><p><img src="/2018/05/03/GC算法和分代回收设计/1.png" alt="这里写图片描述"></p>
+<h3 id="年轻代"><a href="#年轻代" class="headerlink" title="年轻代"></a>年轻代</h3><p>存放生命周期较短的对象。一般使用<strong>复制算法</strong>进行GC.</p>
+<ul>
+<li>构成：<code>Eden</code>区、2个<code>Survivor</code>区（分别叫<code>from</code>和<code>to</code>）。</li>
+<li>GC:<ul>
+<li>最开始对象存在于: <code>Eden</code>区和<code>Survivor</code> 的<code>from</code>, <code>To</code>区是空的。</li>
+<li>进行GC，<ul>
+<li><code>Eden</code>区：所有存活对象被复制到 <code>To</code></li>
+<li>from区：大于<code>XX:MaxTenuringThreshold</code>移到年老代, 反之复制到<code>To</code></li>
+</ul>
+</li>
+<li>Eden 和 from区已经被清空，被清空的from区就相当于最开始的To区域 </li>
+<li>回到最开始的状态</li>
+</ul>
+</li>
+<li>相关参数<ul>
+<li>-Xms 20M ：最小堆内存</li>
+<li>-Xmx 20M： 最大堆内存</li>
+<li>-Xmn 10M：新生代大小<ul>
+<li>-XXSurvivorRatio=8 新生代中<code>Eden</code>区和<strong>其中一个</strong> Survivor区的比例( <strong>8:1:1</strong>)。</li>
+<li>eden space: 8192k</li>
+<li>from space: 1024k</li>
+<li>to space: 1024k</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>为什么很多服务都把 -Xms 和 -Xmx都设置成一样？<ul>
+<li>减少初期GC带来的抖动</li>
+<li>避免JVM在运行过程中向OS申请内存,发生内存抖动</li>
+</ul>
+</li>
+</ul>
+<h3 id="年老代"><a href="#年老代" class="headerlink" title="年老代"></a>年老代</h3><p>存放生命周期长的对象。经历过N次回收之后，仍然存活的对象。一般使用<strong>标记-整理</strong>算法GC，但是常用的CMS是标记-清除算法。</p>
+<h3 id="永久代"><a href="#永久代" class="headerlink" title="永久代"></a>永久代</h3><p>对应前一篇笔记的：方法区。常量、类等。</p>
+<h2 id="GC的触发"><a href="#GC的触发" class="headerlink" title="GC的触发"></a>GC的触发</h2><ul>
+<li><p>Partial GC：并不收集整个GC堆的模式</p>
+<ul>
+<li>Young GC：只收集young gen的GC</li>
+</ul>
+<ul>
+<li>Old GC：只收集old gen的GC。只有CMS的concurrent collection是这个模式</li>
+<li>Mixed GC：收集整个young gen以及部分old gen的GC。只有G1有这个模式</li>
+</ul>
+</li>
+<li><p>Full GC：收集整个堆，包括young gen、old gen、perm gen（如果存在的话）等所有部分的模式。</p>
+</li>
+</ul>
+<p>Major GC通常是跟full GC是等价的，收集整个GC堆。但因为HotSpot VM发展了这么多年，外界对各种名词的解读已经完全混乱了，当有人说“major GC”的时候一定要问清楚他想要指的是上面的full GC还是old GC。</p>
+<ul>
+<li>young GC：当young gen中的<strong>eden区分配满</strong>的时候触发。注意young GC中有部分存活对象会晋升到old gen，所以young GC后old gen的占用量通常会有所升高。</li>
+<li>full GC：<ul>
+<li>当准备要触发一次young GC时，如果发现统计数据说之前young GC的平均晋升大小比目前old gen剩余的空间大，则不会触发young GC而是转为触发full GC（因为HotSpot VM的GC里，除了CMS的concurrent collection之外，其它能收集old gen的GC都会同时收集整个GC堆，包括young gen，所以不需要事先触发一次单独的young GC）；</li>
+<li>或者如果有perm gen的话，要在perm gen分配空间但已经没有足够空间时，也要触发一次full GC；</li>
+<li>或者System.gc()、heap dump带GC，默认也是触发full GC。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>jvm</category>
+      </categories>
+      <tags>
+        <tag>jvm</tag>
+        <tag>java</tag>
+        <tag>虚拟机</tag>
+        <tag>G1</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title></title>
     <url>/2019/05/12/HashMap%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<ul>
 <li>hash链表实现冲突.</li>
@@ -407,12 +407,6 @@
 <li><a href="https://tech.meituan.com/java-hashmap.html" target="_blank" rel="noopener">Java 8系列之重新认识HashMap</a></li>
 <li><a href="https://www.zhihu.com/question/20733617/answer/111577937" target="_blank" rel="noopener">JDK 源码中 HashMap 的 hash 方法原理是什么？</a></li>
 </ul>
-]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2019/05/12/java%E5%BF%AB%E9%80%9F%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<p><a href="http://www.idryman.org/blog/2013/09/28/java-fast-io-using-java-nio-api/" target="_blank" rel="noopener">Java Fast IO Using java.nio API</a></p>
 ]]></content>
   </entry>
   <entry>
@@ -695,6 +689,12 @@
   </entry>
   <entry>
     <title></title>
+    <url>/2019/05/12/java%E5%BF%AB%E9%80%9F%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<p><a href="http://www.idryman.org/blog/2013/09/28/java-fast-io-using-java-nio-api/" target="_blank" rel="noopener">Java Fast IO Using java.nio API</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
     <url>/2019/05/12/jvm%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jmap -histo [pid]</span><br></pre></td></tr></table></figure><p>用<a href="https://www.eclipse.org/mat/downloads.php" target="_blank" rel="noopener">工具</a>查看</p><h2 id="内存dump-分析工具-Eclipse-Memory-Analyzer-Tool"><a href="#内存dump-分析工具-Eclipse-Memory-Analyzer-Tool" class="headerlink" title="内存dump 分析工具-Eclipse Memory Analyzer Tool"></a>内存dump 分析工具-Eclipse Memory Analyzer Tool</h2><p><code>jmap -dump:live,format=b,file=[文件名] [pid]</code></p><ul>
 <li><p>MAT是什么？个基于Eclipse的内存分析工具，是一个快速、功能丰富的<a href="http://lib.csdn.net/base/java" target="_blank" rel="noopener">Java </a>heap分析工具，它可以帮助我们查找内存泄漏和减少内存消耗。使用内存分析工具从众多的对象中进行分析，快速的计算出在内存中对象的占用大小，看看是谁阻止了垃圾收集器的回收工作，并可以通过报表直观的查看到可能造成这种结果的对象。</p>
@@ -832,19 +832,6 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2019/05/12/%E4%B8%80%E8%87%B4%E6%80%A7hash/</url>
-    <content><![CDATA[<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>一致性hash 算法的原理很简单，见<a href="https://blog.csdn.net/cywosp/article/details/23397179" target="_blank" rel="noopener">博客</a>。</p><h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><p>一致性hash在rpc中有应用。rpc客户端存储的数据格式如下：</p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ip1 + vitual Index 1 -&gt; hash值0</span><br><span class="line">    ...</span><br><span class="line">ip1 + vitual Index 9 -&gt; hash值9</span><br><span class="line">ip2 + vitual Index 1 -&gt; hash值10</span><br><span class="line">    ...</span><br><span class="line">ip2 + vitual Index 9 -&gt; hash值19</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure><a id="more"></a>
-
-
-
-<p>现在下游上线或者下线的时候，在zk上的注册都会频繁的改变，那客户端就会重新计算hash，而一旦hash的函数比较复杂的时候，重新计算hash值就会比较耗时。</p>
-<p>比如：假如线上有100台机子，有10个虚拟node。那么每一次如果上线的时候都要重新计算一致性hash的值，那么就需要100 * 10次的hash计算。</p>
-<p>改进也很简单，部署新的机子才会需要计算hash值。</p>
-<p>这样也可能有问题，比如在docker平台上面，每起一个实例的ip都是不一样的，也是会出问题的，所以docker 要尽量保证Ip不变。</p>
-]]></content>
-  </entry>
-  <entry>
     <title>为什么要用自增主键</title>
     <url>/2018/09/14/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E8%87%AA%E5%A2%9E%E4%B8%BB%E9%94%AE/</url>
     <content><![CDATA[<h1 id="拥抱变化"><a href="#拥抱变化" class="headerlink" title="拥抱变化"></a>拥抱变化</h1><p>关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：</p><blockquote>
@@ -892,6 +879,19 @@
         <tag>mysql</tag>
         <tag>数据库</tag>
       </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2019/05/12/%E4%B8%80%E8%87%B4%E6%80%A7hash/</url>
+    <content><![CDATA[<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>一致性hash 算法的原理很简单，见<a href="https://blog.csdn.net/cywosp/article/details/23397179" target="_blank" rel="noopener">博客</a>。</p><h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><p>一致性hash在rpc中有应用。rpc客户端存储的数据格式如下：</p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ip1 + vitual Index 1 -&gt; hash值0</span><br><span class="line">    ...</span><br><span class="line">ip1 + vitual Index 9 -&gt; hash值9</span><br><span class="line">ip2 + vitual Index 1 -&gt; hash值10</span><br><span class="line">    ...</span><br><span class="line">ip2 + vitual Index 9 -&gt; hash值19</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+<p>现在下游上线或者下线的时候，在zk上的注册都会频繁的改变，那客户端就会重新计算hash，而一旦hash的函数比较复杂的时候，重新计算hash值就会比较耗时。</p>
+<p>比如：假如线上有100台机子，有10个虚拟node。那么每一次如果上线的时候都要重新计算一致性hash的值，那么就需要100 * 10次的hash计算。</p>
+<p>改进也很简单，部署新的机子才会需要计算hash值。</p>
+<p>这样也可能有问题，比如在docker平台上面，每起一个实例的ip都是不一样的，也是会出问题的，所以docker 要尽量保证Ip不变。</p>
+]]></content>
   </entry>
   <entry>
     <title>交替打印出奇偶数</title>
@@ -1050,6 +1050,24 @@
       </tags>
   </entry>
   <entry>
+    <title>分库分表实践</title>
+    <url>/2019/09/28/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E5%AE%9E%E8%B7%B5/</url>
+    <content><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题，并没有说清楚。故该篇文章作为分库分表实践的自我总结，以便以后遇到类似问题，迅速定位找到合适的解法。如果能给您带来些许参考，那将是莫大的荣幸。</p><a id="more"></a>
+<h1 id="你真的需要分库分表吗"><a href="#你真的需要分库分表吗" class="headerlink" title="你真的需要分库分表吗"></a>你真的需要分库分表吗</h1><p>在做分库分表之前，请明确的描述清楚你的问题。这个描述的过程不应该是定性的，而是<strong>定量的、边界可衡量</strong>的。例如：由于xxx业务的日益增长，遇到了性能问题，需要分库分表。这样的描述就极其模糊。正确的定义问题边界是：由于xxx业务增长，某个接口延时耗时增加多少，某平台因为数据库查询慢导致可用性降低多少。而关于定于问题，笔者认为最重要的是定义清楚两个问题：</p>
+<ol>
+<li><strong>当前系统遇到什么问题</strong>。即当前系统遇到的性能、容量等问题，定量定义；</li>
+<li><strong>希望通过该次升级支持多久</strong>。并不是从当前看，系统设计得越好，就能支撑业务发展很好，对未知需要保持敬畏，避免过度设计。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>高并发</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>单例模式</title>
     <url>/2017/06/14/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
     <content><![CDATA[<p>这应该是所有设计模式中最简单的设计模式了，所以从它讲起。</p><h1 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h1><p>用来创建独一无二对象。确保只有一个实例，并且提供一个全局访问点(getSingleton)。</p><h1 id="v0-0-1-简单实现"><a href="#v0-0-1-简单实现" class="headerlink" title="v0.0.1-简单实现"></a>v0.0.1-简单实现</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by Acceml on 2016/5/28.</span></span><br><span class="line"><span class="comment"> * Email: huminghit@gmail.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton == <span class="keyword">null</span>) &#123;<span class="comment">//risk</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
@@ -1081,169 +1099,6 @@
       </categories>
       <tags>
         <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分库分表实践</title>
-    <url>/2019/09/28/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E5%AE%9E%E8%B7%B5/</url>
-    <content><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近的一个项目是解决Mysql的一个表容量问题，做了一次分表实践，期间参看了很多方案，但是通篇看下来，很多都是讲怎么做的，方法论层面较为缺少；有的则细节总结不到位，比如说分库分表有哪些坑，需要考虑什么问题，并没有说清楚。故该篇文章作为分库分表实践的自我总结，以便以后遇到类似问题，迅速定位找到合适的解法。如果能给您带来些许参考，那将是莫大的荣幸。</p><a id="more"></a>
-<h1 id="你真的需要分库分表吗"><a href="#你真的需要分库分表吗" class="headerlink" title="你真的需要分库分表吗"></a>你真的需要分库分表吗</h1><p>在做分库分表之前，请明确的描述清楚你的问题。这个描述的过程不应该是定性的，而是<strong>定量的、边界可衡量</strong>的。例如：由于xxx业务的日益增长，遇到了性能问题，需要分库分表。这样的描述就极其模糊。正确的定义问题边界是：由于xxx业务增长，某个接口延时耗时增加多少，某平台因为数据库查询慢导致可用性降低多少。而关于定于问题，笔者认为最重要的是定义清楚两个问题：</p>
-<ol>
-<li><strong>当前系统遇到什么问题</strong>。即当前系统遇到的性能、容量等问题，定量定义；</li>
-<li><strong>希望通过该次升级支持多久</strong>。并不是从当前看，系统设计得越好，就能支撑业务发展很好，对未知需要保持敬畏，避免过度设计。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>高并发</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>如何做好的design</title>
-    <url>/2017/11/10/%E5%A6%82%E4%BD%95%E5%81%9A%E5%A5%BD%E7%9A%84design/</url>
-    <content><![CDATA[<p>要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：</p><ol>
-<li>DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。</li>
-<li>离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，实现数据版本化、回滚和监控。</li>
-<li>广告索引系统。该系统实现广告数据的增量更新和广告定向信息索引更新（正在参与设计中）</li>
-</ol><a id="more"></a>
-
-<p>就这些模块总结一些设计系统的方法论和套路。</p>
-<h1 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h1><p>高考写作文的时候，老师都非常讨厌模板，但是我这里还是推荐按照固定的套路，这样可以方便的讲清楚问题。</p>
-<ul>
-<li><p>简介（描述为什么做，解决什么问题）</p>
-<ul>
-<li>背景。面临的问题是什么，使用该系统后会变成什么样子。</li>
-<li>Goal。进度和人日预估，版本功能点和时间节点。</li>
-<li>术语。该系统中特有的词汇，但是不要把大家认为common sence的东西写进去。</li>
-<li>参考资料</li>
-</ul>
-</li>
-<li><p>总体设计</p>
-<ul>
-<li>规约。描述好该系统解决问题的边界是什么？可以承载多大的并发，多少数据，数据更新频率。</li>
-<li>系统结构图(系统间)。该系统和其他系统的交互关系。</li>
-<li>模块图(系统内)。该系统分为几个模块，同时要给出：图例、数据流向、数据模块、功能模块。</li>
-</ul>
-</li>
-<li><p>功能模块1。</p>
-<ul>
-<li>功能描述。描述好功能、每个功能点面向谁、交互的模块是什么、数据流向。</li>
-<li>API定义。描述好API的功能、同步还是异步、阻塞还是非阻塞。</li>
-<li>关键点。如果涉及到分布式锁、一致性等对于该模块比较重要的点需要单独说一下。</li>
-<li>示意图。如果面向的是用户，可以适当给出示意图。</li>
-<li>可用性。</li>
-</ul>
-</li>
-<li><p>功能模块X</p>
-</li>
-<li><p>数据模块1。</p>
-<ul>
-<li>表设计。需要详细描述数据库表，包括字段的类型、含义、更新频率等信息。</li>
-<li>数据一致性保证、完整性。</li>
-</ul>
-</li>
-<li><p>数据模块X。</p>
-</li>
-<li><p>关键流程(功能)说明</p>
-<ul>
-<li>该模块用于主要的功能点说明。比如你设计的是外卖订单系统，那么下单，退单，结算等就显得尤为重要。</li>
-<li>这个部分可能需要画泳道图、或者跨职能流程图，角色就是上面定义的各模块。</li>
-<li>异常。如果关键步骤失败了，会出现什么情况，系统对该情况的容忍度。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>可用性说明<ul>
-<li>如果某个模块挂掉，或者该系统的某个子系统挂掉会出现什么情况，需要详细给出系统的可用性并有后续的action跟踪。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>监控报警集成<ul>
-<li>需要集成哪些监控项和报警项。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>环境要求<ul>
-<li>描述JDK、ZK、thrift、dubbo、mysql等。如果部门都是统一的，该章节可以省略。</li>
-</ul>
-</li>
-</ul>
-<p>当然，以上的只是给出一个套路，具体看系统的侧重点，每个系统对外部服务可用性、基础服务可用性的依赖都是不一样的。本文提供一个基本的框架，这样做design的时候会比较有条理。</p>
-<h1 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h1><p>可以看到，要想准确无误的传达信息，最重要的两个图：<strong>系统结构图(系统间)和模块图(系统内)</strong>。这两个图直接决定了你整个design的走向，是做成一个服务还是做成一个jar包，是同步还是异步等等。 如果拿捏不定，需要自己列出类似于决策平衡单的东西。</p>
-<table>
-<thead>
-<tr>
-<th>对比项</th>
-<th>方案1</th>
-<th>方案2</th>
-<th align="left">方案3</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>系统结构图</td>
-<td></td>
-<td></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td>模块框图</td>
-<td></td>
-<td></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td>优点</td>
-<td></td>
-<td></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td>缺点</td>
-<td></td>
-<td></td>
-<td align="left"></td>
-</tr>
-</tbody></table>
-<p>该图列出后，系统设计主笔者需要给出推荐理由，并做一些取舍，作为设计初稿可以给组内review或者组织brain storm ，最终拍板形成最终设计方案。刚毕业的同学这个部分很难，通常需要自己调研业界已有方案，和自己的业务痛点和场景做对比，然后提出上面的对比方案，组织一个brain storm，把大家的的idea记下来之后，会有新的idea。</p>
-<h1 id="Diss-自己"><a href="#Diss-自己" class="headerlink" title="Diss 自己"></a>Diss 自己</h1><p>自己设计的系统就是要不断的和自己的idea做斗争，最终得出一个相对优化或者折中的设计。要把自己想象成被challenge的对象，在做一个系统的时候怎么去challenge自己呢?尤其是在没有经验的时候，自己想的时候觉得自己很完美，结果别人挑出一堆毛病没办法解决。我自己总结了一些常规的点如下：</p>
-<ul>
-<li>系统或者子系统挂掉。任意一个节点挂掉系统的可用性，自己随便想想挂掉个几个模块，宕机几台机子。</li>
-<li>数据的一致性。</li>
-<li>不同节点之间会不会存在竞争共享锁。</li>
-<li>数据的完整性。</li>
-<li>系统调用超时。</li>
-<li>该系统发生状态变化时候，对线上系统其他系统的影响。</li>
-<li>如果是服务，什么时候需要熔断，什么时候进行服务降级。</li>
-<li>用户异常行为。</li>
-<li>技术实现难度。这个需要自己对细节和不可控部分有认识，不然很容易画大饼，避免的办法是多交流。</li>
-<li>启动速度，回滚速度，响应速度。</li>
-<li>什么时候触发监控，报警频率和量级会不会对其他系统构成挑战。</li>
-<li>进度预估是否合理。</li>
-<li>数据库容量会不会爆炸增长，尤其是异常的时候。</li>
-<li>系统瓶颈在哪里。比如索引系统的瓶颈在于更新索引，状态是否一致。</li>
-<li>系统迭代更新时可用性。</li>
-<li>系统的边界界定是否合理。比如该系统解决的问题是不是还可以扩大一点，涵盖的业务是不是可以更多。</li>
-<li>是不是可以复用已有模块避免重复造轮子。</li>
-</ul>
-<p>Diss自己还需要整个复盘交互的细节，通常会发现很多问题自己没有考虑到。</p>
-<h1 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h1><p>通常Diss完自己后，根据别人的意见修改，还需要check一下一些细节，这个部分很多人不注意。</p>
-<ul>
-<li>图例。图例其实很有用，尤其是系统稍微复杂一点。比如：数据模块、中间件、功能模块、元数据流、主数据流。不写图例让人觉得很混乱。</li>
-<li>数据规约的大小是不是合适。比如你随便定一个只支持500M的数据更新，有没有数据支持。</li>
-<li>模块颜色。通常系统设计都需要分层，尽量用不同颜色标志，如接入层、转发层、业务层、数据层等。但是颜色不要太浮夸，毕竟程序员是需要低调一点的。</li>
-</ul>
-<p><img src="/2017/11/10/如何做好的design/HIT.jpg" alt="哈工大校训"></p>
-]]></content>
-      <categories>
-        <category>架构</category>
-      </categories>
-      <tags>
-        <tag>架构</tag>
       </tags>
   </entry>
   <entry>
@@ -1409,33 +1264,148 @@
       </tags>
   </entry>
   <entry>
-    <title>建造者模式在日志系统中的运用</title>
-    <url>/2017/08/14/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E5%9C%A8%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%BF%90%E7%94%A8/</url>
-    <content><![CDATA[<blockquote>
-<p> 本文旨在介绍builder设计模式的运用。适合对builder设计模式了解，但是不知道怎么运用的同学。</p>
-</blockquote><h1 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h1><p>在当前笔者维护的广告系统中，有一个模块专门对接客户端上报的点击、曝光、下载事件，用于记录每个广告数据，供算法决策、BI报表展示给广告主。这些数据的格式不统一，使用的协议也不统一，有的是通过http有的是通过rpc调用。如下图所示，该模块的作用在于汇总各数据流、兼容新老数据格式。每种格式自己维护一套解析系统，我们的代码会显得十分的混乱。</p><a id="more"></a>
+    <title>如何做好的design</title>
+    <url>/2017/11/10/%E5%A6%82%E4%BD%95%E5%81%9A%E5%A5%BD%E7%9A%84design/</url>
+    <content><![CDATA[<p>要做大型分布式系统设计，最重要的事情是：把你所做的事情清楚、准确的描述出来。通常在进行大型分布式系统设计的时候都要进行design review，这个过程需要保证你的设计和别人理解你的设计尽量少的出现偏差。笔者参与或主导设计过三个大型的模块：</p><ol>
+<li>DAL(Data Access Layer)。该系统封装数据库的结构，解耦数据库和服务模块。</li>
+<li>离线数据更新系统。把离线算法模型更新到线上，供线上服务使用，实现数据版本化、回滚和监控。</li>
+<li>广告索引系统。该系统实现广告数据的增量更新和广告定向信息索引更新（正在参与设计中）</li>
+</ol><a id="more"></a>
 
-<h1 id="M-1结构"><a href="#M-1结构" class="headerlink" title="M-1结构"></a>M-1结构</h1><p>对于这样的<strong>M to 1</strong>的数据流，就是输入有多种格式，但是输出固定为一种格式，非常适合用builder来统一。</p>
-<p><img src="/2017/08/14/建造者模式在日志系统中的运用/1.png" alt="这里写图片描述"></p>
-<p>经典的builder模式伪代码如下:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActionLog</span> </span>&#123;</span><br><span class="line">  	ActionLog()&#123;</span><br><span class="line">      ...</span><br><span class="line">      ...</span><br><span class="line">  	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String requiredParams;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String optionalParams;</span><br><span class="line">      	Builder(String requiredParams) &#123;</span><br><span class="line">        </span><br><span class="line">      	&#125;</span><br><span class="line">      </span><br><span class="line">     	<span class="function"><span class="keyword">public</span> Builder <span class="title">withOptionalParams</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        	...</span><br><span class="line">      	&#125;</span><br><span class="line">      	<span class="function"><span class="keyword">public</span> ActionLog <span class="title">build</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="keyword">new</span> ActionLog(<span class="keyword">this</span>);&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可参考《effective java》chapter1。这里谈一个细节，为什么这个内部静态类需要define 为final的? builder封装了构造的过程，在还没有构造完成时，允许使用提供的<code>withOptionalParams</code> 来构建对象，但是一旦这个对象确定下来，就不允许改变，得到最终想要的ActionLog。</p>
-<h1 id="M-N结构"><a href="#M-N结构" class="headerlink" title="M-N结构"></a>M-N结构</h1><p>通常的业务场景都不是一种数据格式可以搞定的，可能需要生成多种数据格式。如下游需要送到kafka、hdfs、hive表、thrift调用等。构造这些格式的<code>meta data</code> 已经包含在builder中了，所以我们只需要稍加改动即可。<br><img src="/2017/08/14/建造者模式在日志系统中的运用/2.png" alt="这里写图片描述"></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActionLog</span> </span>&#123;</span><br><span class="line">  	ActionLog()&#123;</span><br><span class="line">      ...</span><br><span class="line">      ...</span><br><span class="line">  	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String requiredParams;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String optionalParams;</span><br><span class="line">      	Builder(String requiredParams) &#123;</span><br><span class="line">        </span><br><span class="line">      	&#125;</span><br><span class="line">      </span><br><span class="line">     	<span class="function"><span class="keyword">public</span> Builder <span class="title">withOptionalParams</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        	...</span><br><span class="line">      	&#125;</span><br><span class="line">      	<span class="function"><span class="keyword">public</span> ActionLog <span class="title">buildForKafka</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="keyword">new</span> ActionLog(<span class="keyword">this</span>);&#125;</span><br><span class="line">      	<span class="function"><span class="keyword">public</span> ActionLog <span class="title">buildForThrift</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="keyword">new</span> ActionLog(<span class="keyword">this</span>);&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="多条上报"><a href="#多条上报" class="headerlink" title="多条上报"></a>多条上报</h1><p>上面的两个例子都是一个请求，产生一条日志，请求层面来说是<code>one to one</code> ，有时候客户端通常会做一个proxy或者sdk，来减少请求次数，一次上报多条。</p>
-<p>这个时候请求层面属于<code>M to one</code> 的结构。我们构造出多个builder就好，不要在builder中做额外的事情，buider保持它职能的单一性。<code>one request</code>-&gt; <code>List&lt;Builder&gt;</code> -&gt; <code>List&lt;ActionLog&gt;</code></p>
-<p>目前在开发中遇到这三种情况，基本可以cover到解析日志的各种情况。在大型系统中，数据结构的统一十分重要。FYI</p>
-<blockquote>
-<p>Don’t be evil. 不要用 eval()。—— Google</p>
-</blockquote>
+<p>就这些模块总结一些设计系统的方法论和套路。</p>
+<h1 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h1><p>高考写作文的时候，老师都非常讨厌模板，但是我这里还是推荐按照固定的套路，这样可以方便的讲清楚问题。</p>
+<ul>
+<li><p>简介（描述为什么做，解决什么问题）</p>
+<ul>
+<li>背景。面临的问题是什么，使用该系统后会变成什么样子。</li>
+<li>Goal。进度和人日预估，版本功能点和时间节点。</li>
+<li>术语。该系统中特有的词汇，但是不要把大家认为common sence的东西写进去。</li>
+<li>参考资料</li>
+</ul>
+</li>
+<li><p>总体设计</p>
+<ul>
+<li>规约。描述好该系统解决问题的边界是什么？可以承载多大的并发，多少数据，数据更新频率。</li>
+<li>系统结构图(系统间)。该系统和其他系统的交互关系。</li>
+<li>模块图(系统内)。该系统分为几个模块，同时要给出：图例、数据流向、数据模块、功能模块。</li>
+</ul>
+</li>
+<li><p>功能模块1。</p>
+<ul>
+<li>功能描述。描述好功能、每个功能点面向谁、交互的模块是什么、数据流向。</li>
+<li>API定义。描述好API的功能、同步还是异步、阻塞还是非阻塞。</li>
+<li>关键点。如果涉及到分布式锁、一致性等对于该模块比较重要的点需要单独说一下。</li>
+<li>示意图。如果面向的是用户，可以适当给出示意图。</li>
+<li>可用性。</li>
+</ul>
+</li>
+<li><p>功能模块X</p>
+</li>
+<li><p>数据模块1。</p>
+<ul>
+<li>表设计。需要详细描述数据库表，包括字段的类型、含义、更新频率等信息。</li>
+<li>数据一致性保证、完整性。</li>
+</ul>
+</li>
+<li><p>数据模块X。</p>
+</li>
+<li><p>关键流程(功能)说明</p>
+<ul>
+<li>该模块用于主要的功能点说明。比如你设计的是外卖订单系统，那么下单，退单，结算等就显得尤为重要。</li>
+<li>这个部分可能需要画泳道图、或者跨职能流程图，角色就是上面定义的各模块。</li>
+<li>异常。如果关键步骤失败了，会出现什么情况，系统对该情况的容忍度。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>可用性说明<ul>
+<li>如果某个模块挂掉，或者该系统的某个子系统挂掉会出现什么情况，需要详细给出系统的可用性并有后续的action跟踪。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>监控报警集成<ul>
+<li>需要集成哪些监控项和报警项。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>环境要求<ul>
+<li>描述JDK、ZK、thrift、dubbo、mysql等。如果部门都是统一的，该章节可以省略。</li>
+</ul>
+</li>
+</ul>
+<p>当然，以上的只是给出一个套路，具体看系统的侧重点，每个系统对外部服务可用性、基础服务可用性的依赖都是不一样的。本文提供一个基本的框架，这样做design的时候会比较有条理。</p>
+<h1 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h1><p>可以看到，要想准确无误的传达信息，最重要的两个图：<strong>系统结构图(系统间)和模块图(系统内)</strong>。这两个图直接决定了你整个design的走向，是做成一个服务还是做成一个jar包，是同步还是异步等等。 如果拿捏不定，需要自己列出类似于决策平衡单的东西。</p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>方案1</th>
+<th>方案2</th>
+<th align="left">方案3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统结构图</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>模块框图</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>优点</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>缺点</td>
+<td></td>
+<td></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p>该图列出后，系统设计主笔者需要给出推荐理由，并做一些取舍，作为设计初稿可以给组内review或者组织brain storm ，最终拍板形成最终设计方案。刚毕业的同学这个部分很难，通常需要自己调研业界已有方案，和自己的业务痛点和场景做对比，然后提出上面的对比方案，组织一个brain storm，把大家的的idea记下来之后，会有新的idea。</p>
+<h1 id="Diss-自己"><a href="#Diss-自己" class="headerlink" title="Diss 自己"></a>Diss 自己</h1><p>自己设计的系统就是要不断的和自己的idea做斗争，最终得出一个相对优化或者折中的设计。要把自己想象成被challenge的对象，在做一个系统的时候怎么去challenge自己呢?尤其是在没有经验的时候，自己想的时候觉得自己很完美，结果别人挑出一堆毛病没办法解决。我自己总结了一些常规的点如下：</p>
+<ul>
+<li>系统或者子系统挂掉。任意一个节点挂掉系统的可用性，自己随便想想挂掉个几个模块，宕机几台机子。</li>
+<li>数据的一致性。</li>
+<li>不同节点之间会不会存在竞争共享锁。</li>
+<li>数据的完整性。</li>
+<li>系统调用超时。</li>
+<li>该系统发生状态变化时候，对线上系统其他系统的影响。</li>
+<li>如果是服务，什么时候需要熔断，什么时候进行服务降级。</li>
+<li>用户异常行为。</li>
+<li>技术实现难度。这个需要自己对细节和不可控部分有认识，不然很容易画大饼，避免的办法是多交流。</li>
+<li>启动速度，回滚速度，响应速度。</li>
+<li>什么时候触发监控，报警频率和量级会不会对其他系统构成挑战。</li>
+<li>进度预估是否合理。</li>
+<li>数据库容量会不会爆炸增长，尤其是异常的时候。</li>
+<li>系统瓶颈在哪里。比如索引系统的瓶颈在于更新索引，状态是否一致。</li>
+<li>系统迭代更新时可用性。</li>
+<li>系统的边界界定是否合理。比如该系统解决的问题是不是还可以扩大一点，涵盖的业务是不是可以更多。</li>
+<li>是不是可以复用已有模块避免重复造轮子。</li>
+</ul>
+<p>Diss自己还需要整个复盘交互的细节，通常会发现很多问题自己没有考虑到。</p>
+<h1 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h1><p>通常Diss完自己后，根据别人的意见修改，还需要check一下一些细节，这个部分很多人不注意。</p>
+<ul>
+<li>图例。图例其实很有用，尤其是系统稍微复杂一点。比如：数据模块、中间件、功能模块、元数据流、主数据流。不写图例让人觉得很混乱。</li>
+<li>数据规约的大小是不是合适。比如你随便定一个只支持500M的数据更新，有没有数据支持。</li>
+<li>模块颜色。通常系统设计都需要分层，尽量用不同颜色标志，如接入层、转发层、业务层、数据层等。但是颜色不要太浮夸，毕竟程序员是需要低调一点的。</li>
+</ul>
+<p><img src="/2017/11/10/如何做好的design/HIT.jpg" alt="哈工大校训"></p>
 ]]></content>
       <categories>
-        <category>设计模式</category>
+        <category>架构</category>
       </categories>
       <tags>
-        <tag>设计模式</tag>
+        <tag>架构</tag>
       </tags>
   </entry>
   <entry>
@@ -1462,6 +1432,36 @@
 <hr>
 <blockquote>
 <p>Talk is cheap, show me your code            ——.Linus Torvalds</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>建造者模式在日志系统中的运用</title>
+    <url>/2017/08/14/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E5%9C%A8%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%BF%90%E7%94%A8/</url>
+    <content><![CDATA[<blockquote>
+<p> 本文旨在介绍builder设计模式的运用。适合对builder设计模式了解，但是不知道怎么运用的同学。</p>
+</blockquote><h1 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h1><p>在当前笔者维护的广告系统中，有一个模块专门对接客户端上报的点击、曝光、下载事件，用于记录每个广告数据，供算法决策、BI报表展示给广告主。这些数据的格式不统一，使用的协议也不统一，有的是通过http有的是通过rpc调用。如下图所示，该模块的作用在于汇总各数据流、兼容新老数据格式。每种格式自己维护一套解析系统，我们的代码会显得十分的混乱。</p><a id="more"></a>
+
+<h1 id="M-1结构"><a href="#M-1结构" class="headerlink" title="M-1结构"></a>M-1结构</h1><p>对于这样的<strong>M to 1</strong>的数据流，就是输入有多种格式，但是输出固定为一种格式，非常适合用builder来统一。</p>
+<p><img src="/2017/08/14/建造者模式在日志系统中的运用/1.png" alt="这里写图片描述"></p>
+<p>经典的builder模式伪代码如下:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActionLog</span> </span>&#123;</span><br><span class="line">  	ActionLog()&#123;</span><br><span class="line">      ...</span><br><span class="line">      ...</span><br><span class="line">  	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String requiredParams;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String optionalParams;</span><br><span class="line">      	Builder(String requiredParams) &#123;</span><br><span class="line">        </span><br><span class="line">      	&#125;</span><br><span class="line">      </span><br><span class="line">     	<span class="function"><span class="keyword">public</span> Builder <span class="title">withOptionalParams</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        	...</span><br><span class="line">      	&#125;</span><br><span class="line">      	<span class="function"><span class="keyword">public</span> ActionLog <span class="title">build</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="keyword">new</span> ActionLog(<span class="keyword">this</span>);&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可参考《effective java》chapter1。这里谈一个细节，为什么这个内部静态类需要define 为final的? builder封装了构造的过程，在还没有构造完成时，允许使用提供的<code>withOptionalParams</code> 来构建对象，但是一旦这个对象确定下来，就不允许改变，得到最终想要的ActionLog。</p>
+<h1 id="M-N结构"><a href="#M-N结构" class="headerlink" title="M-N结构"></a>M-N结构</h1><p>通常的业务场景都不是一种数据格式可以搞定的，可能需要生成多种数据格式。如下游需要送到kafka、hdfs、hive表、thrift调用等。构造这些格式的<code>meta data</code> 已经包含在builder中了，所以我们只需要稍加改动即可。<br><img src="/2017/08/14/建造者模式在日志系统中的运用/2.png" alt="这里写图片描述"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActionLog</span> </span>&#123;</span><br><span class="line">  	ActionLog()&#123;</span><br><span class="line">      ...</span><br><span class="line">      ...</span><br><span class="line">  	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String requiredParams;</span><br><span class="line">      	<span class="keyword">private</span> <span class="keyword">final</span> String optionalParams;</span><br><span class="line">      	Builder(String requiredParams) &#123;</span><br><span class="line">        </span><br><span class="line">      	&#125;</span><br><span class="line">      </span><br><span class="line">     	<span class="function"><span class="keyword">public</span> Builder <span class="title">withOptionalParams</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        	...</span><br><span class="line">      	&#125;</span><br><span class="line">      	<span class="function"><span class="keyword">public</span> ActionLog <span class="title">buildForKafka</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="keyword">new</span> ActionLog(<span class="keyword">this</span>);&#125;</span><br><span class="line">      	<span class="function"><span class="keyword">public</span> ActionLog <span class="title">buildForThrift</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="keyword">new</span> ActionLog(<span class="keyword">this</span>);&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="多条上报"><a href="#多条上报" class="headerlink" title="多条上报"></a>多条上报</h1><p>上面的两个例子都是一个请求，产生一条日志，请求层面来说是<code>one to one</code> ，有时候客户端通常会做一个proxy或者sdk，来减少请求次数，一次上报多条。</p>
+<p>这个时候请求层面属于<code>M to one</code> 的结构。我们构造出多个builder就好，不要在builder中做额外的事情，buider保持它职能的单一性。<code>one request</code>-&gt; <code>List&lt;Builder&gt;</code> -&gt; <code>List&lt;ActionLog&gt;</code></p>
+<p>目前在开发中遇到这三种情况，基本可以cover到解析日志的各种情况。在大型系统中，数据结构的统一十分重要。FYI</p>
+<blockquote>
+<p>Don’t be evil. 不要用 eval()。—— Google</p>
 </blockquote>
 ]]></content>
       <categories>
