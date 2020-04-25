@@ -56,17 +56,18 @@
 </script>
 
   <meta name="description" content="回收区域 GC区域：堆、方法区 不GC的区域：程序计数器、虚拟机栈、本地方法栈 堆回收 引用计数法：有引用就会记1 会有循环引用的问题 主流jvm不使用这种方式   可达性分析法：判断到GC-root GC root 对象 jvm中栈帧中引用的对象 方法区中静态属性(static)、常量(final)引用的对象     引用分类 强引用：Object ojb = new Object()， 只要有">
+<meta name="keywords" content="jvm,java,虚拟机,G1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="江声浩荡">
-<meta property="og:url" content="http://yoursite.com/2019/05/12/GC区域/index.html">
+<meta property="og:title" content="GC区域">
+<meta property="og:url" content="http://yoursite.com/2018/05/03/GC区域/index.html">
 <meta property="og:site_name" content="江声浩荡">
 <meta property="og:description" content="回收区域 GC区域：堆、方法区 不GC的区域：程序计数器、虚拟机栈、本地方法栈 堆回收 引用计数法：有引用就会记1 会有循环引用的问题 主流jvm不使用这种方式   可达性分析法：判断到GC-root GC root 对象 jvm中栈帧中引用的对象 方法区中静态属性(static)、常量(final)引用的对象     引用分类 强引用：Object ojb = new Object()， 只要有">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-12T15:58:23.737Z">
+<meta property="og:updated_time" content="2020-04-25T07:48:36.995Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="江声浩荡">
+<meta name="twitter:title" content="GC区域">
 <meta name="twitter:description" content="回收区域 GC区域：堆、方法区 不GC的区域：程序计数器、虚拟机栈、本地方法栈 堆回收 引用计数法：有引用就会记1 会有循环引用的问题 主流jvm不使用这种方式   可达性分析法：判断到GC-root GC root 对象 jvm中栈帧中引用的对象 方法区中静态属性(static)、常量(final)引用的对象     引用分类 强引用：Object ojb = new Object()， 只要有">
-  <link rel="canonical" href="http://yoursite.com/2019/05/12/GC区域/">
+  <link rel="canonical" href="http://yoursite.com/2018/05/03/GC区域/">
 
 
 <script id="page-configurations">
@@ -80,7 +81,7 @@
   };
 </script>
 
-  <title> | 江声浩荡</title>
+  <title>GC区域 | 江声浩荡</title>
   <meta name="generator" content="Hexo 3.9.0">
   
 
@@ -252,7 +253,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/12/GC区域/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/03/GC区域/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="修飒">
@@ -264,7 +265,7 @@
       <meta itemprop="name" content="江声浩荡">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">GC区域
 
           
         </h1>
@@ -280,7 +281,32 @@
                 
               
 
-              <time title="创建时间：2019-05-12 23:58:23" itemprop="dateCreated datePublished" datetime="2019-05-12T23:58:23+08:00">2019-05-12</time>
+              <time title="创建时间：2018-05-03 09:38:24" itemprop="dateCreated datePublished" datetime="2018-05-03T09:38:24+08:00">2018-05-03</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-25 15:48:36" itemprop="dateModified" datetime="2020-04-25T15:48:36+08:00">2020-04-25</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/jvm/" itemprop="url" rel="index"><span itemprop="name">jvm</span></a></span>
+
+                
+                
+              
             </span>
           
 
@@ -374,14 +400,29 @@
       
 
       <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/jvm/" rel="tag"># jvm</a>
+            
+              <a href="/tags/java/" rel="tag"># java</a>
+            
+              <a href="/tags/虚拟机/" rel="tag"># 虚拟机</a>
+            
+              <a href="/tags/G1/" rel="tag"># G1</a>
+            
+          </div>
+        
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/03/21/java类加载机制/" rel="next" title="java类加载机制">
-                  <i class="fa fa-chevron-left"></i> java类加载机制
+                <a href="/2018/05/03/G1垃圾回收器/" rel="next" title="G1垃圾回收器">
+                  <i class="fa fa-chevron-left"></i> G1垃圾回收器
                 </a>
               
             </div>
@@ -390,8 +431,8 @@
 
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2019/05/12/HashMap内部原理/" rel="prev" title="">
-                   <i class="fa fa-chevron-right"></i>
+                <a href="/2018/05/03/GC算法和分代回收设计/" rel="prev" title="GC算法和分代回收设计">
+                  GC算法和分代回收设计 <i class="fa fa-chevron-right"></i>
                 </a>
               
             </div>
