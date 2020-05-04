@@ -711,6 +711,47 @@
       </tags>
   </entry>
   <entry>
+    <title>交替打印出奇偶数</title>
+    <url>/2019/09/16/%E4%BA%A4%E6%9B%BF%E6%89%93%E5%8D%B0%E5%87%BAAB/</url>
+    <content><![CDATA[<p>中秋佳节放假前夕，同事无心工作，聊到大家面试候选人的题目，其中提到如何用两个线程交替打印出奇偶数。百无聊赖之际，索性写了一下code。</p><h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>两个线程交替打印奇数和偶数，最关键的是如何协作的问题。</p><ul>
+<li>打印的数可以用java里面的<code>atomicInteger</code> 来保证原子性；</li>
+<li>打印何时结束需要设置一个上限，比如打印到100结束；</li>
+</ul><a id="more"></a>
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintABAtomic</span> <span class="keyword">implements</span> <span class="title">IPrintAB</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 打印何时结束需要设置一个上限，打印到100结束；</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_PRINT_NUM = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> AtomicInteger atomicInteger = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printAB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (atomicInteger.get() &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="comment">// 打印奇数.</span></span><br><span class="line">                <span class="keyword">if</span> (atomicInteger.get() % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + atomicInteger.get());</span><br><span class="line">                    atomicInteger.incrementAndGet();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (atomicInteger.get() &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="comment">// 打印偶数.</span></span><br><span class="line">                <span class="keyword">if</span> (atomicInteger.get() % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + atomicInteger.get());</span><br><span class="line">                    atomicInteger.incrementAndGet();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以采用另一种办法。用<code>volatile</code> 的方式来实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintABVolatile</span> <span class="keyword">implements</span> <span class="title">IPrintAB</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_PRINT_NUM = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printAB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (count &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + count);</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (count &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + count);</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="junit多线程的坑"><a href="#junit多线程的坑" class="headerlink" title="junit多线程的坑"></a>junit多线程的坑</h1><p>如果你用单元测试该代码会发现一个问题：还没打印到100线程就结束了。junit日志如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[INFO  2019-09-21 09:20:44.279] [main] org.springframework.test.context.support.AbstractTestContextBootstrapper.getTestExecutionListeners(AbstractTestContextBootstrapper.java:187) [Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@694abbdc, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@2e005c4b, org.springframework.test.context.support.DependencyInjectionTestExecutionListener@4567f35d, org.springframework.test.context.support.DirtiesContextTestExecutionListener@5ffead27, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@6356695f, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@4f18837a, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@359f7cdf, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@1fa268de, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@4f6ee6e4, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@4466af20]][INFO  2019-09-21 09:20:44.380] [main] org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:317) [Loading XML bean definitions from class path resource [applicationContext.xml]]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.668</span>] [main] org.springframework.context.support.AbstractApplicationContext.prepareRefresh(AbstractApplicationContext.java:<span class="number">583</span>) [Refreshing org.springframework.context.support.GenericApplicationContext@<span class="number">34</span>a3d150: startup date [Sat Sep <span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44</span> CST <span class="number">2019</span>]; root of context hierarchy]</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.946</span>] [Thread-<span class="number">2</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">0</span>(PrintABVolatile.java:<span class="number">27</span>) [num:<span class="number">30</span>]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.947</span>] [Thread-<span class="number">3</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">1</span>(PrintABVolatile.java:<span class="number">37</span>) [num:<span class="number">31</span>]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.947</span>] [Thread-<span class="number">2</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">0</span>(PrintABVolatile.java:<span class="number">27</span>) [num:<span class="number">32</span>]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.947</span>] [Thread-<span class="number">3</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">1</span>(PrintABVolatile.java:<span class="number">37</span>) [num:<span class="number">33</span>]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.948</span>] [Thread-<span class="number">2</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">0</span>(PrintABVolatile.java:<span class="number">27</span>) [num:<span class="number">34</span>]</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到这个进程中有三个线程，分别是：<code>thread-main</code>、<code>thread-2</code>、<code>thread-3</code>。但是当打印到第34个数字的时候，这个进程就退出了。</p>
+<p>为了一探究竟，看了一下<code>TestRunner</code>的实现：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        TestRunner aTestRunner = <span class="keyword">new</span> TestRunner();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TestResult r = aTestRunner.start(args);</span><br><span class="line">            <span class="keyword">if</span> (!r.wasSuccessful()) &#123;</span><br><span class="line">                <span class="comment">// 执行成功不成功.</span></span><br><span class="line">                System.exit(<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            System.exit(<span class="number">0</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var3) &#123;</span><br><span class="line">            System.err.println(var3.getMessage());</span><br><span class="line">            System.exit(<span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestResult</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">wasSuccessful</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.failureCount() == <span class="number">0</span> &amp;&amp; <span class="keyword">this</span>.errorCount() == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主线程main执行结束后，会直接调用<code>wasSuccessful</code> 方法，判断返回<code>true</code>，<code>System.exit(0)</code> 直接将虚拟机结束掉。至此原因探究清楚了，提供几种简单的解法。</p>
+<h1 id="junit-多线程问题解决"><a href="#junit-多线程问题解决" class="headerlink" title="junit 多线程问题解决"></a>junit 多线程问题解决</h1><h2 id="使用CountDownLatch"><a href="#使用CountDownLatch" class="headerlink" title="使用CountDownLatch"></a>使用CountDownLatch</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintABVolatile</span> <span class="keyword">implements</span> <span class="title">IPrintAB</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_PRINT_NUM = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printAB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 声明CountDownLatch</span></span><br><span class="line">        CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (count &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + count);</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 偶数线程执行完则计数器减一</span></span><br><span class="line">            countDownLatch.countDown();</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (count &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + count);</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 奇数线程执行完则计数器减一</span></span><br><span class="line">            countDownLatch.countDown();</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            countDownLatch.await();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>AtomicInteger</code>的方法类似，在此不做赘述。</p>
+<h2 id="直接用main方法调试"><a href="#直接用main方法调试" class="headerlink" title="直接用main方法调试"></a>直接用main方法调试</h2><p>当然，这种方法仅用于调试，不能用于写单元测试。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">     PrintABVolatile printABVolatile = <span class="keyword">new</span> PrintABVolatile();</span><br><span class="line">     printABVolatile.printAB();</span><br><span class="line">     <span class="comment">// main线程执行完会等待其他线程执行完，这个进程才会退出.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文是一道经典的面试题，主要考察多线程之间的协调工作，提供了两种方法，分别利用<code>volatile</code>的可见性和<code>AtomicInteger</code> 的原子性对两个线程进行协调。在实践过程中，遇到junit不支持多线程的坑，可以使用<code>CountDownLatch</code> 来等待两个奇偶线程结束后再结束，这里可以考察候选人对于线程结束的理解。</p>
+<p>实现源码见:<a href="https://github.com/acpipe/rigel-infra/blob/master/src/main/java/com/rigel/concurrent/printab/PrintABAtomic.java" target="_blank" rel="noopener">交替打印AB</a></p>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>多线程</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>为什么要用自增主键</title>
     <url>/2018/09/14/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E8%87%AA%E5%A2%9E%E4%B8%BB%E9%94%AE/</url>
     <content><![CDATA[<h1 id="拥抱变化"><a href="#拥抱变化" class="headerlink" title="拥抱变化"></a>拥抱变化</h1><p>关于这个topic，在网上搜索出来的，很多你可以看到这么一句话：</p><blockquote>
@@ -757,47 +798,6 @@
       <tags>
         <tag>mysql</tag>
         <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>交替打印出奇偶数</title>
-    <url>/2019/09/16/%E4%BA%A4%E6%9B%BF%E6%89%93%E5%8D%B0%E5%87%BAAB/</url>
-    <content><![CDATA[<p>中秋佳节放假前夕，同事无心工作，聊到大家面试候选人的题目，其中提到如何用两个线程交替打印出奇偶数。百无聊赖之际，索性写了一下code。</p><h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>两个线程交替打印奇数和偶数，最关键的是如何协作的问题。</p><ul>
-<li>打印的数可以用java里面的<code>atomicInteger</code> 来保证原子性；</li>
-<li>打印何时结束需要设置一个上限，比如打印到100结束；</li>
-</ul><a id="more"></a>
-
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintABAtomic</span> <span class="keyword">implements</span> <span class="title">IPrintAB</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 打印何时结束需要设置一个上限，打印到100结束；</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_PRINT_NUM = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> AtomicInteger atomicInteger = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printAB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (atomicInteger.get() &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="comment">// 打印奇数.</span></span><br><span class="line">                <span class="keyword">if</span> (atomicInteger.get() % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + atomicInteger.get());</span><br><span class="line">                    atomicInteger.incrementAndGet();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (atomicInteger.get() &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="comment">// 打印偶数.</span></span><br><span class="line">                <span class="keyword">if</span> (atomicInteger.get() % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + atomicInteger.get());</span><br><span class="line">                    atomicInteger.incrementAndGet();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>还可以采用另一种办法。用<code>volatile</code> 的方式来实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintABVolatile</span> <span class="keyword">implements</span> <span class="title">IPrintAB</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_PRINT_NUM = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printAB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (count &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + count);</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (count &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + count);</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="junit多线程的坑"><a href="#junit多线程的坑" class="headerlink" title="junit多线程的坑"></a>junit多线程的坑</h1><p>如果你用单元测试该代码会发现一个问题：还没打印到100线程就结束了。junit日志如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[INFO  2019-09-21 09:20:44.279] [main] org.springframework.test.context.support.AbstractTestContextBootstrapper.getTestExecutionListeners(AbstractTestContextBootstrapper.java:187) [Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@694abbdc, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@2e005c4b, org.springframework.test.context.support.DependencyInjectionTestExecutionListener@4567f35d, org.springframework.test.context.support.DirtiesContextTestExecutionListener@5ffead27, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@6356695f, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@4f18837a, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@359f7cdf, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@1fa268de, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@4f6ee6e4, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@4466af20]][INFO  2019-09-21 09:20:44.380] [main] org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:317) [Loading XML bean definitions from class path resource [applicationContext.xml]]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.668</span>] [main] org.springframework.context.support.AbstractApplicationContext.prepareRefresh(AbstractApplicationContext.java:<span class="number">583</span>) [Refreshing org.springframework.context.support.GenericApplicationContext@<span class="number">34</span>a3d150: startup date [Sat Sep <span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44</span> CST <span class="number">2019</span>]; root of context hierarchy]</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.946</span>] [Thread-<span class="number">2</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">0</span>(PrintABVolatile.java:<span class="number">27</span>) [num:<span class="number">30</span>]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.947</span>] [Thread-<span class="number">3</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">1</span>(PrintABVolatile.java:<span class="number">37</span>) [num:<span class="number">31</span>]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.947</span>] [Thread-<span class="number">2</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">0</span>(PrintABVolatile.java:<span class="number">27</span>) [num:<span class="number">32</span>]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.947</span>] [Thread-<span class="number">3</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">1</span>(PrintABVolatile.java:<span class="number">37</span>) [num:<span class="number">33</span>]</span><br><span class="line">[INFO  <span class="number">2019</span>-<span class="number">09</span>-<span class="number">21</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">44.948</span>] [Thread-<span class="number">2</span>] com.rigel.concurrent.printab.PrintABVolatile.lambda$printAB$<span class="number">0</span>(PrintABVolatile.java:<span class="number">27</span>) [num:<span class="number">34</span>]</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<p>可以看到这个进程中有三个线程，分别是：<code>thread-main</code>、<code>thread-2</code>、<code>thread-3</code>。但是当打印到第34个数字的时候，这个进程就退出了。</p>
-<p>为了一探究竟，看了一下<code>TestRunner</code>的实现：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        TestRunner aTestRunner = <span class="keyword">new</span> TestRunner();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TestResult r = aTestRunner.start(args);</span><br><span class="line">            <span class="keyword">if</span> (!r.wasSuccessful()) &#123;</span><br><span class="line">                <span class="comment">// 执行成功不成功.</span></span><br><span class="line">                System.exit(<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            System.exit(<span class="number">0</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var3) &#123;</span><br><span class="line">            System.err.println(var3.getMessage());</span><br><span class="line">            System.exit(<span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestResult</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">wasSuccessful</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.failureCount() == <span class="number">0</span> &amp;&amp; <span class="keyword">this</span>.errorCount() == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>主线程main执行结束后，会直接调用<code>wasSuccessful</code> 方法，判断返回<code>true</code>，<code>System.exit(0)</code> 直接将虚拟机结束掉。至此原因探究清楚了，提供几种简单的解法。</p>
-<h1 id="junit-多线程问题解决"><a href="#junit-多线程问题解决" class="headerlink" title="junit 多线程问题解决"></a>junit 多线程问题解决</h1><h2 id="使用CountDownLatch"><a href="#使用CountDownLatch" class="headerlink" title="使用CountDownLatch"></a>使用CountDownLatch</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintABVolatile</span> <span class="keyword">implements</span> <span class="title">IPrintAB</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_PRINT_NUM = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printAB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 声明CountDownLatch</span></span><br><span class="line">        CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (count &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + count);</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 偶数线程执行完则计数器减一</span></span><br><span class="line">            countDownLatch.countDown();</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (count &lt; MAX_PRINT_NUM) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">                    log.info(<span class="string">"num:"</span> + count);</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 奇数线程执行完则计数器减一</span></span><br><span class="line">            countDownLatch.countDown();</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            countDownLatch.await();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>AtomicInteger</code>的方法类似，在此不做赘述。</p>
-<h2 id="直接用main方法调试"><a href="#直接用main方法调试" class="headerlink" title="直接用main方法调试"></a>直接用main方法调试</h2><p>当然，这种方法仅用于调试，不能用于写单元测试。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">     PrintABVolatile printABVolatile = <span class="keyword">new</span> PrintABVolatile();</span><br><span class="line">     printABVolatile.printAB();</span><br><span class="line">     <span class="comment">// main线程执行完会等待其他线程执行完，这个进程才会退出.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文是一道经典的面试题，主要考察多线程之间的协调工作，提供了两种方法，分别利用<code>volatile</code>的可见性和<code>AtomicInteger</code> 的原子性对两个线程进行协调。在实践过程中，遇到junit不支持多线程的坑，可以使用<code>CountDownLatch</code> 来等待两个奇偶线程结束后再结束，这里可以考察候选人对于线程结束的理解。</p>
-<p>实现源码见:<a href="https://github.com/acpipe/rigel-infra/blob/master/src/main/java/com/rigel/concurrent/printab/PrintABAtomic.java" target="_blank" rel="noopener">交替打印AB</a></p>
-]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>多线程</tag>
       </tags>
   </entry>
   <entry>
@@ -931,6 +931,168 @@
       <tags>
         <tag>mysql</tag>
         <tag>高并发</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>垃圾回收器分类</title>
+    <url>/2019/09/28/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E5%88%86%E7%B1%BB/</url>
+    <content><![CDATA[<p>为什么会有那么多垃圾收集器?因为根据对象的特点，例如对象的生命周期、大小，进行分代以后有不同的垃圾回收算法，每种算法的具体实现和侧重点不同，就有众多的垃圾回收器。不存在什么优劣之分.</p><h1 id="并行和并发"><a href="#并行和并发" class="headerlink" title="并行和并发"></a>并行和并发</h1><ul>
+<li><strong>并行（Parallel）</strong>：指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态。</li>
+<li><strong>并发（Concurrent）</strong>：指用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替执行），用户程序在继续运行。而垃圾收集程序运行在另一个CPU上。</li>
+</ul><a id="more"></a>
+
+<h1 id="吞吐量-vs-停顿时间"><a href="#吞吐量-vs-停顿时间" class="headerlink" title="吞吐量 vs 停顿时间"></a>吞吐量 vs 停顿时间</h1><p>$吞吐量 = {\frac{运行用户代码的时间}{运行用户代码时间+垃圾回收时间}}$</p>
+<p>eg: 虚拟机总共运行了100min，垃圾回收花掉1min, 吞吐量为：99%</p>
+<p><strong>停顿时间缩短是以牺牲吞吐量和新生代空间为代价的</strong>。</p>
+<p>新生代空间缩小 -&gt; 停顿时间缩短 -&gt; GC频繁 -&gt; <strong>GC的总时间增加</strong>-&gt; 吞吐量下降 </p>
+<h1 id="Serial-Garbage-Collector"><a href="#Serial-Garbage-Collector" class="headerlink" title="Serial Garbage Collector"></a>Serial Garbage Collector</h1><p><img src="/2019/09/28/垃圾回收器分类/1.png" alt></p>
+<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
+<li>单线程，只会使用一个CPU，一条线程去完成垃圾回收工作</li>
+<li>进行垃圾回收的时候必须要暂停所有工作线程</li>
+<li>采用复制算法</li>
+<li>新生代</li>
+</ul>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p>Client模式（分配的内存少）下不错的选择</p>
+<h1 id="Parallel-Garbage-Collector"><a href="#Parallel-Garbage-Collector" class="headerlink" title="Parallel Garbage Collector"></a>Parallel Garbage Collector</h1><p><img src="/2019/09/28/垃圾回收器分类/2.png" alt></p>
+<p><strong>ParNew</strong>收集器就是Serial收集器的多线程版本.</p>
+<h2 id="工作原理-1"><a href="#工作原理-1" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
+<li>也是stop the word，只是GC的时候是多线程</li>
+<li><strong>-XX:ParallerGCThreads</strong>可以设置线程数目，默认是CPU的数目。</li>
+<li>采用复制算法</li>
+<li>新生代</li>
+</ul>
+<h2 id="应用-1"><a href="#应用-1" class="headerlink" title="应用"></a>应用</h2><ul>
+<li>只有它可以和CMS配合</li>
+<li>Server模式下的虚拟机中首选的新生代收集器</li>
+</ul>
+<h1 id="Parallel-Scavenge-Garbage-Collector"><a href="#Parallel-Scavenge-Garbage-Collector" class="headerlink" title="Parallel Scavenge Garbage Collector"></a>Parallel Scavenge Garbage Collector</h1><h2 id="工作原理-2"><a href="#工作原理-2" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
+<li>目标是达到一个可控制的 <strong>吞吐量</strong></li>
+<li>老年代</li>
+</ul>
+<h2 id="应用-2"><a href="#应用-2" class="headerlink" title="应用"></a>应用</h2><ul>
+<li>吞吐量高，停顿时间就长。不适合哪种需要与用户交互的程序，在后台运算不需要太多交互的任务。</li>
+<li>Parallel Scavenge收集器无法与CMS收集器配合使用</li>
+<li>采用复制算法</li>
+</ul>
+<h1 id="Serial-Old-Garbage-Collector"><a href="#Serial-Old-Garbage-Collector" class="headerlink" title="Serial Old Garbage Collector"></a>Serial Old Garbage Collector</h1><h2 id="工作原理-3"><a href="#工作原理-3" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
+<li>Serial Old 是 Serial收集器的老年代版本</li>
+<li>单线程</li>
+<li>采用标记整理算法</li>
+</ul>
+<h2 id="应用-3"><a href="#应用-3" class="headerlink" title="应用"></a>应用</h2><ul>
+<li>老年代</li>
+</ul>
+<h1 id="Parallel-Old-Garbage-Collector"><a href="#Parallel-Old-Garbage-Collector" class="headerlink" title="Parallel Old Garbage Collector"></a>Parallel Old Garbage Collector</h1><h2 id="工作原理-4"><a href="#工作原理-4" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
+<li>多线程</li>
+<li>吞吐量优先</li>
+</ul>
+<h2 id="应用-4"><a href="#应用-4" class="headerlink" title="应用"></a>应用</h2><ul>
+<li>老年代</li>
+</ul>
+<h1 id="CMS（Concurrent-Mark-Sweep）"><a href="#CMS（Concurrent-Mark-Sweep）" class="headerlink" title="CMS（Concurrent Mark Sweep）"></a>CMS（Concurrent Mark Sweep）</h1><h3 id="工作原理-5"><a href="#工作原理-5" class="headerlink" title="工作原理"></a>工作原理</h3><ul>
+<li>获取最短回收停顿时间为目标</li>
+<li>标记-清除算法</li>
+</ul>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>( <strong>注意哪些阶段是停顿的</strong>)</p>
+<p><img src="/2019/09/28/垃圾回收器分类/cms.png" alt></p>
+<ul>
+<li><strong>初始标记（CMS initial mark）</strong>：仅仅只是标记一下GC Roots能直接关联到的对象，速度很快，需要“Stop The World”。</li>
+<li><strong>并发标记（CMS concurrent mark）</strong>：进行<strong>GC Roots Tracing</strong>的过程，在整个过程中耗时最长。</li>
+<li><strong>重新标记（CMS remark）</strong>：为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段稍长一些，但远比并发标记的时间短。此阶段也需要“Stop The World”。</li>
+<li><strong>并发清除（CMS concurrent sweep）</strong></li>
+</ul>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ul>
+<li><strong>对CPU资源非常敏感</strong> 其实，面向并发设计的程序都对CPU资源比较敏感。在并发阶段，它虽然不会导致用户线程停顿，但会因为占用了一部分线程（或者说CPU资源）而导致应用程序变慢，总吞吐量会降低。<strong>CMS默认启动的回收线程数是（CPU数量+3）/4</strong>，也就是当CPU在4个以上时，并发回收时垃圾收集线程不少于25%的CPU资源，并且随着CPU数量的增加而下降。但是<strong>当CPU不足4个时（比如2个），CMS对用户程序的影响就可能变得很大</strong>，如果本来CPU负载就比较大，还要分出一半的运算能力去执行收集器线程，就可能导致用户程序的执行速度忽然降低了50%，其实也让人无法接受。</li>
+<li><strong>无法处理浮动垃圾（Floating Garbage）</strong> 由于CMS<strong>并发清理</strong> 阶段用户线程还在运行着，伴随程序运行自然就还会有新的垃圾不断产生。</li>
+<li><strong>标记-清除算法导致的空间碎片</strong>。</li>
+</ul>
+<h3 id="应用-5"><a href="#应用-5" class="headerlink" title="应用"></a>应用</h3><ul>
+<li>老年代</li>
+<li>对时间敏感的任务，比如互联网网站</li>
+</ul>
+<h1 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h1><p>关于G1垃圾回收器是目前生产环境用的垃圾回收器，准备用一篇文章结合GC日志进行单独讲解。</p>
+<h1 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h1><table>
+<thead>
+<tr>
+<th>收集器</th>
+<th>串行、并行or并发</th>
+<th>新生代/老年代</th>
+<th>算法</th>
+<th>目标</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Serial</strong></td>
+<td>串行</td>
+<td>新生代</td>
+<td>复制算法</td>
+<td>响应速度优先</td>
+<td>单CPU环境下的Client模式</td>
+</tr>
+<tr>
+<td><strong>Serial Old</strong></td>
+<td>串行</td>
+<td>老年代</td>
+<td>标记-整理</td>
+<td>响应速度优先</td>
+<td>单CPU环境下的Client模式、CMS的后备预案</td>
+</tr>
+<tr>
+<td><strong>ParNew</strong></td>
+<td>并行</td>
+<td>新生代</td>
+<td>复制算法</td>
+<td>响应速度优先</td>
+<td>多CPU环境时在Server模式下与CMS配合</td>
+</tr>
+<tr>
+<td><strong>Parallel Scavenge</strong></td>
+<td>并行</td>
+<td>新生代</td>
+<td>复制算法</td>
+<td>吞吐量优先</td>
+<td>在后台运算而不需要太多交互的任务</td>
+</tr>
+<tr>
+<td><strong>Parallel Old</strong></td>
+<td>并行</td>
+<td>老年代</td>
+<td>标记-整理</td>
+<td>吞吐量优先</td>
+<td>在后台运算而不需要太多交互的任务</td>
+</tr>
+<tr>
+<td><strong>CMS</strong></td>
+<td>并发</td>
+<td>老年代</td>
+<td>标记-清除</td>
+<td>响应速度优先</td>
+<td>集中在互联网站或B/S系统服务端上的Java应用</td>
+</tr>
+<tr>
+<td><strong>G1</strong></td>
+<td>并发</td>
+<td>both</td>
+<td>标记-整理+复制算法</td>
+<td>响应速度优先</td>
+<td>面向服务端应用，将来替换CMS</td>
+</tr>
+</tbody></table>
+<p>tracking-service中:<code>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</code></p>
+<p>delivery-service中:<code>+UseG1GC</code></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><a href="https://crowhawk.github.io/2017/08/15/jvm_3/" target="_blank" rel="noopener">深入理解JVM(3)——7种垃圾收集器</a></li>
+<li>周志明《深入理解java虚拟机》</li>
+<li><a href="https://tech.meituan.com/g1.html" target="_blank" rel="noopener">Java Hotspot G1 GC的一些关键技术</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>jvm</category>
+      </categories>
+      <tags>
+        <tag>jvm</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1113,168 +1275,6 @@
       </tags>
   </entry>
   <entry>
-    <title>垃圾回收器分类</title>
-    <url>/2019/09/28/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E5%88%86%E7%B1%BB/</url>
-    <content><![CDATA[<p>为什么会有那么多垃圾收集器?因为根据对象的特点，例如对象的生命周期、大小，进行分代以后有不同的垃圾回收算法，每种算法的具体实现和侧重点不同，就有众多的垃圾回收器。不存在什么优劣之分.</p><h1 id="并行和并发"><a href="#并行和并发" class="headerlink" title="并行和并发"></a>并行和并发</h1><ul>
-<li><strong>并行（Parallel）</strong>：指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态。</li>
-<li><strong>并发（Concurrent）</strong>：指用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替执行），用户程序在继续运行。而垃圾收集程序运行在另一个CPU上。</li>
-</ul><a id="more"></a>
-
-<h1 id="吞吐量-vs-停顿时间"><a href="#吞吐量-vs-停顿时间" class="headerlink" title="吞吐量 vs 停顿时间"></a>吞吐量 vs 停顿时间</h1><p>$吞吐量 = {\frac{运行用户代码的时间}{运行用户代码时间+垃圾回收时间}}$</p>
-<p>eg: 虚拟机总共运行了100min，垃圾回收花掉1min, 吞吐量为：99%</p>
-<p><strong>停顿时间缩短是以牺牲吞吐量和新生代空间为代价的</strong>。</p>
-<p>新生代空间缩小 -&gt; 停顿时间缩短 -&gt; GC频繁 -&gt; <strong>GC的总时间增加</strong>-&gt; 吞吐量下降 </p>
-<h1 id="Serial-Garbage-Collector"><a href="#Serial-Garbage-Collector" class="headerlink" title="Serial Garbage Collector"></a>Serial Garbage Collector</h1><p><img src="/2019/09/28/垃圾回收器分类/1.png" alt></p>
-<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
-<li>单线程，只会使用一个CPU，一条线程去完成垃圾回收工作</li>
-<li>进行垃圾回收的时候必须要暂停所有工作线程</li>
-<li>采用复制算法</li>
-<li>新生代</li>
-</ul>
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p>Client模式（分配的内存少）下不错的选择</p>
-<h1 id="Parallel-Garbage-Collector"><a href="#Parallel-Garbage-Collector" class="headerlink" title="Parallel Garbage Collector"></a>Parallel Garbage Collector</h1><p><img src="/2019/09/28/垃圾回收器分类/2.png" alt></p>
-<p><strong>ParNew</strong>收集器就是Serial收集器的多线程版本.</p>
-<h2 id="工作原理-1"><a href="#工作原理-1" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
-<li>也是stop the word，只是GC的时候是多线程</li>
-<li><strong>-XX:ParallerGCThreads</strong>可以设置线程数目，默认是CPU的数目。</li>
-<li>采用复制算法</li>
-<li>新生代</li>
-</ul>
-<h2 id="应用-1"><a href="#应用-1" class="headerlink" title="应用"></a>应用</h2><ul>
-<li>只有它可以和CMS配合</li>
-<li>Server模式下的虚拟机中首选的新生代收集器</li>
-</ul>
-<h1 id="Parallel-Scavenge-Garbage-Collector"><a href="#Parallel-Scavenge-Garbage-Collector" class="headerlink" title="Parallel Scavenge Garbage Collector"></a>Parallel Scavenge Garbage Collector</h1><h2 id="工作原理-2"><a href="#工作原理-2" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
-<li>目标是达到一个可控制的 <strong>吞吐量</strong></li>
-<li>老年代</li>
-</ul>
-<h2 id="应用-2"><a href="#应用-2" class="headerlink" title="应用"></a>应用</h2><ul>
-<li>吞吐量高，停顿时间就长。不适合哪种需要与用户交互的程序，在后台运算不需要太多交互的任务。</li>
-<li>Parallel Scavenge收集器无法与CMS收集器配合使用</li>
-<li>采用复制算法</li>
-</ul>
-<h1 id="Serial-Old-Garbage-Collector"><a href="#Serial-Old-Garbage-Collector" class="headerlink" title="Serial Old Garbage Collector"></a>Serial Old Garbage Collector</h1><h2 id="工作原理-3"><a href="#工作原理-3" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
-<li>Serial Old 是 Serial收集器的老年代版本</li>
-<li>单线程</li>
-<li>采用标记整理算法</li>
-</ul>
-<h2 id="应用-3"><a href="#应用-3" class="headerlink" title="应用"></a>应用</h2><ul>
-<li>老年代</li>
-</ul>
-<h1 id="Parallel-Old-Garbage-Collector"><a href="#Parallel-Old-Garbage-Collector" class="headerlink" title="Parallel Old Garbage Collector"></a>Parallel Old Garbage Collector</h1><h2 id="工作原理-4"><a href="#工作原理-4" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
-<li>多线程</li>
-<li>吞吐量优先</li>
-</ul>
-<h2 id="应用-4"><a href="#应用-4" class="headerlink" title="应用"></a>应用</h2><ul>
-<li>老年代</li>
-</ul>
-<h1 id="CMS（Concurrent-Mark-Sweep）"><a href="#CMS（Concurrent-Mark-Sweep）" class="headerlink" title="CMS（Concurrent Mark Sweep）"></a>CMS（Concurrent Mark Sweep）</h1><h3 id="工作原理-5"><a href="#工作原理-5" class="headerlink" title="工作原理"></a>工作原理</h3><ul>
-<li>获取最短回收停顿时间为目标</li>
-<li>标记-清除算法</li>
-</ul>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>( <strong>注意哪些阶段是停顿的</strong>)</p>
-<p><img src="/2019/09/28/垃圾回收器分类/cms.png" alt></p>
-<ul>
-<li><strong>初始标记（CMS initial mark）</strong>：仅仅只是标记一下GC Roots能直接关联到的对象，速度很快，需要“Stop The World”。</li>
-<li><strong>并发标记（CMS concurrent mark）</strong>：进行<strong>GC Roots Tracing</strong>的过程，在整个过程中耗时最长。</li>
-<li><strong>重新标记（CMS remark）</strong>：为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段稍长一些，但远比并发标记的时间短。此阶段也需要“Stop The World”。</li>
-<li><strong>并发清除（CMS concurrent sweep）</strong></li>
-</ul>
-<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ul>
-<li><strong>对CPU资源非常敏感</strong> 其实，面向并发设计的程序都对CPU资源比较敏感。在并发阶段，它虽然不会导致用户线程停顿，但会因为占用了一部分线程（或者说CPU资源）而导致应用程序变慢，总吞吐量会降低。<strong>CMS默认启动的回收线程数是（CPU数量+3）/4</strong>，也就是当CPU在4个以上时，并发回收时垃圾收集线程不少于25%的CPU资源，并且随着CPU数量的增加而下降。但是<strong>当CPU不足4个时（比如2个），CMS对用户程序的影响就可能变得很大</strong>，如果本来CPU负载就比较大，还要分出一半的运算能力去执行收集器线程，就可能导致用户程序的执行速度忽然降低了50%，其实也让人无法接受。</li>
-<li><strong>无法处理浮动垃圾（Floating Garbage）</strong> 由于CMS<strong>并发清理</strong> 阶段用户线程还在运行着，伴随程序运行自然就还会有新的垃圾不断产生。</li>
-<li><strong>标记-清除算法导致的空间碎片</strong>。</li>
-</ul>
-<h3 id="应用-5"><a href="#应用-5" class="headerlink" title="应用"></a>应用</h3><ul>
-<li>老年代</li>
-<li>对时间敏感的任务，比如互联网网站</li>
-</ul>
-<h1 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h1><p>关于G1垃圾回收器是目前生产环境用的垃圾回收器，准备用一篇文章结合GC日志进行单独讲解。</p>
-<h1 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h1><table>
-<thead>
-<tr>
-<th>收集器</th>
-<th>串行、并行or并发</th>
-<th>新生代/老年代</th>
-<th>算法</th>
-<th>目标</th>
-<th>适用场景</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Serial</strong></td>
-<td>串行</td>
-<td>新生代</td>
-<td>复制算法</td>
-<td>响应速度优先</td>
-<td>单CPU环境下的Client模式</td>
-</tr>
-<tr>
-<td><strong>Serial Old</strong></td>
-<td>串行</td>
-<td>老年代</td>
-<td>标记-整理</td>
-<td>响应速度优先</td>
-<td>单CPU环境下的Client模式、CMS的后备预案</td>
-</tr>
-<tr>
-<td><strong>ParNew</strong></td>
-<td>并行</td>
-<td>新生代</td>
-<td>复制算法</td>
-<td>响应速度优先</td>
-<td>多CPU环境时在Server模式下与CMS配合</td>
-</tr>
-<tr>
-<td><strong>Parallel Scavenge</strong></td>
-<td>并行</td>
-<td>新生代</td>
-<td>复制算法</td>
-<td>吞吐量优先</td>
-<td>在后台运算而不需要太多交互的任务</td>
-</tr>
-<tr>
-<td><strong>Parallel Old</strong></td>
-<td>并行</td>
-<td>老年代</td>
-<td>标记-整理</td>
-<td>吞吐量优先</td>
-<td>在后台运算而不需要太多交互的任务</td>
-</tr>
-<tr>
-<td><strong>CMS</strong></td>
-<td>并发</td>
-<td>老年代</td>
-<td>标记-清除</td>
-<td>响应速度优先</td>
-<td>集中在互联网站或B/S系统服务端上的Java应用</td>
-</tr>
-<tr>
-<td><strong>G1</strong></td>
-<td>并发</td>
-<td>both</td>
-<td>标记-整理+复制算法</td>
-<td>响应速度优先</td>
-<td>面向服务端应用，将来替换CMS</td>
-</tr>
-</tbody></table>
-<p>tracking-service中:<code>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</code></p>
-<p>delivery-service中:<code>+UseG1GC</code></p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li><a href="https://crowhawk.github.io/2017/08/15/jvm_3/" target="_blank" rel="noopener">深入理解JVM(3)——7种垃圾收集器</a></li>
-<li>周志明《深入理解java虚拟机》</li>
-<li><a href="https://tech.meituan.com/g1.html" target="_blank" rel="noopener">Java Hotspot G1 GC的一些关键技术</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>jvm</category>
-      </categories>
-      <tags>
-        <tag>jvm</tag>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>建造者模式在日志系统中的运用</title>
     <url>/2017/08/14/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E5%9C%A8%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%BF%90%E7%94%A8/</url>
     <content><![CDATA[<blockquote>
@@ -1378,7 +1378,7 @@
   <entry>
     <title>线程池如何保证有序?</title>
     <url>/2020/05/03/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%9C%89%E5%BA%8F/</url>
-    <content><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Ad1 -&gt; [Ad1-msg1, Ad1-msg1, ...] -&gt; 顺序发到partition1</span><br><span class="line">Ad2 -&gt; [Ad2-msg1, Ad2-msg2, ...] -&gt; 顺序发到partition2</span><br><span class="line">...</span><br></pre></td></tr></table></figure><a id="more"></a>
+    <content><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Ad1 -&gt; [Ad1-msg1, Ad1-msg2, ...] -&gt; 顺序发到partition1</span><br><span class="line">Ad2 -&gt; [Ad2-msg1, Ad2-msg2, ...] -&gt; 顺序发到partition2</span><br><span class="line">...</span><br></pre></td></tr></table></figure><a id="more"></a>
 
 
 <p>这样做的初衷是<strong>希望对于同一个广告的消息，不要出现消费的时候先后顺序错乱</strong>。</p>

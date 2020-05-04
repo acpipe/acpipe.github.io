@@ -55,20 +55,20 @@
   };
 </script>
 
-  <meta name="description" content="背景在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。123Ad1 -&amp;gt; [Ad1-msg1, Ad1-msg1, ...] -&amp;gt; 顺序发到partition1Ad2 -&amp;gt; [Ad2-msg1,">
+  <meta name="description" content="背景在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。123Ad1 -&amp;gt; [Ad1-msg1, Ad1-msg2, ...] -&amp;gt; 顺序发到partition1Ad2 -&amp;gt; [Ad2-msg1,">
 <meta name="keywords" content="java,线程池">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线程池如何保证有序?">
 <meta property="og:url" content="http://yoursite.com/2020/05/03/线程池如何保证有序/index.html">
 <meta property="og:site_name" content="江声浩荡">
-<meta property="og:description" content="背景在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。123Ad1 -&amp;gt; [Ad1-msg1, Ad1-msg1, ...] -&amp;gt; 顺序发到partition1Ad2 -&amp;gt; [Ad2-msg1,">
+<meta property="og:description" content="背景在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。123Ad1 -&amp;gt; [Ad1-msg1, Ad1-msg2, ...] -&amp;gt; 顺序发到partition1Ad2 -&amp;gt; [Ad2-msg1,">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2020/05/03/线程池如何保证有序/1.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/03/线程池如何保证有序/2.png">
-<meta property="og:updated_time" content="2020-05-04T03:26:29.799Z">
+<meta property="og:updated_time" content="2020-05-04T03:42:19.416Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程池如何保证有序?">
-<meta name="twitter:description" content="背景在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。123Ad1 -&amp;gt; [Ad1-msg1, Ad1-msg1, ...] -&amp;gt; 顺序发到partition1Ad2 -&amp;gt; [Ad2-msg1,">
+<meta name="twitter:description" content="背景在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。123Ad1 -&amp;gt; [Ad1-msg1, Ad1-msg2, ...] -&amp;gt; 顺序发到partition1Ad2 -&amp;gt; [Ad2-msg1,">
 <meta name="twitter:image" content="http://yoursite.com/2020/05/03/线程池如何保证有序/1.png">
   <link rel="canonical" href="http://yoursite.com/2020/05/03/线程池如何保证有序/">
 
@@ -295,7 +295,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-04 11:26:29" itemprop="dateModified" datetime="2020-05-04T11:26:29+08:00">2020-05-04</time>
+                <time title="修改时间：2020-05-04 11:42:19" itemprop="dateModified" datetime="2020-05-04T11:42:19+08:00">2020-05-04</time>
               </span>
             
           
@@ -332,7 +332,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Ad1 -&gt; [Ad1-msg1, Ad1-msg1, ...] -&gt; 顺序发到partition1</span><br><span class="line">Ad2 -&gt; [Ad2-msg1, Ad2-msg2, ...] -&gt; 顺序发到partition2</span><br><span class="line">...</span><br></pre></td></tr></table></figure><a id="more"></a>
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在生产环境中，用kafka来解耦是常用的技术手段。为了保证消息的顺序处理，会把相同属性(同一个人、同一个素材等) 的消息发往kafka同一个partition中。例如，在广告系统中，会把某一个ad的转化数据发送到同一个partition。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Ad1 -&gt; [Ad1-msg1, Ad1-msg2, ...] -&gt; 顺序发到partition1</span><br><span class="line">Ad2 -&gt; [Ad2-msg1, Ad2-msg2, ...] -&gt; 顺序发到partition2</span><br><span class="line">...</span><br></pre></td></tr></table></figure><a id="more"></a>
 
 
 <p>这样做的初衷是<strong>希望对于同一个广告的消息，不要出现消费的时候先后顺序错乱</strong>。</p>
@@ -395,8 +395,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/09/28/分布式锁的几种实现方式/" rel="next" title="分布式锁的集中实现方式">
-                  <i class="fa fa-chevron-left"></i> 分布式锁的集中实现方式
+                <a href="/2019/09/28/线上问题总结/" rel="next" title="线上问题定位总结">
+                  <i class="fa fa-chevron-left"></i> 线上问题定位总结
                 </a>
               
             </div>
