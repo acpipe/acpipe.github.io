@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>958. 二叉树的完全性检验</title>
-    <url>/2020/08/21/958-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%AE%8C%E5%85%A8%E6%80%A7%E6%A3%80%E9%AA%8C/</url>
-    <content><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>给定一个二叉树，确定它是否是一个完全二叉树。</p><p>百度百科中对完全二叉树的定义如下：</p><p>若设二叉树的深度为 h，除第 h 层外，其它各层 (1～h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边，这就是完全二叉树。（注：第 h 层可能包含 1~ 2h 个节点。）</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">输入：[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]</span><br><span class="line">输出：<span class="keyword">true</span></span><br><span class="line">解释：最后一层前的每一层都是满的（即，结点值为 &#123;<span class="number">1</span>&#125; 和 &#123;<span class="number">2</span>,<span class="number">3</span>&#125; 的两层），且最后一层中的所有结点（&#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;）都尽可能地向左。</span><br></pre></td></tr></table></figure><a id="more"></a>
-
-
-
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">输入：[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="keyword">null</span>,<span class="number">7</span>]</span><br><span class="line">输出：<span class="keyword">false</span></span><br><span class="line">解释：值为 <span class="number">7</span> 的结点没有尽可能靠向左侧。</span><br></pre></td></tr></table></figure>
-
-<h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><h2 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h2><ul>
-<li>层次遍历，把<code>null</code> 也放到队列，当遇到<code>null</code>结束遍历；</li>
-<li>此时如果队列中有非<code>null</code>元素，则不是完全二叉树；</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isCompleteTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        queue.add(root);</span><br><span class="line">        <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">            TreeNode current = queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (current == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125; </span><br><span class="line">            queue.add(current.left);</span><br><span class="line">            queue.add(current.right);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(!queue.isEmpty()) &#123;</span><br><span class="line">            TreeNode current = queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (current != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>复杂度分析</p>
-<ul>
-<li>时间复杂度：O(N)，其中 N 是树节点个数。</li>
-<li>空间复杂度：O(N)。</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>leetcode</tag>
-        <tag>二叉树</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>G1参数设置</title>
     <url>/2018/05/10/G1%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/</url>
     <content><![CDATA[<h1 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h1><table>
